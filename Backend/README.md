@@ -33,6 +33,16 @@ To start the FastAPI development server, run:
 
 This will launch the application in development mode, with automatic reload on code changes. By default, the server will be available at `http://127.0.0.1:8000/`.
 
+## Linting and Formatting
+
+[Ruff](https://docs.astral.sh/ruff/) is used for linting and formatting. To run, use:
+
+```bash
+  uv run ruff check   # Lint all files in the current directory.
+  uv run ruff format  # Format all files in the current directory.
+```
+
+```bash
 
 ## Environment Variables
 
