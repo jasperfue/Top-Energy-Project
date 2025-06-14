@@ -3,16 +3,26 @@ import tepyapi
 from tepyapi import apis
 from tepyapi import ApiException
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-app = FastAPI()
+from fastapi.middleware.cors import CORSMiddleware
 
 class Settings(BaseSettings):
     top_energy_username: str
     top_energy_password: str
     top_energy_host: str
+    allowed_origins: str
     model_config = SettingsConfigDict(env_file=".env")
 
 settings = Settings() # type: ignore
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[origin.strip() for origin in settings.allowed_origins.split(",")],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 configuration = tepyapi.Configuration(
     username = settings.top_energy_username,
