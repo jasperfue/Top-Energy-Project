@@ -6,6 +6,7 @@ import ReactDOM from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
 
 import "./styles.css";
+import Spinner from "@/components/ui/Spinner.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import reportWebVitals from "./reportWebVitals.ts";
 
@@ -19,6 +20,13 @@ const router = createRouter({
 	scrollRestoration: true,
 	defaultStructuralSharing: true,
 	defaultPreloadStaleTime: 0,
+	defaultPendingComponent: () => (
+		<div className="flex items-center justify-center h-screen">
+			<Spinner />
+		</div>
+	),
+	defaultPendingMs: 100,
+	defaultPendingMinMs: 300,
 });
 
 // Register the router instance for type safety
