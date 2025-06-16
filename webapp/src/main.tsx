@@ -6,6 +6,7 @@ import ReactDOM from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
 
 import "./styles.css";
+import { ThemeProvider } from "@/components/ThemeProvider.tsx";
 import Spinner from "@/components/ui/Spinner.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import reportWebVitals from "./reportWebVitals.ts";
@@ -43,7 +44,9 @@ if (rootElement && !rootElement.innerHTML) {
 	root.render(
 		<StrictMode>
 			<QueryClientProvider client={queryClient}>
-				<RouterProvider router={router} />
+				<ThemeProvider>
+					<RouterProvider router={router} />
+				</ThemeProvider>
 			</QueryClientProvider>
 		</StrictMode>,
 	);
