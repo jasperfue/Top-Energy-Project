@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import tepyapi
 from tepyapi import apis
 from tepyapi import ApiException
@@ -34,42 +34,31 @@ configuration = tepyapi.Configuration(
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/login")
+@app.get("/login", status_code=204)
 async def login():
-    # Enter a context with an instance of the API client
     with tepyapi.ApiClient(configuration) as api_client:
-        # Create an instance of the API class
         user_api = apis.EfUserManagementApi(api_client)
-        process_api = apis.EfProcessManagementApi(api_client)
-        data_api = apis.EfDataManagementApi(api_client)
-
-        api_error = ''
-
         try:
-            # Login to server
-            print("Login user ... ", end = '', flush = True)
-            api_key = user_api.login(lang='de') # 'de' or 'en', path names corresponding to the language
-            configuration.api_key['api_key'] = api_key
+            print("Login user ... ", end="", flush=True)
+            api_key = user_api.login(lang="de")
+            configuration.api_key["api_key"] = api_key
             print("OK")
-
-            return {"message": f"Successfully logged in as {settings.top_energy_username}"}
+            return
         except ApiException as e:
             print("FAILURE!")
-            print("Status Code: %i" % e.status)
-            print("Reason: %s" % e.reason)
-            if (not e.details is None):
-                print("Error Code: %i" % e.details['code'])
-                print("Message: %s" % e.details['msg'])
-            return {"error": "Login failed", "details": str(e)}
-
+            raise HTTPException(
+                status_code=e.status,
+                detail={
+                    "error": "Login failed",
+                    "reason": e.reason,
+                    "details": e.details or str(e)
+                }
+            )
         except Exception as e:
             print("FAILURE!")
-            print("Exception caught: %s" % e)
-            return {"error": "Login failed", "details": str(e)}
-
+            raise HTTPException(status_code=500, detail=str(e))
         finally:
-            # Logout
-            print("Logout ... ", end = '', flush = True)
+            print("Logout ... ", end="", flush=True)
             try:
                 user_api.logout()
                 print("OK")

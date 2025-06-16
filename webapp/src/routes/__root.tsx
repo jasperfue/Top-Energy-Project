@@ -1,3 +1,4 @@
+import ErrorPage from "@/components/ErrorPage.tsx";
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
@@ -5,14 +6,8 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { env } from "/env.ts";
 
 async function fetchLogin() {
-	const res = await fetch(`${env.VITE_BACKEND_URL}/login`);
-	if (!res.ok) {
-		throw new Response(null, {
-			status: 302,
-			headers: { Location: "/login" },
-		});
-	}
-	return res.json();
+	await fetch(`${env.VITE_BACKEND_URL}/login`);
+	return;
 }
 
 export const Route = createRootRouteWithContext<{
@@ -31,4 +26,5 @@ export const Route = createRootRouteWithContext<{
 			queryFn: fetchLogin,
 			staleTime: Number.POSITIVE_INFINITY,
 		}),
+	errorComponent: ({ error }) => ErrorPage(error),
 });
