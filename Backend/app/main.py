@@ -57,11 +57,32 @@ async def login():
         except Exception as e:
             print("FAILURE!")
             raise HTTPException(status_code=500, detail=str(e))
-        finally:
+
+
+@app.post("/logout", status_code=204)
+async def logout():
+    with tepyapi.ApiClient(configuration) as api_client:
+        user_api = apis.EfUserManagementApi(api_client)
+        try:
+            current_key = configuration.api_key.get("api_key") if configuration.api_key else None
+            if not current_key:
+                return
             print("Logout ... ", end="", flush=True)
-            try:
-                user_api.logout()
-                print("OK")
-            except:
-                print("FAILURE!")
-            print("Ready")
+            user_api.logout()
+            # API-Key explizit leeren, damit zukünftige Aufrufe wissen, dass keine Session mehr besteht
+            configuration.api_key["api_key"] = ""
+            print("OK")
+            return
+        except ApiException as e:
+            print("FAILURE!")
+            raise HTTPException(
+                status_code=e.status,
+                detail={
+                    "error": "Logout failed",
+                    "reason": e.reason,
+                    "details": e.details or str(e),
+                },
+            )
+        except Exception as e:
+            print("FAILURE!")
+            raise HTTPException(status_code=500, detail=str(e))
