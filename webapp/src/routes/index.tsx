@@ -56,8 +56,10 @@ function App() {
 								{projects.projects.map((proj, idx) => (
 									<div key={proj} className="py-2">
 										<Link
-											to={`/projects/${encodeURIComponent(proj)}`}
+											to="/projects/$projectName"
+											params={{ projectName: encodeURIComponent(proj) }}
 											className="flex gap-2 hover:underline"
+											preload={false}
 										>
 											<FileBox strokeWidth={1.5} />
 											{proj}
