@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import logging
 
 from app.core.config import (get_settings)
-from app.routers import auth
+from app.routers import auth, api
 
 app = FastAPI()
 
@@ -21,3 +22,4 @@ async def root():
     return {"message": "Hello World"}
 
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
+app.include_router(api.router, prefix="/api", tags=["api"])

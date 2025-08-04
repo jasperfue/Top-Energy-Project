@@ -1,12 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
 import logo from "../logo.svg";
 import "../App.css";
+import { createQueryOptions } from "@/lib/query.ts";
+import { useQuery } from "@tanstack/react-query";
+
+type Projects = {
+	projects: string[];
+};
+const projectsOptions = createQueryOptions<Projects>(
+	["projects"],
+	"/api/projects",
+);
 
 export const Route = createFileRoute("/")({
 	component: App,
+	loader: ({ context: { queryClient } }) =>
+		queryClient.ensureQueryData(projectsOptions),
 });
 
 function App() {
+	const { data: projects } = useQuery(projectsOptions);
+	console.log(projects);
 	return (
 		<div className="App">
 			<header className="App-header">
