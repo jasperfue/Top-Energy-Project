@@ -3,7 +3,7 @@ import { env } from "/env.ts";
 
 export function useLogoutOnExit() {
 	useEffect(() => {
-		const logoutUrl = `${env.VITE_BACKEND_URL}/logout`;
+		const logoutUrl = `${env.VITE_BACKEND_URL}/auth/logout`;
 
 		const sendLogout = () => {
 			// Preferred: sendBeacon (fire-and-forget, works when closing tab)

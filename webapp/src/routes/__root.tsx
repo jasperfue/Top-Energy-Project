@@ -7,7 +7,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { env } from "/env.ts";
 
 async function fetchLogin() {
-	return await fetch(`${env.VITE_BACKEND_URL}/login`);
+	return await fetch(`${env.VITE_BACKEND_URL}/auth/login`);
 }
 
 export const Route = createRootRouteWithContext<{
