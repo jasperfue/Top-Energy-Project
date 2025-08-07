@@ -1,14 +1,10 @@
 import ErrorPage from "@/components/ErrorPage.tsx";
+import { createQueryOptions } from "@/lib/query.ts";
 import { useLogoutOnExit } from "@/lib/useLogoutOnExit.ts";
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { env } from "/env.ts";
-
-async function fetchLogin() {
-	return await fetch(`${env.VITE_BACKEND_URL}/auth/login`);
-}
 
 export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
@@ -25,10 +21,6 @@ export const Route = createRootRouteWithContext<{
 		);
 	},
 	loader: ({ context: { queryClient } }) =>
-		queryClient.ensureQueryData({
-			queryKey: ["login"] as const,
-			queryFn: fetchLogin,
-			staleTime: Number.POSITIVE_INFINITY,
-		}), // Wenn man die Seite schließt und anschließend wieder öffnet wird login nicht erneut aufgerufen.
+		queryClient.ensureQueryData(createQueryOptions(["login"], "/auth/login")),
 	errorComponent: ({ error }) => ErrorPage(error),
 });

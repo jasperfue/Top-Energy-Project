@@ -1,0 +1,65 @@
+{
+  "elements": [
+    {
+      "name": "Kessel (Gas) 100kW",
+      "input": [
+        {
+          "name": "Thermische Nennleistung",
+          "unit": "kW"
+        }
+      ],
+      "output": [
+        {
+          "name": "Betriebsstunden",
+          "unit": "h/a"
+        },
+        {
+          "name": "Volllaststunden",
+          "unit": "h/a"
+        },
+        {
+          "name": "Abgegebene Wärmeleistung",
+          "unit": "kW"
+        }
+      ]
+    },
+    {
+      "name": "Kessel (Gas) 50kW",
+      "input": [
+        {
+          "name": "Thermische Nennleistung",
+          "unit": "kW"
+        }
+      ],
+      "output": [
+        {
+          "name": "Betriebsstunden",
+          "unit": "h/a"
+        },
+        {
+          "name": "Volllaststunden",
+          "unit": "h/a"
+        },
+        {
+          "name": "Abgegebene Wärmeleistung",
+          "unit": "kW"
+        }
+      ]
+    },
+    {
+      "name": "Brennstofftarif Erdgas DE",
+      "input": [
+        {
+          "name": "Arbeitspreis",
+          "unit": "c/kWh"
+        }
+      ],
+      "output": [
+        {
+          "name": "Summe der Brennstoffkosten",
+          "unit": "TEur/a"
+        }
+      ]
+    }
+  ]
+}
