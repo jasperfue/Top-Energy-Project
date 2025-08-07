@@ -1,14 +1,16 @@
 import asyncio
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import List
 
-import tepyapi
+import jsonschema
 from app.core.config import get_tepy_configuration
-from app.utils import waitForApiFinished
+from app.utils import project_schema, load_and_update_project, read_json
 from fastapi import APIRouter, HTTPException
-from tepyapi import models, apis
 
 router = APIRouter()
+
+executor = ThreadPoolExecutor(max_workers=4)
 
 PROJECTS_DIR = Path(__file__).resolve().parent.parent.parent / "projects"
 
@@ -48,32 +50,24 @@ async def get_projects():
 @router.get("/projects/{project_name}")
 async def get_project(project_name: str):
     project_path = PROJECTS_DIR / project_name
+    top_energy_project_path = project_path / f"{project_name}.te-proj"
+    json_path = project_path / f"{project_name}.json"
+
     if not project_path.exists():
         raise HTTPException(status_code=404, detail=f"Projekt '{project_name}' nicht gefunden")
-    if not (project_path / f"{project_name}.te-proj").is_file():
+    if not top_energy_project_path.is_file():
         raise HTTPException(status_code=400, detail=f"'{project_name}' ist kein gültiges Projekt")
+
     configuration = get_tepy_configuration()
     try:
-        with tepyapi.ApiClient(configuration) as api_client:
-            process_api = apis.EfProcessManagementApi(api_client)
-            print("Load project ... ", end='', flush=True)
-            prj_data = models.ApiProjectData(
-                str((project_path / f"{project_name}.te-proj")),
-                sourceType="file",
-                readonly=True
-            )
-            api_response = process_api.load_project(project_data=prj_data)
-            waitForApiFinished("", process_api, False)
-
-            # Update the project
-            print("Update project ... ", end='', flush=True)
-            process_api.update_project()
-            waitForApiFinished("", process_api, True)
-
-            print("Update messages:")
-            update_messages = process_api.get_update_messages()
-            print(update_messages)
-
-            return api_response
+        loop = asyncio.get_running_loop()
+        first_read_task = asyncio.create_task(read_json(json_path))
+        update_messages = await loop.run_in_executor(
+            executor, load_and_update_project, project_path, configuration
+        )
+        print(update_messages)
+        data = await first_read_task
+        jsonschema.validate(instance=data, schema=project_schema)
+        return data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Fehler beim Lesen des Projekts: {str(e)}")
