@@ -4,8 +4,8 @@ from pathlib import Path
 from typing import List
 
 import jsonschema
-from app.core.config import get_tepy_configuration
-from app.utils import project_schema, load_and_update_project, read_json
+from ..core.config import get_tepy_configuration
+from ..core.utils import project_schema, load_and_update_project, read_json
 from fastapi import APIRouter, HTTPException
 
 router = APIRouter()
@@ -32,7 +32,6 @@ def _list_project_files() -> List[str]:
 
 @router.get("/projects")
 async def get_projects():
-    print(PROJECTS_DIR)
     loop = asyncio.get_running_loop()
     try:
         names = await loop.run_in_executor(None, _list_project_files)
@@ -65,7 +64,6 @@ async def get_project(project_name: str):
         update_messages = await loop.run_in_executor(
             executor, load_and_update_project, project_path, configuration
         )
-        print(update_messages)
         data = await first_read_task
         jsonschema.validate(instance=data, schema=project_schema)
         return data

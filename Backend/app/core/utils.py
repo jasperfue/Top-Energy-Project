@@ -1,10 +1,13 @@
 import json
 import time
+import logging
 from pathlib import Path
 
 import aiofiles
 import tepyapi
 from tepyapi import models, apis
+
+log = logging.getLogger('uvicorn.error')
 
 
 def wait_for_api_finished(api, interval=0.5, backoff=1.2, max_interval=5.0):
@@ -26,11 +29,11 @@ def load_and_update_project(project_path: Path, configuration):
             sourceType="file",
             readonly=True,
         )
-        print("Load project ...")
+        log.info("Load project ...")
         process_api.load_project(project_data=prj_data)
         wait_for_api_finished(process_api)
 
-        print("Update project ...")
+        log.info("Update project ...")
         process_api.update_project()
         wait_for_api_finished(process_api)
 
@@ -39,7 +42,7 @@ def load_and_update_project(project_path: Path, configuration):
 
 
 async def read_json(path: Path):
-    print("Reading JSON...")
+    log.info("Reading JSON...")
     async with aiofiles.open(path, "r", encoding="utf-8") as f:
         content = await f.read()
     return json.loads(content)
