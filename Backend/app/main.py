@@ -1,11 +1,20 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import logging
+from contextlib import asynccontextmanager
 
-from app.core.config import (get_settings)
-from app.routers import auth, api
+from .core.config import (get_settings)
+from .core.auth import login, logout
+from .routers import api
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await login()
+    yield
+    await logout()
+
+
+app = FastAPI(lifespan=lifespan)
 
 settings = get_settings()
 
@@ -17,9 +26,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 
-app.include_router(auth.router, prefix="/auth", tags=["auth"])
+
 app.include_router(api.router, prefix="/api", tags=["api"])
