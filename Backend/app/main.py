@@ -9,9 +9,9 @@ from .routers import api
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await login()
+    login()
     yield
-    await logout()
+    logout()
 
 
 app = FastAPI(lifespan=lifespan)
