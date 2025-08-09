@@ -5,12 +5,13 @@ from typing import List
 
 import jsonschema
 from ..core.config import get_tepy_configuration
-from ..core.utils import project_schema, load_and_update_project, read_json
+from ..core.utils import project_schema, load_and_update_project, read_json, fetch_value
 from fastapi import APIRouter, HTTPException
 
 router = APIRouter()
 
-executor = ThreadPoolExecutor(max_workers=4)
+project_executor = ThreadPoolExecutor(max_workers=4)
+values_executor = ThreadPoolExecutor(max_workers=8)
 
 PROJECTS_DIR = Path(__file__).resolve().parent.parent.parent / "projects"
 
@@ -62,10 +63,25 @@ async def get_project(project_name: str):
         loop = asyncio.get_running_loop()
         first_read_task = asyncio.create_task(read_json(json_path))
         update_messages = await loop.run_in_executor(
-            executor, load_and_update_project, project_path, configuration
+            project_executor, load_and_update_project, project_path, configuration
         )
         data = await first_read_task
         jsonschema.validate(instance=data, schema=project_schema)
+
+        requests = []
+        for el in data.get("elements", []):
+            for io in ("input", "output"):
+                for var in el.get(io, []):
+                    requests.append((el["name"], var["name"], var))
+
+        def runner(args):
+            comp, var_name, var_ref = args
+            var_ref["value"] = fetch_value(comp, var_name, configuration)
+
+        await asyncio.gather(*[
+            loop.run_in_executor(values_executor, runner, r) for r in requests
+        ])
+
         return data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Fehler beim Lesen des Projekts: {str(e)}")
