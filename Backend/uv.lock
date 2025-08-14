@@ -53,6 +53,7 @@ dependencies = [
     { name = "jsonschema" },
     { name = "pydantic-settings" },
     { name = "tepyapi" },
+    { name = "uvicorn" },
 ]
 
 [package.dev-dependencies]
@@ -67,6 +68,7 @@ requires-dist = [
     { name = "jsonschema", specifier = ">=4.25.0" },
     { name = "pydantic-settings", specifier = ">=2.9.1" },
     { name = "tepyapi", path = "top_energy/tepyapi-3.3.2.7-py3-none-any.whl" },
+    { name = "uvicorn", specifier = ">=0.34.3" },
 ]
 
 [package.metadata.requires-dev]

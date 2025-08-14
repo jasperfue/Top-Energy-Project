@@ -10,7 +10,7 @@ This directory contains the backend service for the project, built with FastAPI 
 
 Dependencies are managed using the `uv` command:
 
-- **Add a dependency**  
+- **Add a dependency**
     ```bash 
   uv add <package-name>
     ```
@@ -21,17 +21,19 @@ Dependencies are managed using the `uv` command:
   uv remove <package-name>
   ```
 
-When you run `uv add`, the package will be installed and recorded in your project’s dependency manifest. Similarly, `uv remove` uninstalls the package and updates the manifest.
+When you run `uv add`, the package will be installed and recorded in your project’s dependency manifest. Similarly,
+`uv remove` uninstalls the package and updates the manifest.
 
 ## Running the Server
 
 To start the FastAPI development server, run:
 
 ```bash
-  uv run fastapi dev
+ uvicorn app.main:app --reload    
 ```
 
-This will launch the application in development mode, with automatic reload on code changes. By default, the server will be available at `http://127.0.0.1:8000/`.
+This will launch the application in development mode, with automatic reload on code changes. By default, the server will
+be available at `http://127.0.0.1:8000/`.
 
 ## Linting and Formatting
 
