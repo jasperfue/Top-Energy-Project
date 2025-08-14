@@ -1,11 +1,17 @@
+import ElementCardsWithCharts from "@/components/ElementCardsWithCharts.tsx";
 import { createQueryOptions } from "@/lib/query.ts";
+import type { ProjectData } from "@/types/projectDataTypes.ts";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 const projectQueryOptions = (projectName: string) =>
-	createQueryOptions(["project", projectName], `/api/projects/${projectName}`, {
-		staleTime: Number.POSITIVE_INFINITY,
-	});
+	createQueryOptions<ProjectData>(
+		["project", projectName],
+		`/api/projects/${projectName}`,
+		{
+			staleTime: Number.POSITIVE_INFINITY,
+		},
+	);
 
 export const Route = createFileRoute("/projects/$projectName")({
 	component: Project,
@@ -20,7 +26,9 @@ export const Route = createFileRoute("/projects/$projectName")({
 
 function Project() {
 	const { projectName } = Route.useParams();
-	const { data } = useQuery(projectQueryOptions(projectName));
-	console.log(data);
-	return <div>Hello "/projects/$projectName"!</div>;
+	const { data, error } = useQuery(projectQueryOptions(projectName));
+	if (error) return <div>Fehler: {(error as Error).message}</div>;
+	if (!data) return <div>Keine Daten</div>;
+
+	return <ElementCardsWithCharts data={data} />;
 }
