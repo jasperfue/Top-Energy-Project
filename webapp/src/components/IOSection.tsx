@@ -5,6 +5,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Separator } from "@/components/ui/separator";
 import {
 	type IOEntry,
 	fmtNumber,
@@ -20,7 +21,7 @@ export default function IOSection({
 	kind: "input" | "output";
 }) {
 	return (
-		<div className="space-y-6">
+		<div className="space-y-2">
 			{entries.map((e, idx) => {
 				// ---------- NUMBER VALUE ----------
 				if (isNumberEntry(e)) {
@@ -68,73 +69,78 @@ export default function IOSection({
 					}));
 
 					return (
-						<Accordion
-							key={`${kind}-ts-${idx}-${e.name}`}
-							type="single"
-							collapsible
-						>
-							<AccordionItem value={`${kind}-${idx}-${e.name}`}>
-								<AccordionTrigger>{e.name}</AccordionTrigger>
-								<AccordionContent>
-									<TimeSeriesChart
-										data={chartData}
-										label={e.name}
-										unit={s?.unit ?? e.unit}
-										height={250}
-									/>
+						<>
+							<Accordion
+								key={`${kind}-ts-${idx}-${e.name}`}
+								type="single"
+								collapsible
+							>
+								<AccordionItem value={`${kind}-${idx}-${e.name}`}>
+									<AccordionTrigger className="py-2">{e.name}</AccordionTrigger>
+									<AccordionContent>
+										<TimeSeriesChart
+											data={chartData}
+											label={e.name}
+											unit={s?.unit ?? e.unit}
+											height={250}
+										/>
 
-									{s && (
-										<div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1 text-xs sm:grid-cols-3">
-											<div>
-												<span className="text-muted-foreground">Mittel</span>{" "}
-												<span className="tabular-nums font-medium">
-													{fmtNumber(s.mean)}
-												</span>{" "}
-												{s.unit}
-											</div>
-											<div>
-												<span className="text-muted-foreground">Min</span>{" "}
-												<span className="tabular-nums font-medium">
-													{fmtNumber(s.min)}
-												</span>{" "}
-												{s.unit}
-											</div>
-											<div>
-												<span className="text-muted-foreground">Max</span>{" "}
-												<span className="tabular-nums font-medium">
-													{fmtNumber(s.max)}
-												</span>{" "}
-												{s.unit}
-											</div>
-											<div>
-												<span className="text-muted-foreground">StdAbw</span>{" "}
-												<span className="tabular-nums font-medium">
-													{fmtNumber(s.stddev)}
-												</span>
-											</div>
-											<div>
-												<span className="text-muted-foreground">Punkte</span>{" "}
-												<span className="tabular-nums font-medium">
-													{s.count_valid}/{s.count_total}
-												</span>
-											</div>
-											{s.reduction && (
+										{s && (
+											<div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1 text-xs sm:grid-cols-3">
 												<div>
-													<span className="text-muted-foreground">
-														Reduktion
-													</span>{" "}
+													<span className="text-muted-foreground">Mittel</span>{" "}
 													<span className="tabular-nums font-medium">
-														{s.reduction.returned_points}/
-														{s.reduction.original_points}
+														{fmtNumber(s.mean)}
 													</span>{" "}
-													({s.reduction.method})
+													{s.unit}
 												</div>
-											)}
-										</div>
-									)}
-								</AccordionContent>
-							</AccordionItem>
-						</Accordion>
+												<div>
+													<span className="text-muted-foreground">Min</span>{" "}
+													<span className="tabular-nums font-medium">
+														{fmtNumber(s.min)}
+													</span>{" "}
+													{s.unit}
+												</div>
+												<div>
+													<span className="text-muted-foreground">Max</span>{" "}
+													<span className="tabular-nums font-medium">
+														{fmtNumber(s.max)}
+													</span>{" "}
+													{s.unit}
+												</div>
+												<div>
+													<span className="text-muted-foreground">StdAbw</span>{" "}
+													<span className="tabular-nums font-medium">
+														{fmtNumber(s.stddev)}
+													</span>
+												</div>
+												<div>
+													<span className="text-muted-foreground">Punkte</span>{" "}
+													<span className="tabular-nums font-medium">
+														{s.count_valid}/{s.count_total}
+													</span>
+												</div>
+												{s.reduction && (
+													<div>
+														<span className="text-muted-foreground">
+															Reduktion
+														</span>{" "}
+														<span className="tabular-nums font-medium">
+															{s.reduction.returned_points}/
+															{s.reduction.original_points}
+														</span>{" "}
+														({s.reduction.method})
+													</div>
+												)}
+											</div>
+										)}
+									</AccordionContent>
+								</AccordionItem>
+							</Accordion>
+							{idx < entries.filter(isTimeSeriesEntry).length - 1 && (
+								<Separator />
+							)}
+						</>
 					);
 				}
 
