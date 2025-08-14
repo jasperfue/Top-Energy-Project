@@ -5,8 +5,10 @@ from typing import List
 
 import jsonschema
 from ..core.config import get_tepy_configuration
-from ..core.utils import project_schema, load_and_update_project, read_json, fetch_value
 from fastapi import APIRouter, HTTPException
+
+from ..services.data_fetcher import load_and_update_project, fetch_value
+from ..utils.read_project_config_json import project_schema, read_json
 
 router = APIRouter()
 
