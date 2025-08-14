@@ -22,5 +22,5 @@ function Project() {
 	const { projectName } = Route.useParams();
 	const { data } = useQuery(projectQueryOptions(projectName));
 	console.log(data);
-	return <div>Hello "/projects/$projectName"!</div>;
+	return <pre>{JSON.stringify(data, null, 2)}</pre>;
 }
