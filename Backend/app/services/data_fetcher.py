@@ -7,7 +7,7 @@ import tepyapi
 from tepyapi import models, apis, Configuration
 
 from ..core.config import MAX_TS_POINTS
-from ..utils.timeseries import process_timeseries_payload, is_timeseries
+from ..utils.timeseries import process_timeseries_payload, detect_value_kind
 from ..utils.to_jsonable import to_jsonable
 
 log = logging.getLogger('uvicorn.error')
@@ -49,16 +49,18 @@ def fetch_value(component: str, variable: str, configuration: Configuration) -> 
         with tepyapi.ApiClient(configuration) as api_client:
             data_api = apis.EfDataManagementApi(api_client)
             res = data_api.get_data_from_component(f"Ist-Fall.eSim.Scheme.{component}", variable)
+
+            value_type = detect_value_kind(res)
             payload: Dict[str, Any] = to_jsonable(res)
 
-            if is_timeseries(res):
-                return process_timeseries_payload(payload, max_points=MAX_TS_POINTS)
+            if value_type == "time_series_value":
+                payload = process_timeseries_payload(payload, max_points=MAX_TS_POINTS)
 
-            return payload
+            return {"type": value_type, "value": payload}
 
     except tepyapi.ApiException as e:
-        log.error("Wertabfrage fehlgeschlagen | component=%s variable=%s | %s", component, variable, e)
-        return None
+        log.error("Fetch failed | component=%s variable=%s | %s", component, variable, e)
     except Exception:
-        log.exception("Unerwarteter Fehler bei Wertabfrage | component=%s variable=%s", component, variable)
-        return None
+        log.exception("Unexpected error | component=%s variable=%s", component, variable)
+
+    return {"type": "unknown", "value": None}

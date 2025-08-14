@@ -8,7 +8,6 @@ from typing import Any, Dict, List, Optional, Tuple
 from math import floor
 
 from tepyapi.model.data_value_object import DataValueObject
-from tepyapi.model.data_value_time_series import DataValueTimeSeries
 
 log = logging.getLogger('uvicorn.error')
 
@@ -31,11 +30,11 @@ def _parse_ts_point(p: Dict[str, Any]) -> Optional[TSPoint]:
         return None
 
 
-def is_timeseries(obj: DataValueObject) -> bool:
-    tsv = getattr(obj, "time_series_value", None)
-    if DataValueTimeSeries and isinstance(tsv, DataValueTimeSeries):
-        return True
-    return False
+def detect_value_kind(obj: DataValueObject) -> str:
+    for attr_name, types in obj.openapi_types.items():
+        if isinstance(getattr(obj, attr_name, None), types):
+            return attr_name
+    return "unknown"
 
 
 def _median(seq: List[float]) -> Optional[float]:
@@ -104,7 +103,6 @@ def lttb_downsample(points: List[TSPoint], threshold: int) -> List[TSPoint]:
 
 
 def process_timeseries_payload(payload: Dict[str, Any], max_points: int = 400) -> Dict[str, Any]:
-    log.info("Processing timeseries payload %s", str(payload)[:100])
     tsv = payload["time_series_value"]
     points = [_parse_ts_point(p) for p in tsv.get("value_list", [])]
     points = [p for p in points if p is not None]

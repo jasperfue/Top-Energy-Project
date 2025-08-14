@@ -81,7 +81,7 @@ async def get_project(project_name: str):
 
         def runner(args):
             comp, var_name, var_ref = args
-            var_ref["value"] = fetch_value(comp, var_name, configuration)
+            var_ref.update(fetch_value(comp, var_name, configuration))
 
         log.info("Fetching values for %d components", len(requests))
         await asyncio.gather(*[
