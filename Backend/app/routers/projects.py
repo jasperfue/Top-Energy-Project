@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import List
@@ -9,6 +10,8 @@ from fastapi import APIRouter, HTTPException
 
 from ..services.data_fetcher import load_and_update_project, fetch_value
 from ..utils.read_project_config_json import project_schema, read_json
+
+log = logging.getLogger('uvicorn.error')
 
 router = APIRouter()
 
@@ -80,6 +83,7 @@ async def get_project(project_name: str):
             comp, var_name, var_ref = args
             var_ref["value"] = fetch_value(comp, var_name, configuration)
 
+        log.info("Fetching values for %d components", len(requests))
         await asyncio.gather(*[
             loop.run_in_executor(values_executor, runner, r) for r in requests
         ])

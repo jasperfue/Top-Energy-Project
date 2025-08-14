@@ -3,6 +3,7 @@ from functools import lru_cache
 import tepyapi
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+
 class Settings(BaseSettings):
     top_energy_username: str
     top_energy_password: str
@@ -11,9 +12,11 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=False)
 
+
 @lru_cache()
 def get_settings() -> Settings:
     return Settings()  # type: ignore
+
 
 @lru_cache()
 def get_tepy_configuration():
@@ -23,3 +26,6 @@ def get_tepy_configuration():
         password=settings.top_energy_password,
         host=settings.top_energy_host,
     )
+
+
+MAX_TS_POINTS = 100

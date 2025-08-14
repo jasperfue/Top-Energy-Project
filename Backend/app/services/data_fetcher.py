@@ -1,10 +1,13 @@
 import logging
 import time
 from pathlib import Path
+from typing import Dict, Any, Optional
 
 import tepyapi
-from tepyapi import models, apis
+from tepyapi import models, apis, Configuration
 
+from ..core.config import MAX_TS_POINTS
+from ..utils.timeseries import process_timeseries_payload, is_timeseries
 from ..utils.to_jsonable import to_jsonable
 
 log = logging.getLogger('uvicorn.error')
@@ -18,7 +21,7 @@ def wait_for_api_finished(api, interval=0.5, backoff=1.2, max_interval=5.0):
         next_wait = min(next_wait * backoff, max_interval)
 
 
-def load_and_update_project(project_path: Path, configuration):
+def load_and_update_project(project_path: Path, configuration: Configuration):
     """Blocking routine that loads and updates the project.
     Runs in a thread so that the event loop remains free."""
     with tepyapi.ApiClient(configuration) as api_client:
@@ -41,12 +44,18 @@ def load_and_update_project(project_path: Path, configuration):
         return update_messages
 
 
-def fetch_value(component: str, variable: str, configuration: tepyapi.Configuration):
+def fetch_value(component: str, variable: str, configuration: Configuration) -> Optional[Dict[str, Any]]:
     try:
         with tepyapi.ApiClient(configuration) as api_client:
             data_api = apis.EfDataManagementApi(api_client)
             res = data_api.get_data_from_component(f"Ist-Fall.eSim.Scheme.{component}", variable)
-            return to_jsonable(res)
+            payload: Dict[str, Any] = to_jsonable(res)
+
+            if is_timeseries(res):
+                return process_timeseries_payload(payload, max_points=MAX_TS_POINTS)
+
+            return payload
+
     except tepyapi.ApiException as e:
         log.error("Wertabfrage fehlgeschlagen | component=%s variable=%s | %s", component, variable, e)
         return None
