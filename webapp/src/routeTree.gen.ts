@@ -9,12 +9,48 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ThanksRouteImport } from './routes/thanks'
+import { Route as ScenarioRouteImport } from './routes/scenario'
+import { Route as QuestionnaireRouteImport } from './routes/questionnaire'
+import { Route as IntroRouteImport } from './routes/intro'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PrototypeDashboardRouteImport } from './routes/prototype/dashboard'
+import { Route as PrototypeChatRouteImport } from './routes/prototype/chat'
 import { Route as ProjectsProjectNameRouteImport } from './routes/projects.$projectName'
 
+const ThanksRoute = ThanksRouteImport.update({
+  id: '/thanks',
+  path: '/thanks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScenarioRoute = ScenarioRouteImport.update({
+  id: '/scenario',
+  path: '/scenario',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuestionnaireRoute = QuestionnaireRouteImport.update({
+  id: '/questionnaire',
+  path: '/questionnaire',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntroRoute = IntroRouteImport.update({
+  id: '/intro',
+  path: '/intro',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrototypeDashboardRoute = PrototypeDashboardRouteImport.update({
+  id: '/prototype/dashboard',
+  path: '/prototype/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrototypeChatRoute = PrototypeChatRouteImport.update({
+  id: '/prototype/chat',
+  path: '/prototype/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProjectsProjectNameRoute = ProjectsProjectNameRouteImport.update({
@@ -25,37 +61,128 @@ const ProjectsProjectNameRoute = ProjectsProjectNameRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/intro': typeof IntroRoute
+  '/questionnaire': typeof QuestionnaireRoute
+  '/scenario': typeof ScenarioRoute
+  '/thanks': typeof ThanksRoute
   '/projects/$projectName': typeof ProjectsProjectNameRoute
+  '/prototype/chat': typeof PrototypeChatRoute
+  '/prototype/dashboard': typeof PrototypeDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/intro': typeof IntroRoute
+  '/questionnaire': typeof QuestionnaireRoute
+  '/scenario': typeof ScenarioRoute
+  '/thanks': typeof ThanksRoute
   '/projects/$projectName': typeof ProjectsProjectNameRoute
+  '/prototype/chat': typeof PrototypeChatRoute
+  '/prototype/dashboard': typeof PrototypeDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/intro': typeof IntroRoute
+  '/questionnaire': typeof QuestionnaireRoute
+  '/scenario': typeof ScenarioRoute
+  '/thanks': typeof ThanksRoute
   '/projects/$projectName': typeof ProjectsProjectNameRoute
+  '/prototype/chat': typeof PrototypeChatRoute
+  '/prototype/dashboard': typeof PrototypeDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/projects/$projectName'
+  fullPaths:
+    | '/'
+    | '/intro'
+    | '/questionnaire'
+    | '/scenario'
+    | '/thanks'
+    | '/projects/$projectName'
+    | '/prototype/chat'
+    | '/prototype/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/projects/$projectName'
-  id: '__root__' | '/' | '/projects/$projectName'
+  to:
+    | '/'
+    | '/intro'
+    | '/questionnaire'
+    | '/scenario'
+    | '/thanks'
+    | '/projects/$projectName'
+    | '/prototype/chat'
+    | '/prototype/dashboard'
+  id:
+    | '__root__'
+    | '/'
+    | '/intro'
+    | '/questionnaire'
+    | '/scenario'
+    | '/thanks'
+    | '/projects/$projectName'
+    | '/prototype/chat'
+    | '/prototype/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  IntroRoute: typeof IntroRoute
+  QuestionnaireRoute: typeof QuestionnaireRoute
+  ScenarioRoute: typeof ScenarioRoute
+  ThanksRoute: typeof ThanksRoute
   ProjectsProjectNameRoute: typeof ProjectsProjectNameRoute
+  PrototypeChatRoute: typeof PrototypeChatRoute
+  PrototypeDashboardRoute: typeof PrototypeDashboardRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/thanks': {
+      id: '/thanks'
+      path: '/thanks'
+      fullPath: '/thanks'
+      preLoaderRoute: typeof ThanksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scenario': {
+      id: '/scenario'
+      path: '/scenario'
+      fullPath: '/scenario'
+      preLoaderRoute: typeof ScenarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/questionnaire': {
+      id: '/questionnaire'
+      path: '/questionnaire'
+      fullPath: '/questionnaire'
+      preLoaderRoute: typeof QuestionnaireRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/intro': {
+      id: '/intro'
+      path: '/intro'
+      fullPath: '/intro'
+      preLoaderRoute: typeof IntroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prototype/dashboard': {
+      id: '/prototype/dashboard'
+      path: '/prototype/dashboard'
+      fullPath: '/prototype/dashboard'
+      preLoaderRoute: typeof PrototypeDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prototype/chat': {
+      id: '/prototype/chat'
+      path: '/prototype/chat'
+      fullPath: '/prototype/chat'
+      preLoaderRoute: typeof PrototypeChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/projects/$projectName': {
@@ -70,7 +197,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  IntroRoute: IntroRoute,
+  QuestionnaireRoute: QuestionnaireRoute,
+  ScenarioRoute: ScenarioRoute,
+  ThanksRoute: ThanksRoute,
   ProjectsProjectNameRoute: ProjectsProjectNameRoute,
+  PrototypeChatRoute: PrototypeChatRoute,
+  PrototypeDashboardRoute: PrototypeDashboardRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
