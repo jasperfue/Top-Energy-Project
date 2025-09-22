@@ -7,8 +7,8 @@ import {
 } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
 import {
-	type IOEntry,
 	fmtNumber,
+	type IOEntry,
 	isNumberEntry,
 	isTimeSeriesEntry,
 } from "@/types/projectDataTypes.ts";

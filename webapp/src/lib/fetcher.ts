@@ -31,7 +31,7 @@ export async function fetcher<T = unknown>(
 		} else {
 			try {
 				parsed = JSON.parse(text);
-			} catch (e) {
+			} catch {
 				parsed = text;
 			}
 		}
