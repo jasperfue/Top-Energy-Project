@@ -1,3 +1,7 @@
+import { useQueryErrorResetBoundary } from "@tanstack/react-query";
+import { useRouter } from "@tanstack/react-router";
+import { AlertCircle } from "lucide-react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import {
 	Card,
@@ -6,10 +10,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card.tsx";
-import { useQueryErrorResetBoundary } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
-import { AlertCircle } from "lucide-react";
-import { useEffect } from "react";
 
 export default function ErrorPage(error: Error) {
 	const router = useRouter();

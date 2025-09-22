@@ -1,8 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
 import ElementCardsWithCharts from "@/components/ElementCardsWithCharts.tsx";
 import { createQueryOptions } from "@/lib/query.ts";
 import type { ProjectData } from "@/types/projectDataTypes.ts";
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
 
 const projectQueryOptions = (projectName: string) =>
 	createQueryOptions<ProjectData>(

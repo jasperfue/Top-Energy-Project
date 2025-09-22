@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+import { BarChart3, Factory, Gauge } from "lucide-react";
 import IOSection from "@/components/IOSection.tsx";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -14,12 +16,12 @@ import {
 	TabsTrigger,
 } from "@/components/ui/tabs.tsx";
 import type { ProjectData } from "@/types/projectDataTypes.ts";
-import { motion } from "framer-motion";
-import { BarChart3, Factory, Gauge } from "lucide-react";
 
 export default function ElementCardsWithCharts({
 	data,
-}: { data: ProjectData }) {
+}: {
+	data: ProjectData;
+}) {
 	return (
 		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 			{data.elements.map((el) => (

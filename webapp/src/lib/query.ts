@@ -1,5 +1,5 @@
-import { type UseQueryOptions, queryOptions } from "@tanstack/react-query";
 import type { QueryKey } from "@tanstack/react-query";
+import { queryOptions, type UseQueryOptions } from "@tanstack/react-query";
 import { fetcher } from "./fetcher";
 
 export function createQueryOptions<T>(

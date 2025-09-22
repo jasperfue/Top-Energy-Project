@@ -1,10 +1,10 @@
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import {
 	type ChartConfig,
 	ChartContainer,
 	ChartTooltip,
 	ChartTooltipContent,
 } from "@/components/ui/chart";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 export type TimeSeriesPoint = { date: string; value: number };
 
