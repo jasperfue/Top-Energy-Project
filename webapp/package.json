@@ -53,5 +53,5 @@
 	"overrides": {
 		"@tanstack/react-router": "^1.121.2"
 	},
-	"packageManager": "pnpm@10.12.1"
+	"packageManager": "pnpm@10.17.0"
 }
