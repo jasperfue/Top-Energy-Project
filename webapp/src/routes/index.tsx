@@ -1,7 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import logo from "../logo.svg";
-import "../App.css";
 import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { FileBox } from "lucide-react";
 import {
 	Card,
@@ -11,6 +9,7 @@ import {
 } from "@/components/ui/card.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { createQueryOptions } from "@/lib/query.ts";
+import logo from "../logo.svg";
 
 type Projects = {
 	projects: string[];
