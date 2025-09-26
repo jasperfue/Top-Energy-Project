@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     top_energy_password: str
     top_energy_host: str
     allowed_origins: str
+    xai_api_key: str
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=False)
 

@@ -5,10 +5,12 @@ from contextlib import asynccontextmanager
 from .core.config import (get_settings)
 from .core.auth import login, logout
 from .routers import projects
+from .routers.chat import test_custom_agent
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    test_custom_agent()
     login()
     yield
     logout()
