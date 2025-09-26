@@ -13,7 +13,7 @@ def login():
         with tepyapi.ApiClient(cfg) as client:
             api = apis.EfUserManagementApi(client)
             log.info("🔑 Logging in …")
-            cfg.api_key["api_key"] = api.login(lang="de")
+            cfg.api_key["api_key"] = api.login()
             log.info("✅ Login OK")
     except ApiException as e:
         log.error("🚨 Login failed: %s – %s", e.status, e.reason, exc_info=True)

@@ -66,7 +66,7 @@ requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.12" },
     { name = "jsonschema", specifier = ">=4.25.0" },
     { name = "pydantic-settings", specifier = ">=2.9.1" },
-    { name = "tepyapi", path = "top_energy/tepyapi-3.3.2.7-py3-none-any.whl" },
+    { name = "tepyapi", path = "top_energy/tepyapi-3.4.0.195-py3-none-any.whl" },
 ]
 
 [package.metadata.requires-dev]
@@ -733,14 +733,14 @@ wheels = [
 
 [[package]]
 name = "tepyapi"
-version = "3.3.2.7"
-source = { path = "top_energy/tepyapi-3.3.2.7-py3-none-any.whl" }
+version = "3.4.0.195"
+source = { path = "top_energy/tepyapi-3.4.0.195-py3-none-any.whl" }
 dependencies = [
     { name = "python-dateutil" },
     { name = "urllib3" },
 ]
 wheels = [
-    { filename = "tepyapi-3.3.2.7-py3-none-any.whl", hash = "sha256:2a990c1ada9c3ba3f2d4352a7d4c5eacf70bc627221cd72723d80ab79d2cca8b" },
+    { filename = "tepyapi-3.4.0.195-py3-none-any.whl", hash = "sha256:c59a568a3e5c699defb39e61433692e83eb30b58ea7250e45016ab1cef0ee078" },
 ]
 
 [package.metadata]

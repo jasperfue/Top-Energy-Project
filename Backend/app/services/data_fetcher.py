@@ -48,7 +48,7 @@ def fetch_value(component: str, variable: str, configuration: Configuration) -> 
     try:
         with tepyapi.ApiClient(configuration) as api_client:
             data_api = apis.EfDataManagementApi(api_client)
-            res = data_api.get_data_from_component(f"Ist-Fall.eSim.Scheme.{component}", variable)
+            res = data_api.get_data_from_component(variable, path=f"Ist-Fall.eSim.Scheme.{component}")
 
             value_type = detect_value_kind(res)
             payload: Dict[str, Any] = to_jsonable(res)
