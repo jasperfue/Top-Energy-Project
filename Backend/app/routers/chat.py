@@ -26,9 +26,12 @@ agent = create_react_agent(
 def test_custom_agent():
     """Test custom agent."""
     assert agent is not None
-    agent_result = agent.invoke(
-        {"messages": [{"role": "user", "content": "what is the weather in sf"}]}
-    )
-    log.info(agent_result)
+    for token, metadata in agent.stream(
+            {"messages": [{"role": "user", "content": "what is the weather in sf"}]},
+            stream_mode="messages"
+    ):
+        if "agent" in metadata["langgraph_checkpoint_ns"]:
+            log.info(f"token: {token}")
+            log.info(f"metadata: {metadata}")
 
 # Run the agent
