@@ -8,6 +8,9 @@ dependencies = [
     "aiofiles>=24.1.0",
     "fastapi[standard]>=0.115.12",
     "jsonschema>=4.25.0",
+    "langchain>=0.3.27",
+    "langchain-xai>=0.2.5",
+    "langgraph>=0.6.7",
     "pydantic-settings>=2.9.1",
     "tepyapi",
 ]
