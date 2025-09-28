@@ -10,13 +10,19 @@ import {
 	PromptInputTextarea,
 } from "@/components/ui/prompt-input";
 
-export function PromptInputComponent() {
+export function PromptInputComponent({
+	onSubmit,
+}: {
+	onSubmit: (value: string) => void;
+}) {
 	const inputRef = useRef<HTMLTextAreaElement | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmit = () => {
+		if (isLoading) return;
 		if (!inputRef.current) return;
-		console.log("submit: ", inputRef.current.value);
+		onSubmit(inputRef.current.value);
+		inputRef.current.value = "";
 		setIsLoading(true);
 		setTimeout(() => {
 			setIsLoading(false);
