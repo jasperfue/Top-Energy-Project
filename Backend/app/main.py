@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from .core.config import (get_settings)
 from .core.auth import login, logout
 from .routers import projects
+from .routers import chat
 
 
 @asynccontextmanager
@@ -33,3 +34,4 @@ async def root():
 
 
 app.include_router(projects.router, prefix="/api", tags=["api"])
+app.include_router(chat.router, prefix="/api", tags=["api"])
