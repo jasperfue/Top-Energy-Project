@@ -1,3 +1,5 @@
+import json
+
 from fastapi import APIRouter
 from langgraph.prebuilt import create_react_agent
 from langchain.chat_models import init_chat_model
@@ -37,7 +39,7 @@ def prompt_agent(prompt: str):
             stream_mode="messages"
     ):
         log.info(f"token: {token}")
-        yield token
+        yield token.text()
 
 
 class UserPrompt(BaseModel):
