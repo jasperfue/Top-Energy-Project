@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 import { Markdown } from "./markdown"
+import type { ReactNode } from "react";
 
 export type MessageProps = {
   children: React.ReactNode
@@ -22,7 +23,7 @@ const Message = ({ children, className, ...props }: MessageProps) => (
 export type MessageAvatarProps = {
   src: string
   alt: string
-  fallback?: string
+  fallback?: ReactNode
   delayMs?: number
   className?: string
 }
@@ -58,7 +59,7 @@ const MessageContent = ({
   ...props
 }: MessageContentProps) => {
   const classNames = cn(
-    "rounded-lg p-2 text-foreground bg-secondary prose break-words whitespace-normal",
+    "rounded-lg p-2 text-foreground bg-secondary prose break-words whitespace-normal px-4",
     className
   )
 
