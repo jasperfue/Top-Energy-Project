@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { PromptInputComponent } from "@/components/PromptInput.tsx";
+import { Button } from "@/components/ui/button.tsx";
 
 export const Route = createFileRoute("/prototype/chat")({
 	component: Chat,
@@ -6,18 +8,16 @@ export const Route = createFileRoute("/prototype/chat")({
 
 function Chat() {
 	return (
-		<main className="p-6 space-y-4">
-			<h2 className="text-xl font-semibold">Chat-Prototyp</h2>
-			<div className="space-y-2">
-				<div className="rounded-2xl border p-3 w-fit">Empfehlung: Option A</div>
-				<div className="rounded-2xl border p-3 w-fit">Begründung 1…</div>
-				<div className="rounded-2xl border p-3 w-fit">Begründung 2…</div>
+		<div className="flex flex-col justify-between h-full">
+			<div className="flex items-center justify-between mb-4">
+				<h2 className="text-xl font-semibold">Chat-Prototyp</h2>
+				<Button asChild>
+					<Link to="/questionnaire" search={{ type: "chat" }}>
+						Weiter zum Fragebogen
+					</Link>
+				</Button>
 			</div>
-			<div className="flex justify-end">
-				<Link to="/questionnaire" search={{ type: "chat" }}>
-					Weiter zum Fragebogen
-				</Link>
-			</div>
-		</main>
+			<PromptInputComponent />
+		</div>
 	);
 }
