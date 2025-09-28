@@ -1,10 +1,12 @@
 import json
 
 from fastapi import APIRouter
-from langgraph.prebuilt import create_react_agent
-from langchain.chat_models import init_chat_model
 import logging
 
+from fastapi import APIRouter
+from langchain.chat_models import init_chat_model
+from langchain_core.messages import message_to_dict
+from langgraph.prebuilt import create_react_agent
 from pydantic import BaseModel
 from starlette.responses import StreamingResponse
 
@@ -32,14 +34,14 @@ agent = create_react_agent(
 
 
 def prompt_agent(prompt: str):
-    """Test custom agent."""
     assert agent is not None
     for token, metadata in agent.stream(
             {"messages": [{"role": "user", "content": prompt}]},
             stream_mode="messages"
     ):
-        log.info(f"token: {token}")
-        yield token.text()
+        log.info(f"token: {message_to_dict(token)}")
+        payload = json.dumps(message_to_dict(token), ensure_ascii=False)
+        yield payload + "\n"
 
 
 class UserPrompt(BaseModel):
@@ -48,4 +50,4 @@ class UserPrompt(BaseModel):
 
 @router.post("/chat")
 def chat(user_prompt: UserPrompt):
-    return StreamingResponse(prompt_agent(user_prompt.content))
+    return StreamingResponse(prompt_agent(user_prompt.content, ), media_type="application/x-ndjson; charset=utf-8")
