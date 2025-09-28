@@ -49,15 +49,26 @@ function RootComponent() {
 		</RootDocument>
 	);
 }
-
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="de">
+		<html lang="de" className="h-full">
 			<head>
 				<HeadContent />
 			</head>
-			<body>
-				{children}
+			<body
+				className="
+          min-h-dvh
+          flex flex-col
+          bg-background text-foreground antialiased
+        "
+				style={{
+					paddingTop: "env(safe-area-inset-top)",
+					paddingBottom: "env(safe-area-inset-bottom)",
+				}}
+			>
+				<main className="flex-1 flex min-h-0">
+					<div className="container mx-auto p-4 sm:p-6 lg:p-8">{children}</div>
+				</main>
 				<TanStackRouterDevtools position="bottom-right" />
 				<ReactQueryDevtools buttonPosition="bottom-left" />
 				<Scripts />
