@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 import { Markdown } from "./markdown"
-import type { ReactNode } from "react";
+import {Children, type ReactNode} from "react";
 
 export type MessageProps = {
   children: React.ReactNode
@@ -46,7 +46,7 @@ const MessageAvatar = ({
 }
 
 export type MessageContentProps = {
-  children: React.ReactNode
+  children: ReactNode
   markdown?: boolean
   className?: string
 } & React.ComponentProps<typeof Markdown> &
@@ -63,14 +63,27 @@ const MessageContent = ({
     className
   )
 
-  return markdown ? (
-    <Markdown className={classNames} {...props}>
-      {children as string}
-    </Markdown>
-  ) : (
-    <div className={classNames} {...props}>
+  if (!markdown) {
+    return( <div className={classNames} {...props}>
       {children}
-    </div>
+    </div>)
+  }
+  const markdownElements = [];
+  const otherElements = []
+  for (const child of Children.toArray(children)) {
+    if (typeof child === "string") {
+        markdownElements.push(child);
+    } else {
+      otherElements.push(child);
+    }
+  }
+  return (
+      <div className={classNames} {...props}>
+        {otherElements}
+        <Markdown>
+          {markdownElements.join("")}
+        </Markdown>
+      </div>
   )
 }
 

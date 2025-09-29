@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { User } from "lucide-react";
 import { nanoid } from "nanoid";
 import { useState } from "react";
+import IncomingMessage from "@/components/IncomingMessage.tsx";
 import { PromptInputComponent } from "@/components/PromptInput.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -30,23 +31,31 @@ function Chat() {
 			...prev,
 			{ id: nanoid(), type: "OutgoingMessage", message: value },
 		]);
+		const incomingId = nanoid();
 		startChat.mutate({
 			prompt: value,
 			onChunk: (t) => {
 				setContent((prev) => {
-					const id = t?.data?.id; // ggf. an deine Struktur anpassen
-					const idx = prev.findIndex((c) => c.id === id);
+					const idx = prev.findIndex(
+						(c) => c.id === incomingId && c.type === "IncomingMessage",
+					);
 
-					if (idx !== -1 && prev[idx].type === "IncomingMessage") {
-						const item = prev[idx];
-						const updated = {
+					if (idx !== -1) {
+						const item = prev[idx] as Extract<
+							MessageType,
+							{ type: "IncomingMessage" }
+						>;
+						const updated: MessageType = {
 							...item,
-							message: [...(item.message ?? []), t],
+							message: [...item.message, t],
 						};
 						return [...prev.slice(0, idx), updated, ...prev.slice(idx + 1)];
 					}
 
-					return [...prev, { type: "IncomingMessage", id, message: [t] }];
+					return [
+						...prev,
+						{ id: incomingId, type: "IncomingMessage", message: [t] },
+					];
 				});
 			},
 		});
@@ -65,20 +74,7 @@ function Chat() {
 			<div className="flex flex-col h-full py-6 gap-4">
 				{content.map((c) =>
 					c.type === "IncomingMessage" ? (
-						<div key={c.id} className="space-y-4">
-							<Message>
-								<MessageAvatar src="" fallback="AI" alt="AI" />
-								<MessageContent
-									markdown
-									className="prose-h2:mt-0! prose-h2:scroll-m-0! dark:prose-invert"
-								>
-									{c.message
-										.filter((m) => m.type === "AIMessageChunk")
-										.map((m) => m.data.content)
-										.join("")}
-								</MessageContent>
-							</Message>
-						</div>
+						<IncomingMessage key={c.id} message={c.message} />
 					) : (
 						<div key={c.id} className="space-y-4 self-end">
 							<Message>
