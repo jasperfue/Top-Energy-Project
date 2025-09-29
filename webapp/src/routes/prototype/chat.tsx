@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { User } from "lucide-react";
 import { nanoid } from "nanoid";
 import { useState } from "react";
-import IncomingMessage from "@/components/IncomingMessage.tsx";
+import { IncomingMessage } from "@/components/IncomingMessage.tsx";
 import { PromptInputComponent } from "@/components/PromptInput.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {

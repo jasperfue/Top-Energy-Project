@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
 	Message,
 	MessageAvatar,
@@ -7,7 +8,7 @@ import { Tool } from "@/components/ui/tool.tsx";
 import type { IncomingMessageChunk } from "@/lib/useChatStream.ts";
 import { useToolStates } from "@/lib/useToolStates.ts";
 
-export default function IncomingMessage({
+function IncomingMessageComponent({
 	message,
 }: {
 	message: IncomingMessageChunk[];
@@ -48,3 +49,7 @@ export default function IncomingMessage({
 		</div>
 	);
 }
+
+const IncomingMessage = memo(IncomingMessageComponent);
+IncomingMessage.displayName = "IncomingMessage";
+export { IncomingMessage };
