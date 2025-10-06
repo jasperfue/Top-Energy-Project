@@ -1,23 +1,115 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { nanoid } from "nanoid";
+import { useRef, useState } from "react";
+import { IncomingMessage } from "@/components/IncomingMessage.tsx";
+import { OutgoingMessage } from "@/components/OutgoingMessage.tsx";
+import { PromptInputComponent } from "@/components/PromptInput.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import {
+	type IncomingMessageChunk,
+	useChatStream,
+} from "@/lib/useChatStream.ts";
 
 export const Route = createFileRoute("/prototype/chat")({
+	ssr: false,
 	component: Chat,
 });
+type MessageType =
+	| { id: string; type: "IncomingMessage"; message: IncomingMessageChunk[] }
+	| { id: string; type: "OutgoingMessage"; message: string };
 
 function Chat() {
+	const startChat = useChatStream();
+	const [content, setContent] = useState<MessageType[]>([]);
+	const [isStreaming, setIsStreaming] = useState(false);
+	const abortRef = useRef<AbortController | null>(null);
+
+	const stopStreaming = () => {
+		abortRef.current?.abort();
+	};
+
+	const handleSubmit = (value: string) => {
+		if (isStreaming) return;
+
+		setContent((prev) => [
+			...prev,
+			{ id: nanoid(), type: "OutgoingMessage", message: value },
+		]);
+
+		const incomingId = nanoid();
+		const controller = new AbortController();
+		abortRef.current = controller;
+		setIsStreaming(true);
+
+		startChat.mutate(
+			{
+				prompt: value,
+				signal: controller.signal,
+				onChunk: (t) => {
+					setContent((prev) => {
+						const idx = prev.findIndex(
+							(c) => c.id === incomingId && c.type === "IncomingMessage",
+						);
+
+						if (idx !== -1) {
+							const item = prev[idx] as Extract<
+								MessageType,
+								{ type: "IncomingMessage" }
+							>;
+							const updated: MessageType = {
+								...item,
+								message: [...item.message, t],
+							};
+							return [...prev.slice(0, idx), updated, ...prev.slice(idx + 1)];
+						}
+
+						return [
+							...prev,
+							{ id: incomingId, type: "IncomingMessage", message: [t] },
+						];
+					});
+				},
+			},
+			{
+				onSettled: () => {
+					setIsStreaming(false);
+					abortRef.current = null;
+				},
+			},
+		);
+	};
 	return (
-		<main className="p-6 space-y-4">
-			<h2 className="text-xl font-semibold">Chat-Prototyp</h2>
-			<div className="space-y-2">
-				<div className="rounded-2xl border p-3 w-fit">Empfehlung: Option A</div>
-				<div className="rounded-2xl border p-3 w-fit">Begründung 1…</div>
-				<div className="rounded-2xl border p-3 w-fit">Begründung 2…</div>
+		<div className="flex flex-col justify-between h-full relative">
+			{/* Header */}
+			<div className="sticky top-0 z-20 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+				<div className="flex items-center justify-between py-3">
+					<h2 className="text-xl font-semibold">Chat-Prototyp</h2>
+					<Button asChild>
+						<Link to="/questionnaire" search={{ type: "chat" }}>
+							Weiter zum Fragebogen
+						</Link>
+					</Button>
+				</div>
 			</div>
-			<div className="flex justify-end">
-				<Link to="/questionnaire" search={{ type: "chat" }}>
-					Weiter zum Fragebogen
-				</Link>
+
+			{/* Scrollable content */}
+			<div className="flex-1 overflow-y-auto py-4 space-y-4">
+				{content.map((c) =>
+					c.type === "IncomingMessage" ? (
+						<IncomingMessage key={c.id} message={c.message} />
+					) : (
+						<OutgoingMessage key={c.id} message={c.message} />
+					),
+				)}
 			</div>
-		</main>
+			{/* Prompt unten */}
+			<div className="sticky bottom-0 z-20 bg-background/80 pb-2 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+				<PromptInputComponent
+					onSubmit={handleSubmit}
+					isLoading={isStreaming}
+					onStop={stopStreaming}
+				/>
+			</div>
+		</div>
 	);
 }
