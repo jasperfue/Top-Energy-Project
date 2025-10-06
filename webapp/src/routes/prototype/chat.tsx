@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { nanoid } from "nanoid";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IncomingMessage } from "@/components/IncomingMessage.tsx";
 import { OutgoingMessage } from "@/components/OutgoingMessage.tsx";
 import { PromptInputComponent } from "@/components/PromptInput.tsx";
@@ -21,39 +21,62 @@ type MessageType =
 function Chat() {
 	const startChat = useChatStream();
 	const [content, setContent] = useState<MessageType[]>([]);
+	const [isStreaming, setIsStreaming] = useState(false);
+	const abortRef = useRef<AbortController | null>(null);
+
+	const stopStreaming = () => {
+		abortRef.current?.abort();
+	};
+
 	const handleSubmit = (value: string) => {
+		if (isStreaming) return;
+
 		setContent((prev) => [
 			...prev,
 			{ id: nanoid(), type: "OutgoingMessage", message: value },
 		]);
+
 		const incomingId = nanoid();
-		startChat.mutate({
-			prompt: value,
-			onChunk: (t) => {
-				setContent((prev) => {
-					const idx = prev.findIndex(
-						(c) => c.id === incomingId && c.type === "IncomingMessage",
-					);
+		const controller = new AbortController();
+		abortRef.current = controller;
+		setIsStreaming(true);
 
-					if (idx !== -1) {
-						const item = prev[idx] as Extract<
-							MessageType,
-							{ type: "IncomingMessage" }
-						>;
-						const updated: MessageType = {
-							...item,
-							message: [...item.message, t],
-						};
-						return [...prev.slice(0, idx), updated, ...prev.slice(idx + 1)];
-					}
+		startChat.mutate(
+			{
+				prompt: value,
+				signal: controller.signal,
+				onChunk: (t) => {
+					setContent((prev) => {
+						const idx = prev.findIndex(
+							(c) => c.id === incomingId && c.type === "IncomingMessage",
+						);
 
-					return [
-						...prev,
-						{ id: incomingId, type: "IncomingMessage", message: [t] },
-					];
-				});
+						if (idx !== -1) {
+							const item = prev[idx] as Extract<
+								MessageType,
+								{ type: "IncomingMessage" }
+							>;
+							const updated: MessageType = {
+								...item,
+								message: [...item.message, t],
+							};
+							return [...prev.slice(0, idx), updated, ...prev.slice(idx + 1)];
+						}
+
+						return [
+							...prev,
+							{ id: incomingId, type: "IncomingMessage", message: [t] },
+						];
+					});
+				},
 			},
-		});
+			{
+				onSettled: () => {
+					setIsStreaming(false);
+					abortRef.current = null;
+				},
+			},
+		);
 	};
 	return (
 		<div className="flex flex-col justify-between h-full relative">
@@ -81,7 +104,11 @@ function Chat() {
 			</div>
 			{/* Prompt unten */}
 			<div className="sticky bottom-0 z-20 bg-background/80 pb-2 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-				<PromptInputComponent onSubmit={handleSubmit} />
+				<PromptInputComponent
+					onSubmit={handleSubmit}
+					isLoading={isStreaming}
+					onStop={stopStreaming}
+				/>
 			</div>
 		</div>
 	);

@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUp, Square } from "lucide-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	PromptInput,
@@ -12,30 +12,35 @@ import {
 
 export function PromptInputComponent({
 	onSubmit,
+	isLoading,
+	onStop,
 }: {
 	onSubmit: (value: string) => void;
+	isLoading: boolean;
+	onStop: () => void;
 }) {
-	const inputRef = useRef<HTMLTextAreaElement | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
+	const [inputValue, setInputValue] = useState("");
 
-	const handleSubmit = () => {
-		if (isLoading) return;
-		if (!inputRef.current) return;
-		onSubmit(inputRef.current.value);
-		inputRef.current.value = "";
-		setIsLoading(true);
-		setTimeout(() => {
-			setIsLoading(false);
-		}, 2000);
+	const handleSendOrStop = () => {
+		if (isLoading) {
+			onStop();
+			return;
+		}
+		const value = inputValue.trim();
+		if (!value) return;
+		onSubmit(value);
+		setInputValue("");
 	};
 
 	return (
 		<PromptInput
+			value={inputValue}
+			onValueChange={setInputValue}
 			isLoading={isLoading}
-			onSubmit={handleSubmit}
+			onSubmit={handleSendOrStop}
 			className="w-full"
 		>
-			<PromptInputTextarea ref={inputRef} placeholder="Ask me anything..." />
+			<PromptInputTextarea placeholder="Ask me anything..." />
 			<PromptInputActions className="justify-end pt-2">
 				<PromptInputAction
 					tooltip={isLoading ? "Stop generation" : "Send message"}
@@ -44,7 +49,7 @@ export function PromptInputComponent({
 						variant="default"
 						size="icon"
 						className="h-8 w-8 rounded-full"
-						onClick={handleSubmit}
+						onClick={handleSendOrStop}
 					>
 						{isLoading ? (
 							<Square className="size-4 fill-current" />
