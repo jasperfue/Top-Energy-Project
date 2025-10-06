@@ -62,16 +62,21 @@ function Chat() {
 	};
 
 	return (
-		<div className="flex flex-col justify-between h-full">
-			<div className="flex items-center justify-between mb-4">
-				<h2 className="text-xl font-semibold">Chat-Prototyp</h2>
-				<Button asChild>
-					<Link to="/questionnaire" search={{ type: "chat" }}>
-						Weiter zum Fragebogen
-					</Link>
-				</Button>
+		<div className="flex flex-col justify-between h-full relative">
+			{/* Header */}
+			<div className="sticky top-0 z-20 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+				<div className="flex items-center justify-between py-3">
+					<h2 className="text-xl font-semibold">Chat-Prototyp</h2>
+					<Button asChild>
+						<Link to="/questionnaire" search={{ type: "chat" }}>
+							Weiter zum Fragebogen
+						</Link>
+					</Button>
+				</div>
 			</div>
-			<div className="flex flex-col h-full py-6 gap-4">
+
+			{/* Scrollable content */}
+			<div className="flex-1 overflow-y-auto py-4 space-y-4">
 				{content.map((c) =>
 					c.type === "IncomingMessage" ? (
 						<IncomingMessage key={c.id} message={c.message} />
@@ -87,7 +92,10 @@ function Chat() {
 					),
 				)}
 			</div>
-			<PromptInputComponent onSubmit={handleSubmit} />
+			{/* Prompt unten */}
+			<div className="sticky bottom-0 z-20 bg-background/80 pb-2 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+				<PromptInputComponent onSubmit={handleSubmit} />
+			</div>
 		</div>
 	);
 }

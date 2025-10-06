@@ -16,7 +16,7 @@ function IncomingMessageComponent({
 	const toolStates = useToolStates(message);
 	console.log(message);
 	return (
-		<div className="space-y-4">
+		<div className="space-y-4 flex justify-start">
 			<Message>
 				<MessageAvatar src="" fallback="AI" alt="AI" />
 				{/*@ts-ignore*/}
