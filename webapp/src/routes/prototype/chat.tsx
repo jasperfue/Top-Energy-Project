@@ -1,15 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { User } from "lucide-react";
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { IncomingMessage } from "@/components/IncomingMessage.tsx";
+import { OutgoingMessage } from "@/components/OutgoingMessage.tsx";
 import { PromptInputComponent } from "@/components/PromptInput.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import {
-	Message,
-	MessageAvatar,
-	MessageContent,
-} from "@/components/ui/message.tsx";
 import {
 	type IncomingMessageChunk,
 	useChatStream,
@@ -60,7 +55,6 @@ function Chat() {
 			},
 		});
 	};
-
 	return (
 		<div className="flex flex-col justify-between h-full relative">
 			{/* Header */}
@@ -81,14 +75,7 @@ function Chat() {
 					c.type === "IncomingMessage" ? (
 						<IncomingMessage key={c.id} message={c.message} />
 					) : (
-						<div key={c.id} className="space-y-4 self-end">
-							<Message>
-								<MessageContent className="prose-h2:mt-0! prose-h2:scroll-m-0! dark:prose-invert">
-									{c.message}
-								</MessageContent>
-								<MessageAvatar src="" fallback={<User />} alt="User" />
-							</Message>
-						</div>
+						<OutgoingMessage key={c.id} message={c.message} />
 					),
 				)}
 			</div>
