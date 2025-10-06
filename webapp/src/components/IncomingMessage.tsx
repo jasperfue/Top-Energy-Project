@@ -14,7 +14,6 @@ function IncomingMessageComponent({
 	message: IncomingMessageChunk[];
 }) {
 	const toolStates = useToolStates(message);
-	console.log(message);
 	return (
 		<div className="space-y-4 flex justify-start">
 			<Message>
