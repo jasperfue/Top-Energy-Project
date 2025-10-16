@@ -10,7 +10,16 @@ export default defineConfig({
 	server: {
 		port: 3000,
 	},
-	plugins: [tsConfigPaths(), tanstackStart(), viteReact(), tailwindcss()],
+	plugins: [
+		tsConfigPaths(),
+		tanstackStart(),
+		viteReact({
+			babel: {
+				plugins: ["babel-plugin-react-compiler"],
+			},
+		}),
+		tailwindcss(),
+	],
 	resolve: {
 		alias: {
 			"@": resolve(__dirname, "./src"),
