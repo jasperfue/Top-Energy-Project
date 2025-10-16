@@ -1,12 +1,11 @@
 import { User } from "lucide-react";
-import { memo } from "react";
 import {
 	Message,
 	MessageAvatar,
 	MessageContent,
 } from "@/components/ui/message.tsx";
 
-function OutgoingMessageComponent({ message }: { message: string }) {
+export function OutgoingMessage({ message }: { message: string }) {
 	return (
 		<div className="space-y-4  flex justify-end">
 			<Message>
@@ -18,7 +17,3 @@ function OutgoingMessageComponent({ message }: { message: string }) {
 		</div>
 	);
 }
-
-const OutgoingMessage = memo(OutgoingMessageComponent);
-OutgoingMessage.displayName = "IncomingMessage";
-export { OutgoingMessage };
