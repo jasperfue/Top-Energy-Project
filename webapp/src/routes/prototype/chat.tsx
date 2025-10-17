@@ -1,83 +1,27 @@
+import { useChat } from "@ai-sdk/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { nanoid } from "nanoid";
-import { useRef, useState } from "react";
-import { IncomingMessage } from "@/components/IncomingMessage.tsx";
-import { OutgoingMessage } from "@/components/OutgoingMessage.tsx";
-import { PromptInputComponent } from "@/components/PromptInput.tsx";
-import { Button } from "@/components/ui/button.tsx";
+import { DefaultChatTransport } from "ai";
 import {
-	type IncomingMessageChunk,
-	useChatStream,
-} from "@/lib/useChatStream.ts";
+	Conversation,
+	ConversationContent,
+	ConversationScrollButton,
+} from "@/components/ai-elements/conversation.tsx";
+import { Message, MessageContent } from "@/components/ai-elements/message.tsx";
+import { Response } from "@/components/ai-elements/response";
+import PromptInputComponent from "@/components/PromptInput.tsx";
+import { Button } from "@/components/ui/button.tsx";
 
 export const Route = createFileRoute("/prototype/chat")({
 	ssr: false,
 	component: Chat,
 });
-type MessageType =
-	| { id: string; type: "IncomingMessage"; message: IncomingMessageChunk[] }
-	| { id: string; type: "OutgoingMessage"; message: string };
 
 function Chat() {
-	const startChat = useChatStream();
-	const [content, setContent] = useState<MessageType[]>([]);
-	const [isStreaming, setIsStreaming] = useState(false);
-	const abortRef = useRef<AbortController | null>(null);
-
-	const stopStreaming = () => {
-		abortRef.current?.abort();
-	};
-
-	const handleSubmit = (value: string) => {
-		if (isStreaming) return;
-
-		setContent((prev) => [
-			...prev,
-			{ id: nanoid(), type: "OutgoingMessage", message: value },
-		]);
-
-		const incomingId = nanoid();
-		const controller = new AbortController();
-		abortRef.current = controller;
-		setIsStreaming(true);
-
-		startChat.mutate(
-			{
-				prompt: value,
-				signal: controller.signal,
-				onChunk: (t) => {
-					setContent((prev) => {
-						const idx = prev.findIndex(
-							(c) => c.id === incomingId && c.type === "IncomingMessage",
-						);
-
-						if (idx !== -1) {
-							const item = prev[idx] as Extract<
-								MessageType,
-								{ type: "IncomingMessage" }
-							>;
-							const updated: MessageType = {
-								...item,
-								message: [...item.message, t],
-							};
-							return [...prev.slice(0, idx), updated, ...prev.slice(idx + 1)];
-						}
-
-						return [
-							...prev,
-							{ id: incomingId, type: "IncomingMessage", message: [t] },
-						];
-					});
-				},
-			},
-			{
-				onSettled: () => {
-					setIsStreaming(false);
-					abortRef.current = null;
-				},
-			},
-		);
-	};
+	const { messages, sendMessage, status } = useChat({
+		transport: new DefaultChatTransport({
+			api: "/api/chat",
+		}),
+	});
 	return (
 		<div className="flex flex-col justify-between h-full relative">
 			{/* Header */}
@@ -93,22 +37,34 @@ function Chat() {
 			</div>
 
 			{/* Scrollable content */}
-			<div className="flex-1 overflow-y-auto py-4 space-y-4">
-				{content.map((c) =>
-					c.type === "IncomingMessage" ? (
-						<IncomingMessage key={c.id} message={c.message} />
-					) : (
-						<OutgoingMessage key={c.id} message={c.message} />
-					),
-				)}
+			<div className="flex flex-col h-full">
+				<Conversation>
+					<ConversationContent>
+						{messages.map((message) => (
+							<Message from={message.role} key={message.id}>
+								<MessageContent>
+									{message.parts.map((part, i) => {
+										switch (part.type) {
+											case "text": // we don't use any reasoning or tool calls in this example
+												return (
+													<Response key={`${message.id}-${i}`}>
+														{part.text}
+													</Response>
+												);
+											default:
+												return null;
+										}
+									})}
+								</MessageContent>
+							</Message>
+						))}
+					</ConversationContent>
+					<ConversationScrollButton />
+				</Conversation>
 			</div>
 			{/* Prompt unten */}
 			<div className="sticky bottom-0 z-20 bg-background/80 pb-2 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-				<PromptInputComponent
-					onSubmit={handleSubmit}
-					isLoading={isStreaming}
-					onStop={stopStreaming}
-				/>
+				<PromptInputComponent sendMessage={sendMessage} status={status} />
 			</div>
 		</div>
 	);
