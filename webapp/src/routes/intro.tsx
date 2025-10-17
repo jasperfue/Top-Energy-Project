@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
@@ -11,6 +11,7 @@ export const Route = createFileRoute("/intro")({
 function Intro() {
 	const nav = useNavigate();
 	const [consent, setConsent] = useState(false);
+	const checkboxId = useId();
 
 	return (
 		<main className="mx-auto max-w-2xl p-6 space-y-6">
@@ -22,8 +23,9 @@ function Intro() {
 				Kontakt, Widerruf etc.
 			</p>
 			<Separator />
-			<label className="flex items-start gap-3">
+			<label htmlFor={checkboxId} className="flex items-start gap-3">
 				<Checkbox
+					id={checkboxId}
 					checked={consent}
 					onCheckedChange={(v) => setConsent(Boolean(v))}
 				/>
