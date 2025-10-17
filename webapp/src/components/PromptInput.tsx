@@ -1,62 +1,59 @@
-import { ArrowUp, Square } from "lucide-react";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import type { useChat } from "@ai-sdk/react";
+import type { ChatStatus } from "ai";
+import { useRef, useState } from "react";
 import {
 	PromptInput,
-	PromptInputAction,
-	PromptInputActions,
+	PromptInputBody,
+	PromptInputFooter,
+	type PromptInputMessage,
+	PromptInputSpeechButton,
+	PromptInputSubmit,
 	PromptInputTextarea,
-} from "@/components/ui/prompt-input";
+	PromptInputTools,
+} from "@/components/ai-elements/prompt-input.tsx";
 
-export function PromptInputComponent({
-	onSubmit,
-	isLoading,
-	onStop,
-}: {
-	onSubmit: (value: string) => void;
-	isLoading: boolean;
-	onStop: () => void;
-}) {
-	const [inputValue, setInputValue] = useState("");
+type PromptInputComponentProps = {
+	status: ChatStatus;
+	sendMessage: ReturnType<typeof useChat>["sendMessage"];
+};
 
-	const handleSendOrStop = () => {
-		if (isLoading) {
-			onStop();
+const PromptInputComponent = ({
+	status,
+	sendMessage,
+}: PromptInputComponentProps) => {
+	const [text, setText] = useState("");
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+	const handleSubmit = (message: PromptInputMessage) => {
+		const hasText = Boolean(message.text);
+
+		if (!hasText) {
 			return;
 		}
-		const value = inputValue.trim();
-		if (!value) return;
-		onSubmit(value);
-		setInputValue("");
+		void sendMessage({ text });
+		setText("");
 	};
 
 	return (
-		<PromptInput
-			value={inputValue}
-			onValueChange={setInputValue}
-			isLoading={isLoading}
-			onSubmit={handleSendOrStop}
-			className="w-full"
-		>
-			<PromptInputTextarea placeholder="Ask me anything..." />
-			<PromptInputActions className="justify-end pt-2">
-				<PromptInputAction
-					tooltip={isLoading ? "Stop generation" : "Send message"}
-				>
-					<Button
-						variant="default"
-						size="icon"
-						className="h-8 w-8 rounded-full"
-						onClick={handleSendOrStop}
-					>
-						{isLoading ? (
-							<Square className="size-4 fill-current" />
-						) : (
-							<ArrowUp className="size-5" />
-						)}
-					</Button>
-				</PromptInputAction>
-			</PromptInputActions>
+		<PromptInput onSubmit={handleSubmit} className="mt-4" globalDrop multiple>
+			<PromptInputBody>
+				<PromptInputTextarea
+					onChange={(e) => setText(e.target.value)}
+					ref={textareaRef}
+					value={text}
+				/>
+			</PromptInputBody>
+			<PromptInputFooter>
+				<PromptInputTools>
+					<PromptInputSpeechButton
+						onTranscriptionChange={setText}
+						textareaRef={textareaRef}
+					/>
+				</PromptInputTools>
+				<PromptInputSubmit disabled={!text && !status} status={status} />
+			</PromptInputFooter>
 		</PromptInput>
 	);
-}
+};
+
+export default PromptInputComponent;
