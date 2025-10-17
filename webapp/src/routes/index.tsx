@@ -1,98 +1,41 @@
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { FileBox } from "lucide-react";
-import {
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card.tsx";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useId, useState } from "react";
+import { Button } from "@/components/ui/button.tsx";
+import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { createQueryOptions } from "@/lib/query.ts";
-import logo from "../logo.svg";
-
-type Projects = {
-	projects: string[];
-};
-const projectsOptions = createQueryOptions<Projects>(
-	["projects"],
-	"/api/projects",
-);
 
 export const Route = createFileRoute("/")({
-	component: App,
-	loader: ({ context: { queryClient } }) =>
-		queryClient.ensureQueryData(projectsOptions),
+	component: Consent,
 });
-function App() {
-	const {
-		data: projects,
-		isLoading,
-		isError,
-		error,
-	} = useQuery(projectsOptions);
+
+function Consent() {
+	const nav = useNavigate();
+	const [consent, setConsent] = useState(false);
+	const checkboxId = useId();
 
 	return (
-		<header className="flex flex-col items-center gap-4 mb-6">
-			<img src={logo} className="h-16 w-16 animate-spin-slow" alt="logo" />
-			<Card className="w-full">
-				<CardHeader>
-					<CardTitle>Deine Projekte</CardTitle>
-				</CardHeader>
-				<CardContent>
-					{isLoading && <p>Lade Projekte…</p>}
-					{isError && (
-						<p className="text-destructive">
-							Fehler beim Laden: {String(error?.message || "Unbekannt")}
-						</p>
-					)}
-					{!isLoading &&
-					!isError &&
-					projects?.projects &&
-					projects.projects.length > 0 ? (
-						<div className="flex flex-col">
-							{projects.projects.map((proj, idx) => (
-								<div key={proj} className="py-2">
-									<Link
-										to="/projects/$projectName"
-										params={{ projectName: encodeURIComponent(proj) }}
-										className="flex gap-2 hover:underline"
-										preload={false}
-									>
-										<FileBox strokeWidth={1.5} />
-										{proj}
-									</Link>
-									{idx < projects.projects.length - 1 && (
-										<div className="my-2">
-											<Separator />
-										</div>
-									)}
-								</div>
-							))}
-						</div>
-					) : (
-						!isLoading && !isError && <p>Keine Projekte gefunden.</p>
-					)}
-				</CardContent>
-			</Card>
-			<div className="flex gap-4 mt-4">
-				<a
-					className="text-sm underline"
-					href="https://reactjs.org"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					Learn React
-				</a>
-				<a
-					className="text-sm underline"
-					href="https://tanstack.com"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					Learn TanStack
-				</a>
+		<main className="mx-auto max-w-2xl p-6 space-y-6">
+			<h1 className="text-2xl font-semibold">
+				Studieninformation & Einwilligung
+			</h1>
+			<p className="text-muted-foreground">
+				Kurzbeschreibung der Studie, Datenerhebung (anonym/pseudonym), Dauer,
+				Kontakt, Widerruf etc.
+			</p>
+			<Separator />
+			<label htmlFor={checkboxId} className="flex items-start gap-3">
+				<Checkbox
+					id={checkboxId}
+					checked={consent}
+					onCheckedChange={(v) => setConsent(Boolean(v))}
+				/>
+				<span>Ich habe die Informationen gelesen und willige ein.</span>
+			</label>
+			<div className="flex justify-end">
+				<Button disabled={!consent} onClick={() => nav({ to: "/scenario" })}>
+					Weiter
+				</Button>
 			</div>
-		</header>
+		</main>
 	);
 }
