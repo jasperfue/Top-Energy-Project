@@ -23,7 +23,10 @@ function Consent() {
 				Kontakt, Widerruf etc.
 			</p>
 			<Separator />
-			<label htmlFor={checkboxId} className="flex items-start gap-3">
+			<label
+				htmlFor={checkboxId}
+				className="flex items-center gap-3 cursor-pointer"
+			>
 				<Checkbox
 					id={checkboxId}
 					checked={consent}
