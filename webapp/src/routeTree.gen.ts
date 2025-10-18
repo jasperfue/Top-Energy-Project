@@ -15,7 +15,6 @@ import { Route as QuestionnaireRouteImport } from './routes/questionnaire'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PrototypeDashboardRouteImport } from './routes/prototype/dashboard'
 import { Route as PrototypeChatRouteImport } from './routes/prototype/chat'
-import { Route as ProjectsProjectNameRouteImport } from './routes/projects.$projectName'
 import { Route as ApiChatRouteImport } from './routes/api.chat'
 
 const ThanksRoute = ThanksRouteImport.update({
@@ -48,11 +47,6 @@ const PrototypeChatRoute = PrototypeChatRouteImport.update({
   path: '/prototype/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProjectsProjectNameRoute = ProjectsProjectNameRouteImport.update({
-  id: '/projects/$projectName',
-  path: '/projects/$projectName',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -65,7 +59,6 @@ export interface FileRoutesByFullPath {
   '/scenario': typeof ScenarioRoute
   '/thanks': typeof ThanksRoute
   '/api/chat': typeof ApiChatRoute
-  '/projects/$projectName': typeof ProjectsProjectNameRoute
   '/prototype/chat': typeof PrototypeChatRoute
   '/prototype/dashboard': typeof PrototypeDashboardRoute
 }
@@ -75,7 +68,6 @@ export interface FileRoutesByTo {
   '/scenario': typeof ScenarioRoute
   '/thanks': typeof ThanksRoute
   '/api/chat': typeof ApiChatRoute
-  '/projects/$projectName': typeof ProjectsProjectNameRoute
   '/prototype/chat': typeof PrototypeChatRoute
   '/prototype/dashboard': typeof PrototypeDashboardRoute
 }
@@ -86,7 +78,6 @@ export interface FileRoutesById {
   '/scenario': typeof ScenarioRoute
   '/thanks': typeof ThanksRoute
   '/api/chat': typeof ApiChatRoute
-  '/projects/$projectName': typeof ProjectsProjectNameRoute
   '/prototype/chat': typeof PrototypeChatRoute
   '/prototype/dashboard': typeof PrototypeDashboardRoute
 }
@@ -98,7 +89,6 @@ export interface FileRouteTypes {
     | '/scenario'
     | '/thanks'
     | '/api/chat'
-    | '/projects/$projectName'
     | '/prototype/chat'
     | '/prototype/dashboard'
   fileRoutesByTo: FileRoutesByTo
@@ -108,7 +98,6 @@ export interface FileRouteTypes {
     | '/scenario'
     | '/thanks'
     | '/api/chat'
-    | '/projects/$projectName'
     | '/prototype/chat'
     | '/prototype/dashboard'
   id:
@@ -118,7 +107,6 @@ export interface FileRouteTypes {
     | '/scenario'
     | '/thanks'
     | '/api/chat'
-    | '/projects/$projectName'
     | '/prototype/chat'
     | '/prototype/dashboard'
   fileRoutesById: FileRoutesById
@@ -129,7 +117,6 @@ export interface RootRouteChildren {
   ScenarioRoute: typeof ScenarioRoute
   ThanksRoute: typeof ThanksRoute
   ApiChatRoute: typeof ApiChatRoute
-  ProjectsProjectNameRoute: typeof ProjectsProjectNameRoute
   PrototypeChatRoute: typeof PrototypeChatRoute
   PrototypeDashboardRoute: typeof PrototypeDashboardRoute
 }
@@ -178,13 +165,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrototypeChatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/projects/$projectName': {
-      id: '/projects/$projectName'
-      path: '/projects/$projectName'
-      fullPath: '/projects/$projectName'
-      preLoaderRoute: typeof ProjectsProjectNameRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -201,7 +181,6 @@ const rootRouteChildren: RootRouteChildren = {
   ScenarioRoute: ScenarioRoute,
   ThanksRoute: ThanksRoute,
   ApiChatRoute: ApiChatRoute,
-  ProjectsProjectNameRoute: ProjectsProjectNameRoute,
   PrototypeChatRoute: PrototypeChatRoute,
   PrototypeDashboardRoute: PrototypeDashboardRoute,
 }
