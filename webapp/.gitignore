@@ -6,3 +6,6 @@ dist-ssr
 count.txt
 .env
 .vite
+
+# Local Netlify folder
+.netlify
