@@ -7,12 +7,11 @@ import {
 	ConversationScrollButton,
 } from "@/components/ai-elements/conversation.tsx";
 import { Message, MessageContent } from "@/components/ai-elements/message.tsx";
-import { Response } from "@/components/ai-elements/response";
 import PromptInputComponent from "@/components/PromptInput.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { Markdown } from "@/components/ui/markdown.tsx";
 
 export const Route = createFileRoute("/prototype/chat")({
-	ssr: false,
 	component: Chat,
 });
 
@@ -47,9 +46,9 @@ function Chat() {
 										switch (part.type) {
 											case "text": // we don't use any reasoning or tool calls in this example
 												return (
-													<Response key={`${message.id}-${i}`}>
+													<Markdown key={`${message.id}-${i}`}>
 														{part.text}
-													</Response>
+													</Markdown>
 												);
 											default:
 												return null;
