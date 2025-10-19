@@ -5,8 +5,8 @@
 	"scripts": {
 		"dev": "vite dev",
 		"start": "node .output/server/index.mjs",
-		"prebuild:knowledge": "tsc scripts/build-knowledge.ts --outDir dist/scripts",
-		"build:knowledge": "if [ \"$CI\" = \"true\" ]; then echo '🧠 Running production knowledge build...' && pnpm prebuild:knowledge && node dist/scripts/build-knowledge.js; else echo '💡 Running local tsx knowledge build...' && dotenv -e .env -- tsx scripts/build-knowledge.ts; fi",
+		"build:knowledge-bundle": "esbuild scripts/build-knowledge.ts --platform=node --format=esm --bundle --packages=external --target=node20 --sourcemap --tsconfig=tsconfig.scripts.json --outfile=dist-tools/build-knowledge.mjs",
+		"build:knowledge": "if [ \"$CI\" = \"true\" ]; then pnpm build:knowledge-bundle && node dist-tools/build-knowledge.mjs; else dotenv -e .env -- tsx scripts/build-knowledge.ts; fi",
 		"build": "tsc && vite build && pnpm build:knowledge",
 		"serve": "vite preview",
 		"test": "vitest run",
@@ -40,6 +40,7 @@
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
 		"cmdk": "^1.1.1",
+		"esbuild": "^0.25.11",
 		"lucide-react": "^0.544.0",
 		"marked": "^16.4.1",
 		"nanoid": "^5.1.6",
