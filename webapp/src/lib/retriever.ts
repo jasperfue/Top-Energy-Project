@@ -1,7 +1,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
-import {createOpenAI} from "@ai-sdk/openai";
-import {cosineSimilarity, embed} from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
+import { cosineSimilarity, embed } from "ai";
 
 const EMBED_MODEL = createOpenAI({
 	apiKey: process.env.OPENAI_API_KEY,

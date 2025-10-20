@@ -1,6 +1,6 @@
-import {createFileRoute} from "@tanstack/react-router";
-import {convertToModelMessages, type UIMessage} from "ai";
-import {createRagAgent} from "@/lib/rag-agent.ts";
+import { createFileRoute } from "@tanstack/react-router";
+import { convertToModelMessages, type UIMessage } from "ai";
+import { createRagAgent } from "@/lib/rag-agent.ts";
 
 export const Route = createFileRoute("/api/chat")({
 	server: {

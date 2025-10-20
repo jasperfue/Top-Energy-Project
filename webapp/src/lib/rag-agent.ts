@@ -1,7 +1,7 @@
-import {createXai} from "@ai-sdk/xai";
-import {Experimental_Agent as Agent, stepCountIs, tool} from "ai";
-import {z} from "zod";
-import {retrieveTopK} from "@/lib/retriever"; // Helper to guard empty/whitespace
+import { createXai } from "@ai-sdk/xai";
+import { Experimental_Agent as Agent, stepCountIs, tool } from "ai";
+import { z } from "zod";
+import { retrieveTopK } from "@/lib/retriever";
 
 // Helper to guard empty/whitespace
 const clean = (s: string | undefined | null) => (s ?? "").trim();

@@ -1,8 +1,8 @@
 import * as crypto from "node:crypto";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import {createOpenAI} from "@ai-sdk/openai";
-import {embedMany} from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
+import { embedMany } from "ai";
 
 const KNOWLEDGE_DIR = path.resolve("knowledge");
 const OUTFILE = path.resolve("public/knowledge.index.json");
