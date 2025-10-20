@@ -5,9 +5,8 @@
 	"scripts": {
 		"dev": "vite dev",
 		"start": "node .output/server/index.mjs",
-		"build:knowledge-bundle": "esbuild scripts/build-knowledge.ts --platform=node --format=esm --bundle --packages=external --target=node20 --sourcemap --tsconfig=tsconfig.scripts.json --outfile=dist-tools/build-knowledge.mjs",
-		"build:knowledge": "if [ \"$CI\" = \"true\" ]; then pnpm build:knowledge-bundle && node dist-tools/build-knowledge.mjs; else dotenv -e .env -- tsx scripts/build-knowledge.ts; fi",
-		"build": "tsc && vite build && pnpm build:knowledge",
+		"build:knowledge": "dotenv -e .env -- tsx scripts/build-knowledge.ts",
+		"build": "tsc && vite builde",
 		"serve": "vite preview",
 		"test": "vitest run",
 		"check": "biome check --write"

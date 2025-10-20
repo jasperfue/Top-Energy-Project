@@ -17,7 +17,6 @@ function Chat() {
 			api: "/api/chat",
 		}),
 	});
-	console.log(messages);
 	return (
 		<div className="flex flex-col justify-between h-full relative">
 			{/* Header */}
