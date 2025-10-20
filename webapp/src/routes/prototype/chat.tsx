@@ -1,15 +1,11 @@
-import { useChat } from "@ai-sdk/react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { DefaultChatTransport } from "ai";
-import {
-	Conversation,
-	ConversationContent,
-	ConversationScrollButton,
-} from "@/components/ai-elements/conversation.tsx";
-import { Message, MessageContent } from "@/components/ai-elements/message.tsx";
+import {useChat} from "@ai-sdk/react";
+import {createFileRoute, Link} from "@tanstack/react-router";
+import {DefaultChatTransport} from "ai";
+import {Conversation, ConversationContent, ConversationScrollButton,} from "@/components/ai-elements/conversation.tsx";
+import {Message, MessageContent} from "@/components/ai-elements/message.tsx";
 import PromptInputComponent from "@/components/PromptInput.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import { Markdown } from "@/components/ui/markdown.tsx";
+import {Button} from "@/components/ui/button.tsx";
+import {Markdown} from "@/components/ui/markdown.tsx";
 
 export const Route = createFileRoute("/prototype/chat")({
 	component: Chat,
