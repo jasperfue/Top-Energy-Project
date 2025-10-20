@@ -1,7 +1,7 @@
 import {createXai} from "@ai-sdk/xai";
 import {Experimental_Agent as Agent, stepCountIs, tool} from "ai";
 import {z} from "zod";
-import {retrieveTopK} from "@/lib/retriever";
+import {retrieveTopK} from "@/lib/retriever"; // Helper to guard empty/whitespace
 
 // Helper to guard empty/whitespace
 const clean = (s: string | undefined | null) => (s ?? "").trim();
@@ -15,7 +15,7 @@ export const RAG_SYSTEM_PROMPT = [
 	"When citing, include the source file and chunk index in parentheses — e.g. (source: file.md#2).",
 ].join("\n");
 
-export function createRagAgent() {
+export function createRagAgent(request: Request) {
 	const getInformation = tool({
 		description:
 			"Retrieve relevant knowledge base context. Always pass the user's question as `question`.",
@@ -25,7 +25,7 @@ export function createRagAgent() {
 		execute: async ({ question }) => {
 			const q = clean(question);
 			if (!q) return "(no query provided)";
-			const top = await retrieveTopK(q, 5);
+			const top = await retrieveTopK(q, 5, 0.2, request);
 			if (!top.length) return "(no relevant context)";
 			return top
 				.map(

@@ -3,12 +3,6 @@ import * as path from "node:path";
 import {createOpenAI} from "@ai-sdk/openai";
 import {cosineSimilarity, embed} from "ai";
 
-// 1) zuerst public/ probieren (prod/vercel)
-const PUBLIC_INDEX = path.resolve("public/knowledge.index.json");
-// 2) fallback: root (lokal)
-const ROOT_INDEX = path.resolve("knowledge.index.json");
-
-const INDEX_PATH = fs.existsSync(PUBLIC_INDEX) ? PUBLIC_INDEX : ROOT_INDEX;
 const EMBED_MODEL = createOpenAI({
 	apiKey: process.env.OPENAI_API_KEY,
 }).embedding("text-embedding-3-small");
@@ -23,18 +17,45 @@ type IndexRow = {
 type IndexFile = { model: string; index: IndexRow[] };
 
 let cache: IndexFile | null = null;
-function loadIndex(): IndexFile {
-	if (!cache) cache = JSON.parse(fs.readFileSync(INDEX_PATH, "utf8"));
-	if (!cache) throw new Error("Failed to load index");
-	return cache;
+export async function loadIndex(request?: Request): Promise<IndexFile> {
+	if (cache) return cache;
+
+	const publicPath = path.resolve("public/knowledge.index.json");
+	if (fs.existsSync(publicPath)) {
+		cache = JSON.parse(fs.readFileSync(publicPath, "utf8"));
+		if (!cache) throw new Error("Failed to parse index from public folder.");
+		console.info("Retrieved knowledge index via public path.");
+		return cache;
+	}
+
+	if (request) {
+		const url = new URL("/knowledge.index.json", request.url);
+		const res = await fetch(url.toString());
+		if (!res.ok)
+			throw new Error(`Failed to fetch index: ${res.status} ${res.statusText}`);
+		cache = (await res.json()) as IndexFile;
+		console.info("Retrieved knowledge index via request.");
+		return cache;
+	}
+
+	throw new Error(
+		"knowledge.index.json not found (neither on FS nor via request).",
+	);
 }
 
-export async function retrieveTopK(query: string, k = 5, minScore = 0.2) {
-	const idx = loadIndex();
-	const q = await embed({
-		model: EMBED_MODEL,
-		value: query,
-	});
+export async function retrieveTopK(
+	query: string,
+	k = 5,
+	minScore = 0.2,
+	request?: Request,
+) {
+	const [idx, q] = await Promise.all([
+		loadIndex(request),
+		embed({
+			model: EMBED_MODEL,
+			value: query,
+		}),
+	]);
 	const scored = idx.index
 		.map((row) => ({
 			row,

@@ -11,9 +11,9 @@ export const Route = createFileRoute("/api/chat")({
 						messages: UIMessage[];
 					};
 
-					const agent = createRagAgent();
+					const agent = createRagAgent(request);
 
-					const session = await agent.stream({
+					const session = agent.stream({
 						messages: convertToModelMessages(messages),
 					});
 
