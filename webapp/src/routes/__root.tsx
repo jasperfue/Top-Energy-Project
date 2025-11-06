@@ -10,6 +10,7 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import ErrorPage from "@/components/ErrorPage.tsx";
 import NotFoundPage from "@/components/NotFoundPage.tsx";
+import { getLocale } from "@/paraglide/runtime";
 import { seo } from "@/types/utils.ts";
 import stylesCss from "../styles.css?url";
 
@@ -51,7 +52,7 @@ function RootComponent() {
 }
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="de" className="h-full">
+		<html lang={getLocale()} className="h-full">
 			<head>
 				<HeadContent />
 			</head>
