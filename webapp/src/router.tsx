@@ -2,12 +2,17 @@ import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 import Spinner from "@/components/ui/Spinner.tsx";
+import { deLocalizeUrl, localizeUrl } from "./paraglide/runtime";
 import { routeTree } from "./routeTree.gen";
 
 export function getRouter() {
 	const queryClient = new QueryClient();
 	const router = createRouter({
 		routeTree,
+		rewrite: {
+			input: ({ url }) => deLocalizeUrl(url),
+			output: ({ url }) => localizeUrl(url),
+		},
 		context: { queryClient },
 		defaultPreload: "intent",
 		scrollRestoration: true,

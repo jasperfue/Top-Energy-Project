@@ -25,13 +25,7 @@ export default defineConfig({
 			outdir: "./src/paraglide",
 			outputStructure: "message-modules",
 			cookieName: "PARAGLIDE_LOCALE",
-			strategy: ["url", "cookie", "preferredLanguage", "baseLocale"],
-			urlPatterns: [
-				{
-					pattern: "/:path(.*)?",
-					localized: [["en", "/en/:path(.*)?"]],
-				},
-			],
+			strategy: ["url", "cookie", "baseLocale"],
 		}),
 		tailwindcss(),
 		netlify(),
