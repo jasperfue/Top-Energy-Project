@@ -1,4 +1,5 @@
 import { resolve } from "node:path";
+import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import netlify from "@netlify/vite-plugin-tanstack-start";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
@@ -11,6 +12,12 @@ export default defineConfig({
 	server: {
 		port: 3000,
 	},
+	optimizeDeps: {
+		include: ["react-country-flag"],
+	},
+	ssr: {
+		noExternal: ["react-country-flag"],
+	},
 	plugins: [
 		tsConfigPaths(),
 		tanstackStart(),
@@ -18,6 +25,13 @@ export default defineConfig({
 			babel: {
 				plugins: ["babel-plugin-react-compiler"],
 			},
+		}),
+		paraglideVitePlugin({
+			project: "./project.inlang",
+			outdir: "./src/paraglide",
+			outputStructure: "message-modules",
+			cookieName: "PARAGLIDE_LOCALE",
+			strategy: ["url", "cookie", "baseLocale"],
 		}),
 		tailwindcss(),
 		netlify(),
