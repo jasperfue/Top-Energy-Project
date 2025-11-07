@@ -8,6 +8,7 @@ import {
 } from "@/components/ai-elements/conversation.tsx";
 import { Message, MessageContent } from "@/components/ai-elements/message.tsx";
 import PromptInputComponent from "@/components/PromptInput.tsx";
+import { AITypingBubble } from "@/components/ui/AITypingBubble.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Markdown } from "@/components/ui/markdown.tsx";
 
@@ -34,12 +35,11 @@ function Chat() {
 					</Button>
 				</div>
 			</div>
-
 			{/* Scrollable content */}
 			<div className="flex flex-col h-full">
 				<Conversation>
 					<ConversationContent>
-						{messages.map((message) => (
+						{messages.map((message, index) => (
 							<Message from={message.role} key={message.id}>
 								<MessageContent>
 									{message.parts.map((part, i) => {
@@ -54,6 +54,9 @@ function Chat() {
 												return null;
 										}
 									})}
+									{status === "streaming" && index === messages.length - 1 && (
+										<AITypingBubble />
+									)}
 								</MessageContent>
 							</Message>
 						))}
@@ -61,7 +64,6 @@ function Chat() {
 					<ConversationScrollButton />
 				</Conversation>
 			</div>
-			{/* Prompt unten */}
 			<div className="sticky bottom-0 z-20 bg-background/80 pb-2 backdrop-blur supports-[backdrop-filter]:bg-background/60">
 				<PromptInputComponent sendMessage={sendMessage} status={status} />
 			</div>
