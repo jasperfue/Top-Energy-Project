@@ -79,7 +79,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				}}
 			>
 				<div className="flex-1 flex min-h-0">
-					<div className="container mx-auto p-4 sm:p-6 lg:p-8">{children}</div>
+					<div className="container mx-auto px-4 sm:px-6 lg:px-8">
+						{children}
+					</div>
 				</div>
 				<div className="fixed bottom-4 right-4 z-50">
 					<Select value={getLocale()} onValueChange={setLocale}>

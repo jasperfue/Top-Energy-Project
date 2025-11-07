@@ -23,20 +23,18 @@ function Chat() {
 		}),
 	});
 	return (
-		<div className="flex flex-col justify-between h-full relative">
+		<div className="grid py-4 h-dvh grid-rows-[auto_1fr_auto]">
 			{/* Header */}
-			<div className="sticky top-0 z-20 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-				<div className="flex items-center justify-between py-3">
-					<h2 className="text-xl font-semibold">Chat-Prototyp</h2>
-					<Button asChild>
-						<Link to="/questionnaire" search={{ type: "chat" }}>
-							Weiter zum Fragebogen
-						</Link>
-					</Button>
-				</div>
+			<div className="flex items-center justify-between py-3">
+				<h2 className="text-xl font-semibold">Chat-Prototyp</h2>
+				<Button asChild>
+					<Link to="/questionnaire" search={{ type: "chat" }}>
+						Weiter zum Fragebogen
+					</Link>
+				</Button>
 			</div>
 			{/* Scrollable content */}
-			<div className="flex flex-col h-full">
+			<div className="min-h-0 overflow-y-auto">
 				<Conversation>
 					<ConversationContent>
 						{messages.map((message, index) => (
@@ -54,9 +52,9 @@ function Chat() {
 												return null;
 										}
 									})}
-									{status === "streaming" && index === messages.length - 1 && (
-										<AITypingBubble />
-									)}
+									{status === "streaming" &&
+										index === messages.length - 1 &&
+										message.role === "assistant" && <AITypingBubble />}
 								</MessageContent>
 							</Message>
 						))}
@@ -64,9 +62,7 @@ function Chat() {
 					<ConversationScrollButton />
 				</Conversation>
 			</div>
-			<div className="sticky bottom-0 z-20 bg-background/80 pb-2 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-				<PromptInputComponent sendMessage={sendMessage} status={status} />
-			</div>
+			<PromptInputComponent sendMessage={sendMessage} status={status} />
 		</div>
 	);
 }
