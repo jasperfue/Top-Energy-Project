@@ -3,7 +3,6 @@ import { useId, useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { m } from "@/paraglide/messages.js";
 
 export const Route = createFileRoute("/")({
 	component: Consent,
@@ -16,7 +15,6 @@ function Consent() {
 
 	return (
 		<main className="mx-auto max-w-2xl p-6 space-y-6">
-			<h1>TEST: {m.example_message({ username: "Jasper" })}</h1>
 			<h1 className="text-2xl font-semibold">
 				Studieninformation & Einwilligung
 			</h1>

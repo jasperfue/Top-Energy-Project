@@ -8,9 +8,16 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import ReactCountryFlag from "react-country-flag";
 import ErrorPage from "@/components/ErrorPage.tsx";
 import NotFoundPage from "@/components/NotFoundPage.tsx";
-import { getLocale } from "@/paraglide/runtime";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+} from "@/components/ui/select.tsx";
+import { getLocale, locales, setLocale } from "@/paraglide/runtime";
 import { seo } from "@/types/utils.ts";
 import stylesCss from "../styles.css?url";
 
@@ -50,6 +57,10 @@ function RootComponent() {
 		</RootDocument>
 	);
 }
+
+const getCountryCode = (locale: string) =>
+	locale === "en" ? "GB" : locale.toUpperCase();
+
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang={getLocale()} className="h-full">
@@ -70,7 +81,30 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<div className="flex-1 flex min-h-0">
 					<div className="container mx-auto p-4 sm:p-6 lg:p-8">{children}</div>
 				</div>
-				<TanStackRouterDevtools position="bottom-right" />
+				<div className="fixed bottom-4 right-4 z-50">
+					<Select value={getLocale()} onValueChange={setLocale}>
+						<SelectTrigger>
+							<ReactCountryFlag
+								style={{ width: 20, height: 20 }}
+								svg
+								countryCode={getCountryCode(getLocale())}
+							/>
+						</SelectTrigger>
+
+						<SelectContent>
+							{locales.map((locale) => (
+								<SelectItem key={locale} value={locale}>
+									<ReactCountryFlag
+										svg
+										style={{ width: 20, height: 20 }}
+										countryCode={getCountryCode(locale)}
+									/>
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+				<TanStackRouterDevtools position="top-right" />
 				<ReactQueryDevtools buttonPosition="bottom-left" />
 				<Scripts />
 			</body>
