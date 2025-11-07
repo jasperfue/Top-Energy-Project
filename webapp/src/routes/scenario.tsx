@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { m } from "@/paraglide/messages.js";
 
 export const Route = createFileRoute("/scenario")({
 	component: Scenario,
@@ -18,35 +19,33 @@ function Scenario() {
 
 	return (
 		<main className="mx-auto max-w-3xl p-6 space-y-6">
-			<h1 className="text-2xl font-semibold">Szenario</h1>
-			<p className="text-muted-foreground">
-				Stell dir vor, du bist Inhaber eines KMU und stehst vor der
-				Entscheidung, welches Energiesystem du einbauen willst. Dein Ziel ist
-				es, Kosten, CO₂-Emissionen und Versorgungssicherheit zu berücksichtigen.
-				Das folgende DSS präsentiert dir eine empfohlene Lösung und erklärt die
-				maßgeblichen Gründe.
-			</p>
+			<h1 className="text-2xl font-semibold">{m.scenario_title()}</h1>
+
+			<p className="text-muted-foreground">{m.scenario_intro()}</p>
+
 			<Separator />
+
 			<div className="grid md:grid-cols-3 gap-4">
 				<Card>
 					<CardHeader>Option A</CardHeader>
-					<CardContent>z. B. PV + Wärmepumpe</CardContent>
+					<CardContent>{m.scenario_option_a_content()}</CardContent>
 				</Card>
 				<Card>
 					<CardHeader>Option B</CardHeader>
-					<CardContent>z. B. BHKW + Gasboiler</CardContent>
+					<CardContent>{m.scenario_option_b_content()}</CardContent>
 				</Card>
 				<Card>
 					<CardHeader>Option C</CardHeader>
-					<CardContent>z. B. Status quo + Effizienzmaßnahmen</CardContent>
+					<CardContent>{m.scenario_option_c_content()}</CardContent>
 				</Card>
 			</div>
+
 			<p className="text-sm text-muted-foreground">
-				Das DSS hilft dir, diese Optionen anhand deiner Lastprofile und
-				Randbedingungen zu bewerten und eine Empfehlung auszusprechen.
+				{m.scenario_helper_text()}
 			</p>
+
 			<div className="flex justify-end">
-				<Button onClick={start}>Jetzt starten</Button>
+				<Button onClick={start}>{m.scenario_start()}</Button>
 			</div>
 		</main>
 	);
