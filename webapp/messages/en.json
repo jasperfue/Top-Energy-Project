@@ -1,4 +1,9 @@
 {
-  "$schema": "https://inlang.com/schema/inlang-message-format",
-  "example_message": "Hello world {username}"
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+
+	"common_continue": "Continue",
+
+	"consent_title": "Study Information & Consent",
+	"consent_blurb": "Brief description of the study, data collection (anonymous/pseudonymous), duration, contact, withdrawal, etc.",
+	"consent_checkbox_label": "I have read the information and give my consent."
 }

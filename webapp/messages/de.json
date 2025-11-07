@@ -1,4 +1,9 @@
 {
-  "$schema": "https://inlang.com/schema/inlang-message-format",
-  "example_message": "Guten Tag {username}"
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+
+	"common_continue": "Weiter",
+
+	"consent_title": "Studieninformation & Einwilligung",
+	"consent_blurb": "Kurzbeschreibung der Studie, Datenerhebung (anonym/pseudonym), Dauer, Kontakt, Widerruf etc.",
+	"consent_checkbox_label": "Ich habe die Informationen gelesen und willige ein."
 }
