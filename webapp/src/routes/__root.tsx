@@ -85,7 +85,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				</div>
 				<div className="fixed bottom-4 right-4 z-50">
 					<Select value={getLocale()} onValueChange={setLocale}>
-						<SelectTrigger>
+						<SelectTrigger className="bg-background">
 							<ReactCountryFlag
 								style={{ width: 20, height: 20 }}
 								svg
