@@ -31,7 +31,10 @@ function Consent() {
 				<span>{m.consent_checkbox_label()}</span>
 			</label>
 			<div className="flex justify-end">
-				<Button disabled={!consent} onClick={() => nav({ to: "/scenario" })}>
+				<Button
+					disabled={!consent}
+					onClick={() => nav({ to: "/affinity-for-technology" })}
+				>
 					{m.common_continue()}
 				</Button>
 			</div>

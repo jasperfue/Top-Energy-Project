@@ -13,10 +13,10 @@ export default defineConfig({
 		port: 3000,
 	},
 	optimizeDeps: {
-		include: ["react-country-flag"],
+		include: ["react-country-flag", "@hookform/resolvers"],
 	},
 	ssr: {
-		noExternal: ["react-country-flag"],
+		noExternal: ["react-country-flag", "@hookform/resolvers"],
 	},
 	plugins: [
 		tsConfigPaths(),
