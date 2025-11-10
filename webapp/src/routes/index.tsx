@@ -3,6 +3,7 @@ import { useId, useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
+import { m } from "@/paraglide/messages.js";
 
 export const Route = createFileRoute("/")({
 	component: Consent,
@@ -15,13 +16,8 @@ function Consent() {
 
 	return (
 		<main className="mx-auto max-w-2xl p-6 space-y-6">
-			<h1 className="text-2xl font-semibold">
-				Studieninformation & Einwilligung
-			</h1>
-			<p className="text-muted-foreground">
-				Kurzbeschreibung der Studie, Datenerhebung (anonym/pseudonym), Dauer,
-				Kontakt, Widerruf etc.
-			</p>
+			<h1 className="text-2xl font-semibold">{m.consent_title()}</h1>
+			<p className="text-muted-foreground">{m.consent_blurb()}</p>
 			<Separator />
 			<label
 				htmlFor={checkboxId}
@@ -32,11 +28,11 @@ function Consent() {
 					checked={consent}
 					onCheckedChange={(v) => setConsent(Boolean(v))}
 				/>
-				<span>Ich habe die Informationen gelesen und willige ein.</span>
+				<span>{m.consent_checkbox_label()}</span>
 			</label>
 			<div className="flex justify-end">
 				<Button disabled={!consent} onClick={() => nav({ to: "/scenario" })}>
-					Weiter
+					{m.common_continue()}
 				</Button>
 			</div>
 		</main>

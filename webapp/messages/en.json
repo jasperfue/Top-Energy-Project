@@ -1,4 +1,17 @@
 {
-  "$schema": "https://inlang.com/schema/inlang-message-format",
-  "example_message": "Hello world {username}"
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+
+	"common_continue": "Continue",
+
+	"consent_title": "Study Information & Consent",
+	"consent_blurb": "Brief description of the study, data collection (anonymous/pseudonymous), duration, contact, withdrawal, etc.",
+	"consent_checkbox_label": "I have read the information and give my consent.",
+
+	"scenario_title": "Scenario Description",
+	"scenario_intro": "Imagine you own an SME and need to decide which energy system to install. Your goal is to consider cost, CO₂ emissions, and security of supply. The following DSS presents a recommended solution and explains the key reasons.",
+	"scenario_option_a_content": "e.g., PV + Heat Pump",
+	"scenario_option_b_content": "e.g., CHP + Gas Boiler",
+	"scenario_option_c_content": "e.g., Status Quo + Efficiency Measures",
+	"scenario_helper_text": "The DSS helps you evaluate these options based on your load profiles and constraints and provides a recommendation.",
+	"scenario_start": "Start Now"
 }
