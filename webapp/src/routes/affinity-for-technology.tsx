@@ -1,0 +1,185 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { LikertScale } from "@/components/LikertScale";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { m } from "@/paraglide/messages.js";
+
+export const Route = createFileRoute("/affinity-for-technology")({
+	component: AffinityForTechnologyForm,
+});
+
+const Likert6 = z.union([
+	z.literal(1),
+	z.literal(2),
+	z.literal(3),
+	z.literal(4),
+	z.literal(5),
+	z.literal(6),
+]);
+
+const schema = z.object({
+	q1: Likert6,
+	q2: Likert6,
+	q3: Likert6,
+	q4: Likert6,
+	q5: Likert6,
+	q6: Likert6,
+	q7: Likert6,
+	q8: Likert6,
+	q9: Likert6,
+});
+
+export type AffTechFormValues = z.infer<typeof schema>;
+
+export function AffinityForTechnologyForm() {
+	const nav = useNavigate();
+
+	const form = useForm<AffTechFormValues>({
+		resolver: zodResolver(schema),
+		defaultValues: {
+			q1: undefined,
+			q2: undefined,
+			q3: undefined,
+			q4: undefined,
+			q5: undefined,
+			q6: undefined,
+			q7: undefined,
+			q8: undefined,
+			q9: undefined,
+		},
+		mode: "onSubmit",
+	});
+
+	const options = [
+		{
+			value: 1 as const,
+			label: m.common_likert_1(),
+		},
+		{
+			value: 2 as const,
+			label: m.common_likert_2(),
+		},
+		{
+			value: 3 as const,
+			label: m.common_likert_3(),
+		},
+		{
+			value: 4 as const,
+			label: m.common_likert_4(),
+		},
+		{
+			value: 5 as const,
+			label: m.common_likert_5(),
+		},
+		{
+			value: 6 as const,
+			label: m.common_likert_6(),
+		},
+	];
+
+	const submit = form.handleSubmit((values) => {
+		console.log("Affinity for Technology values:", values);
+		void nav({ to: "/scenario" });
+	});
+
+	return (
+		<main className="mx-auto p-6 space-y-6">
+			<h2 className="text-2xl font-semibold">{m.afftech_title()}</h2>
+
+			<Card>
+				<CardContent className="flex flex-col py-4 gap-4">
+					<div
+						// biome-ignore lint/security/noDangerouslySetInnerHtml: Have to
+						dangerouslySetInnerHTML={{
+							__html: m.afftech_intro(),
+						}}
+					/>
+					<div
+						// biome-ignore lint/security/noDangerouslySetInnerHtml: have to
+						dangerouslySetInnerHTML={{
+							__html: m.afftech_subtitle(),
+						}}
+					/>
+				</CardContent>
+			</Card>
+
+			<Separator />
+
+			<form onSubmit={submit} className="max-w-fit mx-auto">
+				<div className="space-y-5 mb-8">
+					<LikertScale
+						name="q1"
+						control={form.control}
+						options={options}
+						rowLabel={m.afftech_q1()}
+						required
+						showHeader
+					/>
+					<LikertScale
+						name="q2"
+						control={form.control}
+						options={options}
+						rowLabel={m.afftech_q2()}
+						required
+					/>
+					<LikertScale
+						name="q3"
+						control={form.control}
+						options={options}
+						rowLabel={m.afftech_q3()}
+						required
+					/>
+					<LikertScale
+						name="q4"
+						control={form.control}
+						options={options}
+						rowLabel={m.afftech_q4()}
+						required
+					/>
+					<LikertScale
+						name="q5"
+						control={form.control}
+						options={options}
+						rowLabel={m.afftech_q5()}
+						required
+					/>
+					<LikertScale
+						name="q6"
+						control={form.control}
+						options={options}
+						rowLabel={m.afftech_q6()}
+						required
+					/>
+					<LikertScale
+						name="q7"
+						control={form.control}
+						options={options}
+						rowLabel={m.afftech_q7()}
+						required
+					/>
+					<LikertScale
+						name="q8"
+						control={form.control}
+						options={options}
+						rowLabel={m.afftech_q8()}
+						required
+					/>
+					<LikertScale
+						name="q9"
+						control={form.control}
+						options={options}
+						rowLabel={m.afftech_q9()}
+						required
+					/>
+				</div>
+				<div className="flex justify-end">
+					<Button type="submit">{m.common_continue()}</Button>
+				</div>
+			</form>
+		</main>
+	);
+}

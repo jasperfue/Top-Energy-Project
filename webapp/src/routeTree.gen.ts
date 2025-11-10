@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ThanksRouteImport } from './routes/thanks'
 import { Route as ScenarioRouteImport } from './routes/scenario'
 import { Route as QuestionnaireRouteImport } from './routes/questionnaire'
+import { Route as AffinityForTechnologyRouteImport } from './routes/affinity-for-technology'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PrototypeDashboardRouteImport } from './routes/prototype/dashboard'
 import { Route as PrototypeChatRouteImport } from './routes/prototype/chat'
@@ -30,6 +31,11 @@ const ScenarioRoute = ScenarioRouteImport.update({
 const QuestionnaireRoute = QuestionnaireRouteImport.update({
   id: '/questionnaire',
   path: '/questionnaire',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AffinityForTechnologyRoute = AffinityForTechnologyRouteImport.update({
+  id: '/affinity-for-technology',
+  path: '/affinity-for-technology',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -55,6 +61,7 @@ const ApiChatRoute = ApiChatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/affinity-for-technology': typeof AffinityForTechnologyRoute
   '/questionnaire': typeof QuestionnaireRoute
   '/scenario': typeof ScenarioRoute
   '/thanks': typeof ThanksRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/affinity-for-technology': typeof AffinityForTechnologyRoute
   '/questionnaire': typeof QuestionnaireRoute
   '/scenario': typeof ScenarioRoute
   '/thanks': typeof ThanksRoute
@@ -74,6 +82,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/affinity-for-technology': typeof AffinityForTechnologyRoute
   '/questionnaire': typeof QuestionnaireRoute
   '/scenario': typeof ScenarioRoute
   '/thanks': typeof ThanksRoute
@@ -85,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/affinity-for-technology'
     | '/questionnaire'
     | '/scenario'
     | '/thanks'
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/affinity-for-technology'
     | '/questionnaire'
     | '/scenario'
     | '/thanks'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/affinity-for-technology'
     | '/questionnaire'
     | '/scenario'
     | '/thanks'
@@ -113,6 +125,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AffinityForTechnologyRoute: typeof AffinityForTechnologyRoute
   QuestionnaireRoute: typeof QuestionnaireRoute
   ScenarioRoute: typeof ScenarioRoute
   ThanksRoute: typeof ThanksRoute
@@ -142,6 +155,13 @@ declare module '@tanstack/react-router' {
       path: '/questionnaire'
       fullPath: '/questionnaire'
       preLoaderRoute: typeof QuestionnaireRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/affinity-for-technology': {
+      id: '/affinity-for-technology'
+      path: '/affinity-for-technology'
+      fullPath: '/affinity-for-technology'
+      preLoaderRoute: typeof AffinityForTechnologyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -177,6 +197,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AffinityForTechnologyRoute: AffinityForTechnologyRoute,
   QuestionnaireRoute: QuestionnaireRoute,
   ScenarioRoute: ScenarioRoute,
   ThanksRoute: ThanksRoute,
