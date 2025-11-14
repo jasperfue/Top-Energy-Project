@@ -18,7 +18,7 @@ export const Route = createFileRoute("/scenario")({
 });
 
 const updateStudyVariant = createServerFn({ method: "POST" })
-	.inputValidator(z.string())
+	.inputValidator(z.enum(["chat", "dashboard"]))
 	.handler(async ({ data }) => {
 		const session = await useUserSession();
 		if (!session.data.recId) throw new Error("No recId in session data");
