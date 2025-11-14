@@ -1,20 +1,71 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { airtable } from "@/lib/airtable.ts";
+import { useUserSession } from "@/lib/useUserSession.ts";
 import { m } from "@/paraglide/messages.js";
 
 export const Route = createFileRoute("/scenario")({
 	component: Scenario,
+	loader: () => ({
+		deferredSlowData: getPrototypeType(),
+	}),
 });
+
+const updateStudyVariant = createServerFn({ method: "POST" })
+	.inputValidator(z.string())
+	.handler(async ({ data }) => {
+		const session = await useUserSession();
+		if (!session.data.recId) throw new Error("No recId in session data");
+
+		await airtable
+			.update([
+				{
+					id: session.data.recId,
+					fields: {
+						Studienvariante: data === "chat" ? "Chat" : "Dashboard",
+					},
+				},
+			])
+			.catch((err: Error) => {
+				console.error("Error updating study variant:", err);
+			});
+	});
+
+const getPrototypeType = createServerFn().handler(
+	async (): Promise<"chat" | "dashboard"> => {
+		const allRecords = await airtable
+			.select({ fields: ["Studienvariante"] })
+			.all();
+
+		const counts = { chat: 0, dashboard: 0 };
+		for (const record of allRecords) {
+			const v = record.fields?.Studienvariante;
+			if (v === "Chat") counts.chat++;
+			else if (v === "Dashboard") counts.dashboard++;
+		}
+
+		return counts.chat > counts.dashboard ? "dashboard" : "chat";
+	},
+);
 
 function Scenario() {
 	const nav = useNavigate();
+	const [isLoading, setIsLoading] = useState(false);
+	const { deferredSlowData } = Route.useLoaderData();
 
 	const start = async () => {
-		// Hier später Backend fragen
-		const type = Math.random() < 0.5 ? "chat" : "dashboard";
-		void nav({ to: `/prototype/${type}` });
+		if (isLoading) return;
+		setIsLoading(true);
+
+		const prototypeType = await deferredSlowData;
+		await updateStudyVariant({ data: prototypeType });
+		await nav({ to: `/prototype/${prototypeType}` });
 	};
 
 	return (
@@ -45,7 +96,13 @@ function Scenario() {
 			</p>
 
 			<div className="flex justify-end">
-				<Button onClick={start}>{m.scenario_start()}</Button>
+				<Button onClick={start} disabled={isLoading}>
+					{isLoading ? (
+						<Loader2 className="h-4 w-4 animate-spin" />
+					) : (
+						m.scenario_start()
+					)}
+				</Button>
 			</div>
 		</main>
 	);
