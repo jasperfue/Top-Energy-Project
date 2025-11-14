@@ -1,25 +1,19 @@
-import { createServerFn } from "@tanstack/react-start";
 import { useSession } from "@tanstack/react-start/server";
 
 type userSession = {
 	userId?: string;
+	recId?: string;
 };
 
-const useUserSession = () =>
+export const useUserSession = () =>
 	useSession<userSession>({
 		name: "app-session",
 		// biome-ignore lint/style/noNonNullAssertion: Is set
 		password: process.env.SESSION_SECRET!,
-		cookie: { secure: true, sameSite: "lax", httpOnly: true },
+		cookie: {
+			secure: process.env.NODE_ENV === "production", // HTTPS only in production
+			sameSite: "lax", // CSRF protection
+			httpOnly: true, // XSS protection
+			maxAge: 7 * 24 * 60 * 60, // 7 days
+		},
 	});
-
-export const setNewUserId = createServerFn().handler(async () => {
-	const session = await useUserSession();
-	const newUserId = crypto.randomUUID();
-	await session.update({ userId: newUserId });
-});
-
-export const getUserId = createServerFn().handler(async () => {
-	const session = await useUserSession();
-	return session.data.userId;
-});

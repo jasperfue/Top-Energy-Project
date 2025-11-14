@@ -1,13 +1,21 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import { useId, useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { setNewUserId } from "@/lib/userIdSession.ts";
+import { useUserSession } from "@/lib/userIdSession.ts";
 import { m } from "@/paraglide/messages.js";
+
+const setNewUserId = createServerFn().handler(async () => {
+	const session = await useUserSession();
+	const newUserId = crypto.randomUUID();
+	await session.update({ userId: newUserId });
+});
 
 export const Route = createFileRoute("/")({
 	component: Consent,
+	ssr: false, // So the beforeLoad function runs on the client -> Function needs a request
 	beforeLoad: () => {
 		void setNewUserId();
 	},
