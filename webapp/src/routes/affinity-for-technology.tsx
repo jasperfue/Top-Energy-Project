@@ -22,15 +22,15 @@ const Likert6 = z.union([
 ]);
 
 const schema = z.object({
-	q1: Likert6,
-	q2: Likert6,
-	q3: Likert6,
-	q4: Likert6,
-	q5: Likert6,
-	q6: Likert6,
-	q7: Likert6,
-	q8: Likert6,
-	q9: Likert6,
+	afftech_q1: Likert6,
+	afftech_q2: Likert6,
+	afftech_q3: Likert6,
+	afftech_q4: Likert6,
+	afftech_q5: Likert6,
+	afftech_q6: Likert6,
+	afftech_q7: Likert6,
+	afftech_q8: Likert6,
+	afftech_q9: Likert6,
 });
 
 export type AffTechFormValues = z.infer<typeof schema>;
@@ -41,15 +41,15 @@ export function AffinityForTechnologyForm() {
 	const form = useForm<AffTechFormValues>({
 		resolver: zodResolver(schema),
 		defaultValues: {
-			q1: undefined,
-			q2: undefined,
-			q3: undefined,
-			q4: undefined,
-			q5: undefined,
-			q6: undefined,
-			q7: undefined,
-			q8: undefined,
-			q9: undefined,
+			afftech_q1: undefined,
+			afftech_q2: undefined,
+			afftech_q3: undefined,
+			afftech_q4: undefined,
+			afftech_q5: undefined,
+			afftech_q6: undefined,
+			afftech_q7: undefined,
+			afftech_q8: undefined,
+			afftech_q9: undefined,
 		},
 		mode: "onSubmit",
 	});
@@ -112,7 +112,7 @@ export function AffinityForTechnologyForm() {
 			<form onSubmit={submit} className="max-w-fit mx-auto">
 				<div className="space-y-5 mb-8">
 					<LikertScale
-						name="q1"
+						name="afftech_q1"
 						control={form.control}
 						options={options}
 						rowLabel={m.afftech_q1()}
@@ -120,56 +120,56 @@ export function AffinityForTechnologyForm() {
 						showHeader
 					/>
 					<LikertScale
-						name="q2"
+						name="afftech_q2"
 						control={form.control}
 						options={options}
 						rowLabel={m.afftech_q2()}
 						required
 					/>
 					<LikertScale
-						name="q3"
+						name="afftech_q3"
 						control={form.control}
 						options={options}
 						rowLabel={m.afftech_q3()}
 						required
 					/>
 					<LikertScale
-						name="q4"
+						name="afftech_q4"
 						control={form.control}
 						options={options}
 						rowLabel={m.afftech_q4()}
 						required
 					/>
 					<LikertScale
-						name="q5"
+						name="afftech_q5"
 						control={form.control}
 						options={options}
 						rowLabel={m.afftech_q5()}
 						required
 					/>
 					<LikertScale
-						name="q6"
+						name="afftech_q6"
 						control={form.control}
 						options={options}
 						rowLabel={m.afftech_q6()}
 						required
 					/>
 					<LikertScale
-						name="q7"
+						name="afftech_q7"
 						control={form.control}
 						options={options}
 						rowLabel={m.afftech_q7()}
 						required
 					/>
 					<LikertScale
-						name="q8"
+						name="afftech_q8"
 						control={form.control}
 						options={options}
 						rowLabel={m.afftech_q8()}
 						required
 					/>
 					<LikertScale
-						name="q9"
+						name="afftech_q9"
 						control={form.control}
 						options={options}
 						rowLabel={m.afftech_q9()}
