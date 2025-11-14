@@ -1,7 +1,6 @@
 import { useSession } from "@tanstack/react-start/server";
 
 type userSession = {
-	userId?: string;
 	recId?: string;
 };
 

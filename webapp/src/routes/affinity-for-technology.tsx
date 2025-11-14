@@ -41,16 +41,16 @@ type AffTechFormValues = z.infer<typeof afftechAnswers>;
 const submitAffinityForTechnologyForm = createServerFn({ method: "POST" })
 	.inputValidator(afftechAnswers)
 	.handler(async ({ data }) => {
-		const session = await useUserSession();
-		console.log("userId in affinity", session.data.userId);
-		if (!session.data.userId) return;
-		const airTableResponse = await airtable.create([
-			{
-				fields: {
-					"Teilnehmer ID": session.data.userId,
-					...data,
+		const [session, airTableResponse] = await Promise.all([
+			useUserSession(),
+			airtable.create([
+				{
+					fields: {
+						"Teilnehmer ID": crypto.randomUUID(),
+						...data,
+					},
 				},
-			},
+			]),
 		]);
 		void session.update({ recId: airTableResponse[0].id });
 	});
