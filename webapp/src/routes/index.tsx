@@ -3,10 +3,14 @@ import { useId, useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
+import { setNewUserId } from "@/lib/userIdSession.ts";
 import { m } from "@/paraglide/messages.js";
 
 export const Route = createFileRoute("/")({
 	component: Consent,
+	beforeLoad: () => {
+		void setNewUserId();
+	},
 });
 
 function Consent() {
