@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { airtable } from "@/lib/airtable.ts";
-import { useUserSession } from "@/lib/userIdSession.ts";
+import { useUserSession } from "@/lib/useUserSession.ts";
 import { m } from "@/paraglide/messages.js";
 
 export const Route = createFileRoute("/affinity-for-technology")({

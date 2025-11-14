@@ -4,7 +4,7 @@ import { useId, useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { useUserSession } from "@/lib/userIdSession.ts";
+import { useUserSession } from "@/lib/useUserSession.ts";
 import { m } from "@/paraglide/messages.js";
 
 const setNewUserId = createServerFn().handler(async () => {
