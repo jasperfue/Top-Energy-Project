@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
@@ -197,7 +198,13 @@ export function AffinityForTechnologyForm() {
 					/>
 				</div>
 				<div className="flex justify-end">
-					<Button type="submit">{m.common_continue()}</Button>
+					<Button type="submit" disabled={form.formState.isSubmitting}>
+						{form.formState.isSubmitting ? (
+							<Loader2 className="h-4 w-4 animate-spin" />
+						) : (
+							m.common_continue()
+						)}
+					</Button>
 				</div>
 			</form>
 		</main>

@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -46,10 +48,10 @@ const getPrototypeType = createServerFn().handler(
 
 function Scenario() {
 	const nav = useNavigate();
+	const [isLoading, setIsLoading] = useState(false);
 
 	const start = async () => {
-		// Hier später Backend fragen
-		const type = Math.random() < 0.5 ? "chat" : "dashboard";
+		setIsLoading(true);
 		const type = await getPrototypeType();
 		void nav({ to: `/prototype/${type}` });
 	};
@@ -82,7 +84,13 @@ function Scenario() {
 			</p>
 
 			<div className="flex justify-end">
-				<Button onClick={start}>{m.scenario_start()}</Button>
+				<Button onClick={start} disabled={isLoading}>
+					{isLoading ? (
+						<Loader2 className="h-4 w-4 animate-spin" />
+					) : (
+						m.scenario_start()
+					)}
+				</Button>
 			</div>
 		</main>
 	);
