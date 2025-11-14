@@ -1,12 +1,48 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { airtable } from "@/lib/airtable.ts";
+import { useUserSession } from "@/lib/useUserSession.ts";
 import { m } from "@/paraglide/messages.js";
 
 export const Route = createFileRoute("/scenario")({
 	component: Scenario,
 });
+
+const getPrototypeType = createServerFn().handler(
+	async (): Promise<"chat" | "dashboard"> => {
+		const [session, allRecords] = await Promise.all([
+			useUserSession(),
+			airtable.select({ fields: ["Studienvariante"] }).all(),
+		]);
+		if (!session.data.recId) throw new Error("No recId in session data");
+
+		const counts = { chat: 0, dashboard: 0 };
+		for (const record of allRecords) {
+			const v = record.fields?.Studienvariante;
+			if (v === "Chat") counts.chat++;
+			else if (v === "Dashboard") counts.dashboard++;
+		}
+
+		const newType = counts.chat > counts.dashboard ? "dashboard" : "chat";
+		await airtable
+			.update([
+				{
+					id: session.data.recId,
+					fields: {
+						Studienvariante: newType === "chat" ? "Chat" : "Dashboard",
+					},
+				},
+			])
+			.catch((err: Error) => {
+				console.error("Error updating study variant:", err);
+			});
+
+		return newType;
+	},
+);
 
 function Scenario() {
 	const nav = useNavigate();
@@ -14,6 +50,7 @@ function Scenario() {
 	const start = async () => {
 		// Hier später Backend fragen
 		const type = Math.random() < 0.5 ? "chat" : "dashboard";
+		const type = await getPrototypeType();
 		void nav({ to: `/prototype/${type}` });
 	};
 
