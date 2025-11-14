@@ -2,4 +2,4 @@ import Airtable from "airtable";
 
 export const airtable = new Airtable({
 	apiKey: process.env.AIRTABLE_API_KEY,
-}).base("appKOJOmk0ieXF16r");
+}).base("appKOJOmk0ieXF16r")("Teilnehmerdatensätze");
