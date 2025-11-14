@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -11,15 +12,36 @@ import { m } from "@/paraglide/messages.js";
 
 export const Route = createFileRoute("/scenario")({
 	component: Scenario,
+	loader: () => ({
+		deferredSlowData: getPrototypeType(),
+	}),
 });
+
+const updateStudyVariant = createServerFn({ method: "POST" })
+	.inputValidator(z.string())
+	.handler(async ({ data }) => {
+		const session = await useUserSession();
+		if (!session.data.recId) throw new Error("No recId in session data");
+
+		await airtable
+			.update([
+				{
+					id: session.data.recId,
+					fields: {
+						Studienvariante: data === "chat" ? "Chat" : "Dashboard",
+					},
+				},
+			])
+			.catch((err: Error) => {
+				console.error("Error updating study variant:", err);
+			});
+	});
 
 const getPrototypeType = createServerFn().handler(
 	async (): Promise<"chat" | "dashboard"> => {
-		const [session, allRecords] = await Promise.all([
-			useUserSession(),
-			airtable.select({ fields: ["Studienvariante"] }).all(),
-		]);
-		if (!session.data.recId) throw new Error("No recId in session data");
+		const allRecords = await airtable
+			.select({ fields: ["Studienvariante"] })
+			.all();
 
 		const counts = { chat: 0, dashboard: 0 };
 		for (const record of allRecords) {
@@ -28,32 +50,22 @@ const getPrototypeType = createServerFn().handler(
 			else if (v === "Dashboard") counts.dashboard++;
 		}
 
-		const newType = counts.chat > counts.dashboard ? "dashboard" : "chat";
-		await airtable
-			.update([
-				{
-					id: session.data.recId,
-					fields: {
-						Studienvariante: newType === "chat" ? "Chat" : "Dashboard",
-					},
-				},
-			])
-			.catch((err: Error) => {
-				console.error("Error updating study variant:", err);
-			});
-
-		return newType;
+		return counts.chat > counts.dashboard ? "dashboard" : "chat";
 	},
 );
 
 function Scenario() {
 	const nav = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
+	const { deferredSlowData } = Route.useLoaderData();
 
 	const start = async () => {
+		if (isLoading) return;
 		setIsLoading(true);
-		const type = await getPrototypeType();
-		void nav({ to: `/prototype/${type}` });
+
+		const prototypeType = await deferredSlowData;
+		await updateStudyVariant({ data: prototypeType });
+		await nav({ to: `/prototype/${prototypeType}` });
 	};
 
 	return (
