@@ -53,7 +53,7 @@ const submitAffinityForTechnologyForm = createServerFn({ method: "POST" })
 				},
 			]),
 		]);
-		void session.update({ recId: airTableResponse[0].id });
+		await session.update({ recId: airTableResponse[0].id });
 	});
 
 export function AffinityForTechnologyForm() {
