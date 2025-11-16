@@ -11,8 +11,6 @@ import { m } from "@/paraglide/messages.js";
 
 export const Route = createFileRoute("/questionnaire")({
 	component: Questionnaire,
-	validateSearch: (search) =>
-		z.object({ type: z.enum(["chat", "dashboard"]) }).parse(search),
 });
 
 const Likert5 = z.union([
@@ -36,7 +34,6 @@ type TrustFormValues = z.infer<typeof trustAnswers>;
 
 function Questionnaire() {
 	const nav = useNavigate();
-	const { type } = Route.useSearch();
 
 	const form = useForm<TrustFormValues>({
 		resolver: zodResolver(trustAnswers),
@@ -75,11 +72,8 @@ function Questionnaire() {
 	];
 
 	const submit = form.handleSubmit(async (values) => {
-		console.log("Questionnaire submit", {
-			type,
-			values,
-		});
-
+		console.log("Questionnaire submit", values);
+		// TODO: send to airtable with ServerFn
 		void nav({ to: "/thanks" });
 	});
 
