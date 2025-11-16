@@ -2,18 +2,19 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 
 	"common_continue": "Weiter",
-	"common_likert_1": "stimmt gar nicht",
-	"common_likert_2": "stimmt weitgehend nicht",
-	"common_likert_3": "stimmt eher nicht",
-	"common_likert_4": "stimmt eher",
-	"common_likert_5": "stimmt weitgehend",
-	"common_likert_6": "stimmt völlig",
 	"common_likert6_1": "stimmt gar nicht",
 	"common_likert6_2": "stimmt weitgehend nicht",
 	"common_likert6_3": "stimmt eher nicht",
 	"common_likert6_4": "stimmt eher",
 	"common_likert6_5": "stimmt weitgehend",
 	"common_likert6_6": "stimmt völlig",
+
+	"common_likert5_1": "stimmt gar nicht",
+	"common_likert5_2": "stimmt eher nicht",
+	"common_likert5_3": "teils / teils",
+	"common_likert5_4": "stimmt eher",
+	"common_likert5_5": "stimmt völlig",
+
 	"common_required_error": "Dieses Feld ist erforderlich",
 
 	"consent_title": "Studieninformation & Einwilligung",
@@ -40,5 +41,14 @@
 	"afftech_q6": "Es genügt mir, dass ein technisches System funktioniert, mir ist es egal, wie oder warum.",
 	"afftech_q7": "Ich versuche zu verstehen, wie ein technisches System genau funktioniert.",
 	"afftech_q8": "Es genügt mir, die Grundfunktionen eines technischen Systems zu kennen.",
-	"afftech_q9": "Ich versuche, die Möglichkeiten eines technischen Systems vollständig auszunutzen."
+	"afftech_q9": "Ich versuche, die Möglichkeiten eines technischen Systems vollständig auszunutzen.",
+
+	"questionnaire_intro": "Bitte antworten",
+
+	"trust_q1": "Ich halte das System für kompetent.",
+	"trust_q2": "Ich vertraue dem System.",
+	"trust_q3": "Ich habe Vertrauen in die Empfehlungen des Systems.",
+	"trust_q4": "Ich kann mich auf das System verlassen.",
+	"trust_q5": "Ich kann darauf vertrauen, dass sich das System konsistent verhält.",
+	"trust_q6": "Ich kann darauf vertrauen, dass das System bei jeder Empfehlung zuverlässig arbeitet."
 }

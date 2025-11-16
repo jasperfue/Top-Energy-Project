@@ -2,18 +2,19 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 
 	"common_continue": "Continue",
-	"common_likert_1": "completely disagree",
-	"common_likert_2": "largely disagree",
-	"common_likert_3": "slightly disagree",
-	"common_likert_4": "slightly agree",
-	"common_likert_5": "largely agree",
-	"common_likert_6": "completely agree",
 	"common_likert6_1": "completely disagree",
 	"common_likert6_2": "largely disagree",
 	"common_likert6_3": "slightly disagree",
 	"common_likert6_4": "slightly agree",
 	"common_likert6_5": "largely agree",
 	"common_likert6_6": "completely agree",
+
+	"common_likert5_1": "strongly disagree",
+	"common_likert5_2": "somewhat disagree",
+	"common_likert5_3": "neutral",
+	"common_likert5_4": "somewhat agree",
+	"common_likert5_5": "strongly agree",
+
 	"common_required_error": "This field is required",
 
 	"consent_title": "Study Information & Consent",
@@ -40,5 +41,14 @@
 	"afftech_q6": "It is enough for me that a technical system works; I don’t care how or why.",
 	"afftech_q7": "I try to understand how a technical system exactly works.",
 	"afftech_q8": "It is enough for me to know the basic functions of a technical system.",
-	"afftech_q9": "I try to make full use of the capabilities of a technical system."
+	"afftech_q9": "I try to make full use of the capabilities of a technical system.",
+
+	"questionnaire_intro": "Bitte antworten",
+
+	"trust_q1": "I believe the system is a competent performer.",
+	"trust_q2": "I trust the system.",
+	"trust_q3": "I have confidence in the advice given by the system.",
+	"trust_q4": "I can depend on the system.",
+	"trust_q5": "I can rely on the system to behave in consistent ways.",
+	"trust_q6": "I can rely on the system to do its best every time I take its advice."
 }
