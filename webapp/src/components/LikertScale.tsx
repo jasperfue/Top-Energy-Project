@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
 
 type LikertOption = {
-	value: 1 | 2 | 3 | 4 | 5 | 6;
+	value: number;
 	label: string;
 };
 
@@ -52,7 +52,10 @@ export function LikertScale<TFieldValues extends FieldValues>({
 						<div className="self-end">
 							<RadioGroup
 								id={name}
-								className={cn("grid grid-cols-6")}
+								className={cn("grid")}
+								style={{
+									gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))`,
+								}}
 								value={field.value?.toString() ?? ""}
 								onValueChange={(v) => field.onChange(Number(v))}
 							>
@@ -81,7 +84,7 @@ export function LikertScale<TFieldValues extends FieldValues>({
 								))}
 							</RadioGroup>
 							{fieldState.error && (
-								<div className="col-span-6 mt-1 flex items-center justify-center gap-1 text-xs text-destructive">
+								<div className="mt-1 flex items-center justify-center gap-1 text-xs text-destructive">
 									<TriangleAlert className="h-3 w-3" aria-hidden="true" />
 									<span>{m.common_required_error()}</span>
 								</div>
