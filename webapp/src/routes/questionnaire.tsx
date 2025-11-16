@@ -79,7 +79,7 @@ function Questionnaire() {
 
 	return (
 		<main className="mx-auto p-6 space-y-6">
-			<h2 className="text-2xl font-semibold">Fragebogen</h2>
+			<h2 className="text-2xl font-semibold">{m.questionnaire_title()}</h2>
 
 			<Card>
 				<CardContent className="flex flex-col py-4 gap-4">
