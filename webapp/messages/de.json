@@ -47,8 +47,8 @@
 
 	"trust_q1": "Ich halte das System für kompetent.",
 	"trust_q2": "Ich vertraue dem System.",
-	"trust_q3": "Ich habe Vertrauen in die Empfehlungen des Systems.",
+	"trust_q3": "Ich habe Vertrauen in die Einschätzungen des Systems.",
 	"trust_q4": "Ich kann mich auf das System verlassen.",
 	"trust_q5": "Ich kann darauf vertrauen, dass sich das System konsistent verhält.",
-	"trust_q6": "Ich kann darauf vertrauen, dass das System bei jeder Empfehlung zuverlässig arbeitet."
+	"trust_q6": "Ich kann darauf vertrauen, dass das System bei jeder Einschätzung zuverlässig arbeitet."
 }
