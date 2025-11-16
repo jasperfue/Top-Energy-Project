@@ -8,6 +8,12 @@
 	"common_likert_4": "stimmt eher",
 	"common_likert_5": "stimmt weitgehend",
 	"common_likert_6": "stimmt völlig",
+	"common_likert6_1": "stimmt gar nicht",
+	"common_likert6_2": "stimmt weitgehend nicht",
+	"common_likert6_3": "stimmt eher nicht",
+	"common_likert6_4": "stimmt eher",
+	"common_likert6_5": "stimmt weitgehend",
+	"common_likert6_6": "stimmt völlig",
 	"common_required_error": "Dieses Feld ist erforderlich",
 
 	"consent_title": "Studieninformation & Einwilligung",

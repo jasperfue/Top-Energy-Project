@@ -78,27 +78,27 @@ export function AffinityForTechnologyForm() {
 	const options = [
 		{
 			value: 1 as const,
-			label: m.common_likert_1(),
+			label: m.common_likert6_1(),
 		},
 		{
 			value: 2 as const,
-			label: m.common_likert_2(),
+			label: m.common_likert6_2(),
 		},
 		{
 			value: 3 as const,
-			label: m.common_likert_3(),
+			label: m.common_likert6_3(),
 		},
 		{
 			value: 4 as const,
-			label: m.common_likert_4(),
+			label: m.common_likert6_4(),
 		},
 		{
 			value: 5 as const,
-			label: m.common_likert_5(),
+			label: m.common_likert6_5(),
 		},
 		{
 			value: 6 as const,
-			label: m.common_likert_6(),
+			label: m.common_likert6_6(),
 		},
 	];
 

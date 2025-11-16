@@ -8,6 +8,12 @@
 	"common_likert_4": "slightly agree",
 	"common_likert_5": "largely agree",
 	"common_likert_6": "completely agree",
+	"common_likert6_1": "completely disagree",
+	"common_likert6_2": "largely disagree",
+	"common_likert6_3": "slightly disagree",
+	"common_likert6_4": "slightly agree",
+	"common_likert6_5": "largely agree",
+	"common_likert6_6": "completely agree",
 	"common_required_error": "This field is required",
 
 	"consent_title": "Study Information & Consent",
