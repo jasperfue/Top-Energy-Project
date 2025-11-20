@@ -9,11 +9,13 @@
 	"common_likert6_5": "largely agree",
 	"common_likert6_6": "completely agree",
 
-	"common_likert5_1": "strongly disagree",
-	"common_likert5_2": "somewhat disagree",
-	"common_likert5_3": "neutral",
-	"common_likert5_4": "somewhat agree",
-	"common_likert5_5": "strongly agree",
+	"common_likert7_1": "completely disagree",
+	"common_likert7_2": "mostly disagree",
+	"common_likert7_3": "slightly disagree",
+	"common_likert7_4": "neutral",
+	"common_likert7_5": "slightly agree",
+	"common_likert7_6": "mostly agree",
+	"common_likert7_7": "completely agree",
 
 	"common_required_error": "This field is required",
 
@@ -46,10 +48,7 @@
 	"questionnaire_title": "Questionnaire",
 	"questionnaire_intro": "Bitte antworten",
 
-	"trust_q1": "I believe the system is a competent performer.",
-	"trust_q2": "I trust the system.",
-	"trust_q3": "I have confidence in the advice given by the system.",
-	"trust_q4": "I can depend on the system.",
-	"trust_q5": "I can rely on the system to behave in consistent ways.",
-	"trust_q6": "I can rely on the system to do its best every time I take its advice."
+	"trust_q1": "I am confident in the system.",
+	"trust_q2": "The system is reliable.",
+	"trust_q3": "I can trust the system."
 }

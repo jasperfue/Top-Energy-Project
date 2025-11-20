@@ -9,11 +9,13 @@
 	"common_likert6_5": "stimmt weitgehend",
 	"common_likert6_6": "stimmt völlig",
 
-	"common_likert5_1": "stimmt gar nicht",
-	"common_likert5_2": "stimmt eher nicht",
-	"common_likert5_3": "teils / teils",
-	"common_likert5_4": "stimmt eher",
-	"common_likert5_5": "stimmt völlig",
+	"common_likert7_1": "stimmt gar nicht",
+	"common_likert7_2": "stimmt überwiegend nicht",
+	"common_likert7_3": "stimmt eher nicht",
+	"common_likert7_4": "teils / teils",
+	"common_likert7_5": "stimmt eher",
+	"common_likert7_6": "stimmt überwiegend",
+	"common_likert7_7": "stimmt völlig",
 
 	"common_required_error": "Dieses Feld ist erforderlich",
 
@@ -46,10 +48,7 @@
 	"questionnaire_title": "Fragebogen",
 	"questionnaire_intro": "Bitte antworten",
 
-	"trust_q1": "Ich halte das System für kompetent.",
-	"trust_q2": "Ich vertraue dem System.",
-	"trust_q3": "Ich habe Vertrauen in die Einschätzungen des Systems.",
-	"trust_q4": "Ich kann mich auf das System verlassen.",
-	"trust_q5": "Ich kann darauf vertrauen, dass sich das System konsistent verhält.",
-	"trust_q6": "Ich kann darauf vertrauen, dass das System bei jeder Einschätzung zuverlässig arbeitet."
+	"trust_q1": "Ich bin zuversichtlich, was das System betrifft.",
+	"trust_q2": "Das System ist zuverlässig.",
+	"trust_q3": "Ich kann dem System vertrauen."
 }

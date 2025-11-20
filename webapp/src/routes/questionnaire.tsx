@@ -13,21 +13,20 @@ export const Route = createFileRoute("/questionnaire")({
 	component: Questionnaire,
 });
 
-const Likert5 = z.union([
+const Likert7 = z.union([
 	z.literal(1),
 	z.literal(2),
 	z.literal(3),
 	z.literal(4),
 	z.literal(5),
+	z.literal(6),
+	z.literal(7),
 ]);
 
 const trustAnswers = z.object({
-	trust_q1: Likert5,
-	trust_q2: Likert5,
-	trust_q3: Likert5,
-	trust_q4: Likert5,
-	trust_q5: Likert5,
-	trust_q6: Likert5,
+	trust_q1: Likert7,
+	trust_q2: Likert7,
+	trust_q3: Likert7,
 });
 
 type TrustFormValues = z.infer<typeof trustAnswers>;
@@ -41,9 +40,6 @@ function Questionnaire() {
 			trust_q1: undefined,
 			trust_q2: undefined,
 			trust_q3: undefined,
-			trust_q4: undefined,
-			trust_q5: undefined,
-			trust_q6: undefined,
 		},
 		mode: "onSubmit",
 	});
@@ -51,23 +47,31 @@ function Questionnaire() {
 	const options = [
 		{
 			value: 1 as const,
-			label: m.common_likert5_1(),
+			label: m.common_likert7_1(),
 		},
 		{
 			value: 2 as const,
-			label: m.common_likert5_2(),
+			label: "",
 		},
 		{
 			value: 3 as const,
-			label: m.common_likert5_3(),
+			label: "",
 		},
 		{
 			value: 4 as const,
-			label: m.common_likert5_4(),
+			label: m.common_likert7_4(),
 		},
 		{
 			value: 5 as const,
-			label: m.common_likert5_5(),
+			label: "",
+		},
+		{
+			value: 6 as const,
+			label: "",
+		},
+		{
+			value: 7 as const,
+			label: m.common_likert7_7(),
 		},
 	];
 
@@ -116,27 +120,6 @@ function Questionnaire() {
 						control={form.control}
 						options={options}
 						rowLabel={m.trust_q3()}
-						required
-					/>
-					<LikertScale
-						name="trust_q4"
-						control={form.control}
-						options={options}
-						rowLabel={m.trust_q4()}
-						required
-					/>
-					<LikertScale
-						name="trust_q5"
-						control={form.control}
-						options={options}
-						rowLabel={m.trust_q5()}
-						required
-					/>
-					<LikertScale
-						name="trust_q6"
-						control={form.control}
-						options={options}
-						rowLabel={m.trust_q6()}
 						required
 					/>
 				</div>
