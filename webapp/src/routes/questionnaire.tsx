@@ -8,20 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { m } from "@/paraglide/messages.js";
+import { Likert7, likert7Options } from "@/routes/affinity-for-technology.tsx";
 
 export const Route = createFileRoute("/questionnaire")({
 	component: Questionnaire,
 });
-
-const Likert7 = z.union([
-	z.literal(1),
-	z.literal(2),
-	z.literal(3),
-	z.literal(4),
-	z.literal(5),
-	z.literal(6),
-	z.literal(7),
-]);
 
 const trustAnswers = z.object({
 	trust_q1: Likert7,
@@ -43,37 +34,6 @@ function Questionnaire() {
 		},
 		mode: "onSubmit",
 	});
-
-	const options = [
-		{
-			value: 1 as const,
-			label: m.common_likert7_1(),
-		},
-		{
-			value: 2 as const,
-			label: "",
-		},
-		{
-			value: 3 as const,
-			label: "",
-		},
-		{
-			value: 4 as const,
-			label: m.common_likert7_4(),
-		},
-		{
-			value: 5 as const,
-			label: "",
-		},
-		{
-			value: 6 as const,
-			label: "",
-		},
-		{
-			value: 7 as const,
-			label: m.common_likert7_7(),
-		},
-	];
 
 	const submit = form.handleSubmit(async (values) => {
 		console.log("Questionnaire submit", values);
@@ -103,7 +63,7 @@ function Questionnaire() {
 					<LikertScale
 						name="trust_q1"
 						control={form.control}
-						options={options}
+						options={likert7Options}
 						rowLabel={m.trust_q1()}
 						required
 						showHeader
@@ -111,14 +71,14 @@ function Questionnaire() {
 					<LikertScale
 						name="trust_q2"
 						control={form.control}
-						options={options}
+						options={likert7Options}
 						rowLabel={m.trust_q2()}
 						required
 					/>
 					<LikertScale
 						name="trust_q3"
 						control={form.control}
-						options={options}
+						options={likert7Options}
 						rowLabel={m.trust_q3()}
 						required
 					/>
