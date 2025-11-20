@@ -52,7 +52,7 @@ export function LikertScale<TFieldValues extends FieldValues>({
 						<div className="self-center">
 							<RadioGroup
 								id={name}
-								className={cn("grid")}
+								className="grid"
 								style={{
 									gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))`,
 								}}
@@ -62,7 +62,7 @@ export function LikertScale<TFieldValues extends FieldValues>({
 								{options.map((opt) => (
 									<div
 										key={opt.value}
-										className="flex flex-col items-center place-content-evenly w-25"
+										className="flex flex-col items-center justify-end w-15"
 									>
 										{showHeader && (
 											<Label
