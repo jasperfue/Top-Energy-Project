@@ -49,7 +49,7 @@ export function LikertScale<TFieldValues extends FieldValues>({
 					control={control}
 					rules={{ required }}
 					render={({ field, fieldState }) => (
-						<div className="self-end">
+						<div className="self-center">
 							<RadioGroup
 								id={name}
 								className={cn("grid")}
