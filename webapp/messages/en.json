@@ -2,12 +2,21 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 
 	"common_continue": "Continue",
-	"common_likert_1": "completely disagree",
-	"common_likert_2": "largely disagree",
-	"common_likert_3": "slightly disagree",
-	"common_likert_4": "slightly agree",
-	"common_likert_5": "largely agree",
-	"common_likert_6": "completely agree",
+	"common_likert6_1": "completely disagree",
+	"common_likert6_2": "largely disagree",
+	"common_likert6_3": "slightly disagree",
+	"common_likert6_4": "slightly agree",
+	"common_likert6_5": "largely agree",
+	"common_likert6_6": "completely agree",
+
+	"common_likert7_1": "completely disagree",
+	"common_likert7_2": "mostly disagree",
+	"common_likert7_3": "slightly disagree",
+	"common_likert7_4": "neutral",
+	"common_likert7_5": "slightly agree",
+	"common_likert7_6": "mostly agree",
+	"common_likert7_7": "completely agree",
+
 	"common_required_error": "This field is required",
 
 	"consent_title": "Study Information & Consent",
@@ -34,5 +43,12 @@
 	"afftech_q6": "It is enough for me that a technical system works; I don’t care how or why.",
 	"afftech_q7": "I try to understand how a technical system exactly works.",
 	"afftech_q8": "It is enough for me to know the basic functions of a technical system.",
-	"afftech_q9": "I try to make full use of the capabilities of a technical system."
+	"afftech_q9": "I try to make full use of the capabilities of a technical system.",
+
+	"questionnaire_title": "Questionnaire",
+	"questionnaire_intro": "Bitte antworten",
+
+	"trust_q1": "I am confident in the system.",
+	"trust_q2": "The system is reliable.",
+	"trust_q3": "I can trust the system."
 }

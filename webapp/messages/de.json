@@ -2,12 +2,21 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 
 	"common_continue": "Weiter",
-	"common_likert_1": "stimmt gar nicht",
-	"common_likert_2": "stimmt weitgehend nicht",
-	"common_likert_3": "stimmt eher nicht",
-	"common_likert_4": "stimmt eher",
-	"common_likert_5": "stimmt weitgehend",
-	"common_likert_6": "stimmt völlig",
+	"common_likert6_1": "stimmt gar nicht",
+	"common_likert6_2": "stimmt weitgehend nicht",
+	"common_likert6_3": "stimmt eher nicht",
+	"common_likert6_4": "stimmt eher",
+	"common_likert6_5": "stimmt weitgehend",
+	"common_likert6_6": "stimmt völlig",
+
+	"common_likert7_1": "stimmt gar nicht",
+	"common_likert7_2": "stimmt überwiegend nicht",
+	"common_likert7_3": "stimmt eher nicht",
+	"common_likert7_4": "teils / teils",
+	"common_likert7_5": "stimmt eher",
+	"common_likert7_6": "stimmt überwiegend",
+	"common_likert7_7": "stimmt völlig",
+
 	"common_required_error": "Dieses Feld ist erforderlich",
 
 	"consent_title": "Studieninformation & Einwilligung",
@@ -34,5 +43,12 @@
 	"afftech_q6": "Es genügt mir, dass ein technisches System funktioniert, mir ist es egal, wie oder warum.",
 	"afftech_q7": "Ich versuche zu verstehen, wie ein technisches System genau funktioniert.",
 	"afftech_q8": "Es genügt mir, die Grundfunktionen eines technischen Systems zu kennen.",
-	"afftech_q9": "Ich versuche, die Möglichkeiten eines technischen Systems vollständig auszunutzen."
+	"afftech_q9": "Ich versuche, die Möglichkeiten eines technischen Systems vollständig auszunutzen.",
+
+	"questionnaire_title": "Fragebogen",
+	"questionnaire_intro": "Bitte antworten",
+
+	"trust_q1": "Ich bin zuversichtlich, was das System betrifft.",
+	"trust_q2": "Das System ist zuverlässig.",
+	"trust_q3": "Ich kann dem System vertrauen."
 }

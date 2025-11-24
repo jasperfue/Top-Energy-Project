@@ -16,25 +16,57 @@ export const Route = createFileRoute("/affinity-for-technology")({
 	component: AffinityForTechnologyForm,
 });
 
-const Likert6 = z.union([
+export const likert7Options = [
+	{
+		value: 1 as const,
+		label: m.common_likert7_1(),
+	},
+	{
+		value: 2 as const,
+		label: "",
+	},
+	{
+		value: 3 as const,
+		label: "",
+	},
+	{
+		value: 4 as const,
+		label: m.common_likert7_4(),
+	},
+	{
+		value: 5 as const,
+		label: "",
+	},
+	{
+		value: 6 as const,
+		label: "",
+	},
+	{
+		value: 7 as const,
+		label: m.common_likert7_7(),
+	},
+];
+
+export const Likert7 = z.union([
 	z.literal(1),
 	z.literal(2),
 	z.literal(3),
 	z.literal(4),
 	z.literal(5),
 	z.literal(6),
+	z.literal(7),
 ]);
 
 const afftechAnswers = z.object({
-	afftech_q1: Likert6,
-	afftech_q2: Likert6,
-	afftech_q3: Likert6,
-	afftech_q4: Likert6,
-	afftech_q5: Likert6,
-	afftech_q6: Likert6,
-	afftech_q7: Likert6,
-	afftech_q8: Likert6,
-	afftech_q9: Likert6,
+	afftech_q1: Likert7,
+	afftech_q2: Likert7,
+	afftech_q3: Likert7,
+	afftech_q4: Likert7,
+	afftech_q5: Likert7,
+	afftech_q6: Likert7,
+	afftech_q7: Likert7,
+	afftech_q8: Likert7,
+	afftech_q9: Likert7,
 });
 
 type AffTechFormValues = z.infer<typeof afftechAnswers>;
@@ -75,33 +107,6 @@ export function AffinityForTechnologyForm() {
 		mode: "onSubmit",
 	});
 
-	const options = [
-		{
-			value: 1 as const,
-			label: m.common_likert_1(),
-		},
-		{
-			value: 2 as const,
-			label: m.common_likert_2(),
-		},
-		{
-			value: 3 as const,
-			label: m.common_likert_3(),
-		},
-		{
-			value: 4 as const,
-			label: m.common_likert_4(),
-		},
-		{
-			value: 5 as const,
-			label: m.common_likert_5(),
-		},
-		{
-			value: 6 as const,
-			label: m.common_likert_6(),
-		},
-	];
-
 	const submit = form.handleSubmit(async (values) => {
 		await submitAffinityForTechnologyForm({ data: values });
 		void nav({ to: "/scenario" });
@@ -135,7 +140,7 @@ export function AffinityForTechnologyForm() {
 					<LikertScale
 						name="afftech_q1"
 						control={form.control}
-						options={options}
+						options={likert7Options}
 						rowLabel={m.afftech_q1()}
 						required
 						showHeader
@@ -143,56 +148,56 @@ export function AffinityForTechnologyForm() {
 					<LikertScale
 						name="afftech_q2"
 						control={form.control}
-						options={options}
+						options={likert7Options}
 						rowLabel={m.afftech_q2()}
 						required
 					/>
 					<LikertScale
 						name="afftech_q3"
 						control={form.control}
-						options={options}
+						options={likert7Options}
 						rowLabel={m.afftech_q3()}
 						required
 					/>
 					<LikertScale
 						name="afftech_q4"
 						control={form.control}
-						options={options}
+						options={likert7Options}
 						rowLabel={m.afftech_q4()}
 						required
 					/>
 					<LikertScale
 						name="afftech_q5"
 						control={form.control}
-						options={options}
+						options={likert7Options}
 						rowLabel={m.afftech_q5()}
 						required
 					/>
 					<LikertScale
 						name="afftech_q6"
 						control={form.control}
-						options={options}
+						options={likert7Options}
 						rowLabel={m.afftech_q6()}
 						required
 					/>
 					<LikertScale
 						name="afftech_q7"
 						control={form.control}
-						options={options}
+						options={likert7Options}
 						rowLabel={m.afftech_q7()}
 						required
 					/>
 					<LikertScale
 						name="afftech_q8"
 						control={form.control}
-						options={options}
+						options={likert7Options}
 						rowLabel={m.afftech_q8()}
 						required
 					/>
 					<LikertScale
 						name="afftech_q9"
 						control={form.control}
-						options={options}
+						options={likert7Options}
 						rowLabel={m.afftech_q9()}
 						required
 					/>

@@ -28,9 +28,7 @@ function Chat() {
 			<div className="flex items-center justify-between py-3">
 				<h2 className="text-xl font-semibold">Chat-Prototyp</h2>
 				<Button asChild>
-					<Link to="/questionnaire" search={{ type: "chat" }}>
-						Weiter zum Fragebogen
-					</Link>
+					<Link to="/questionnaire">Weiter zum Fragebogen</Link>
 				</Button>
 			</div>
 			{/* Scrollable content */}
