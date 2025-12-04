@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
+import { MultipleChoiceQuestion } from "@/components/MultipleChoiceQuestion.tsx";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -20,17 +21,29 @@ const trustAnswers = z.object({
 	trust_q3: Likert7,
 });
 
-type TrustFormValues = z.infer<typeof trustAnswers>;
+const understandingAnswers = z.object({
+	understanding_q1: Likert7,
+	understanding_q2: z.enum(["q2_option_a", "q2_option_b", "q2_option_c"]),
+});
+
+const formSchema = z.object({
+	...understandingAnswers.shape,
+	...trustAnswers.shape,
+});
+
+type FormValues = z.infer<typeof formSchema>;
 
 function Questionnaire() {
 	const nav = useNavigate();
 
-	const form = useForm<TrustFormValues>({
-		resolver: zodResolver(trustAnswers),
+	const form = useForm<FormValues>({
+		resolver: zodResolver(formSchema),
 		defaultValues: {
 			trust_q1: undefined,
 			trust_q2: undefined,
 			trust_q3: undefined,
+			understanding_q1: undefined,
+			understanding_q2: undefined,
 		},
 		mode: "onSubmit",
 	});
@@ -58,31 +71,56 @@ function Questionnaire() {
 
 			<Separator />
 
-			<form onSubmit={submit} className="max-w-fit mx-auto">
-				<div className="space-y-5 mb-8">
-					<LikertScale
-						name="trust_q1"
-						control={form.control}
-						options={likert7Options}
-						rowLabel={m.trust_q1()}
-						required
-						showHeader
-					/>
-					<LikertScale
-						name="trust_q2"
-						control={form.control}
-						options={likert7Options}
-						rowLabel={m.trust_q2()}
-						required
-					/>
-					<LikertScale
-						name="trust_q3"
-						control={form.control}
-						options={likert7Options}
-						rowLabel={m.trust_q3()}
-						required
-					/>
-				</div>
+			<form onSubmit={submit} className="max-w-fit mx-auto space-y-3">
+				<Card>
+					<CardContent className="space-y-5">
+						<LikertScale
+							name="trust_q1"
+							control={form.control}
+							options={likert7Options}
+							rowLabel={m.trust_q1()}
+							required
+							showHeader
+						/>
+						<LikertScale
+							name="trust_q2"
+							control={form.control}
+							options={likert7Options}
+							rowLabel={m.trust_q2()}
+							required
+						/>
+						<LikertScale
+							name="trust_q3"
+							control={form.control}
+							options={likert7Options}
+							rowLabel={m.trust_q3()}
+							required
+						/>
+					</CardContent>
+				</Card>
+				<Card>
+					<CardContent className="space-y-5">
+						<LikertScale
+							name="understanding_q1"
+							control={form.control}
+							options={likert7Options}
+							rowLabel={"Objektive Verständnisfrage 1"}
+							required
+							showHeader
+						/>
+						<MultipleChoiceQuestion
+							name="understanding_q2"
+							control={form.control}
+							question={"Subjektive Verständnisfrage 2"}
+							required
+							options={[
+								{ value: "q2_option_a", label: "Test Antwort 1" },
+								{ value: "q2_option_b", label: "Test Antwort 2" },
+								{ value: "q2_option_c", label: "Test Antwort 3" },
+							]}
+						/>
+					</CardContent>
+				</Card>
 
 				<div className="flex justify-end">
 					<Button type="submit" disabled={form.formState.isSubmitting}>
