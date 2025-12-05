@@ -22,7 +22,6 @@ Dieses Dokument enthält die wichtigsten numerischen Daten und Modellannahmen zu
 | Arbeitspreis          | `24,920`  | ct/kWh  |
 | Leistungspreis        | `153,55`  | €/kW/a  |
 | Einspeisevergütung    | `6,2`     | ct/KWh  |
-| Summe der Stromkosten | `177.250` | €/a     |
 
 
 ## Brennstofftarif
@@ -34,7 +33,6 @@ Dieses Dokument enthält die wichtigsten numerischen Daten und Modellannahmen zu
 | Preis CO2-Zertifikate        | `70`           | €/t     |
 | CO2-Emissionsfaktor (Hi/Hu)  | `0,201`        | t/MWh   |
 | Preissteigerung              | `3`            | %/a     |
- | Summe aller Brennstoffkosten | `13.032`       | €/a     |
 
 
 ## Wärmebedarf (Winter)
@@ -54,8 +52,6 @@ Dieses Dokument enthält die wichtigsten numerischen Daten und Modellannahmen zu
 | Nennleistung                    | `256`    | kW      | thermisch              |
 | Nennwirkungsgrad                | `95`     | %       | thermisch              |
 | Brennstoffnennleistung          | `269,47` | kW      |                        |
-| Abgegebene Wärmeleistung        | `126,54` | MWh/a   | Entspricht Wärmebedarf |
-| Aufgenommene Brennstoffleistung | `133,21` | MWh/a   |                        |
 
 
 
@@ -70,11 +66,24 @@ Dieses Dokument enthält die wichtigsten numerischen Daten und Modellannahmen zu
 
 ## Kälteerzeugung (Kompressionskältemaschine)
 
-| Parameter                         | Wert    | Einheit | Anmerkung              |
-|-----------------------------------|---------|---------|------------------------|
-| Kälteleistung (Nenn)              | `2.000` | kW      |                        |
-| Nennkälteleistungszahl (ERR)      | `5`     | -       |                        |
-| Antriebsleistung                  | `400`   | kW      | elektrisch             |
-| Aufgenommene elektrische Leistung | `70`    | MWh/a   |                        |
-| Abgegebene Kälteleistung          | `350`   | MWh/a   | entspricht Kältebedarf |
+| Parameter                         | Wert    | Einheit | Anmerkung                  |
+|-----------------------------------|---------|---------|----------------------------|
+| Kälteleistung (Nenn)              | `2.000` | kW      |                            |
+| Nennkälteleistungszahl (ERR)      | `5`     | -       |                            |
+| Antriebsleistung                  | `400`   | kW      | elektrisch                 |
+| Aufgenommene elektrische Leistung | `70`    | MWh/a   | kommt zu Strombedarf hinzu |
+| Abgegebene Kälteleistung          | `350`   | MWh/a   | entspricht Kältebedarf     |
+
+
+# Summe der Kosten im Ist-Zustand
+
+| Parameter                    | Wert      | Einheit | Anmerkung                                           |
+|------------------------------|-----------|---------|-----------------------------------------------------|
+| Summe der Stromkosten        | `177.250` | €/a     | aus Strombedarf und Kälteerzeugung                  |
+| Summe aller Brennstoffkosten | `13.032`  | €/a     | von Heißwasserkessel                                |
+| Gesamte Betriebskosten       | `190.282` | €/a     | Summe aus gesamten Stromkosten und Brennstoffkosten |
+
+## Summe CO₂-Emissionen im Ist-Zustand
+76,55 t/a
+
 
