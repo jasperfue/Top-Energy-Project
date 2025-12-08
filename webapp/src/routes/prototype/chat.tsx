@@ -11,6 +11,7 @@ import PromptInputComponent from "@/components/PromptInput.tsx";
 import { AITypingBubble } from "@/components/ui/AITypingBubble.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Markdown } from "@/components/ui/markdown.tsx";
+import { m } from "@/paraglide/messages.js";
 
 export const Route = createFileRoute("/prototype/chat")({
 	component: Chat,
@@ -21,14 +22,27 @@ function Chat() {
 		transport: new DefaultChatTransport({
 			api: "/api/chat",
 		}),
+		messages: [
+			{
+				id: "welcome-message",
+				role: "assistant",
+				parts: [
+					{
+						type: "text",
+						text: m.chat_intro(),
+					},
+				],
+			},
+		],
 	});
+
 	return (
 		<div className="grid py-4 h-dvh grid-rows-[auto_1fr_auto]">
 			{/* Header */}
 			<div className="flex items-center justify-between py-3">
-				<h2 className="text-xl font-semibold">Chat-Prototyp</h2>
+				<h2 className="text-xl font-semibold">Chat</h2>
 				<Button asChild>
-					<Link to="/questionnaire">Weiter zum Fragebogen</Link>
+					<Link to="/questionnaire">{m.chat_continue()}</Link>
 				</Button>
 			</div>
 			{/* Scrollable content */}
@@ -58,6 +72,7 @@ function Chat() {
 				</ConversationContent>
 				<ConversationScrollButton />
 			</Conversation>
+			{/* @ts-expect-error*/}
 			<PromptInputComponent sendMessage={sendMessage} status={status} />
 		</div>
 	);
