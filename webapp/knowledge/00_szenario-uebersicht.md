@@ -1,6 +1,6 @@
 # Szenario-Übersicht
 
-In einem industriellen Betrieb (KMU) wurde eine Energy-Audit durchgeführt und potenzielle Maßnahmen gefunden, welche die Energieeffizienz steigern und die CO₂-Emissionen reduzieren können.
+In einem industriellen Betrieb (KMU) wurde eine Energy-Audit durchgeführt und potenzielle Maßnahmen gefunden, welche die Energieeffizienz steigern und als Nebeneffekt die CO₂-Emissionen reduzieren können.
 
 Das Szenario wird in zwei Zuständen abgebildet:
 
@@ -33,5 +33,5 @@ Im Soll-Zustand werden zum bestehenden System folgende Komponenten ergänzt:
 - **Stromspeicher** (Batteriespeicher)
 - **Photovoltaikanlage**
 
-Die Optimierung im Soll-Zustand zielt auf eine **Betirebskostenreduktion** ab,
+Die Optimierung im Soll-Zustand zielt auf eine **Betriebskostenreduktion** ab,
 unter Einhaltung der Versorgungssicherheit und technischer Randbedingungen.

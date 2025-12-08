@@ -8,7 +8,7 @@ ohne die Versorgungssicherheit zu gefährden. Um das Optimum zu erreichen, wurde
 
 ### Wärmepumpe
 
-- Eine **elektrische Wärmepumpe** wird eingebunden, um einen signifkanten Anteil des
+- Eine **elektrische Wärmepumpe** wird eingebunden, um einen signifikanten Anteil des
   Wärmebedarfs bereitzustellen.
 - Sie nutzt Umwelt- oder Abwärmequellen (z. B. Außenluft, Prozessabwärme) und ersetzt
   teilweise die fossil befeuerte Wärmeerzeugung durch den Heißwasserkessel.

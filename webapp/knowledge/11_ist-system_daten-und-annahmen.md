@@ -12,8 +12,8 @@ Dieses Dokument enthält die wichtigsten numerischen Daten und Modellannahmen zu
   - Minimalwert: `11,20` kW
   - Standardabweichung: `37,174` kW
 - Zeitauflösung: `15` Minuten
-- Besonderheiten:
-    - In diesem Strombedarf ist die Kälteanlage noch nicht berücksichtigt. Sodass der tatsächliche Strombedarf höher liegt.
+
+**Wichtiger Hinweis zur Bilanzierung**: Der hier genannte "Jährliche Strombedarf" (395,22 MWh/a) bezieht sich nur auf den Grundbedarf exklusive der Kälteanlage. Die Kälteanlage wird separat mit 70 MWh/a berechnet.**
 
 ## Stromtarif
 
