@@ -13,7 +13,7 @@
 			"!**/ui",
 			"!**/ai-elements",
 			"!**/dist",
-			"!knowledge.index.json"
+			"!**/knowledge.index.json"
 		]
 	},
 	"formatter": {

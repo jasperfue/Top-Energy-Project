@@ -10,7 +10,7 @@ const EMBED_MODEL = createOpenAI({
 type IndexRow = {
 	id: string;
 	file: string;
-	chunkIndex: number;
+	context: string;
 	text: string;
 	embedding: number[];
 };
@@ -68,7 +68,7 @@ export async function retrieveTopK(
 	return scored.map(({ row, score }) => ({
 		id: row.id,
 		file: row.file,
-		chunkIndex: row.chunkIndex,
+		context: row.context,
 		score,
 		text: row.text,
 	}));

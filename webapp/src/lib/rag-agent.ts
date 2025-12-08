@@ -25,16 +25,22 @@ export function createRagAgent(request: Request) {
 		execute: async ({ question }) => {
 			const q = clean(question);
 			if (!q) return "(no query provided)";
-			const top = await retrieveTopK(q, 5, 0.2, request);
+			const top = await retrieveTopK(q, 5, 0.4, request);
+
 			if (!top.length) return "(no relevant context)";
 			return top
-				.map(
-					(t, i) =>
-						`# Doc ${i + 1} (${t.file}#${t.chunkIndex}, score=${t.score.toFixed(
-							3,
-						)})\n${t.text}`,
-				)
-				.join("\n\n---\n\n");
+				.map((t, i) => {
+					return `
+SOURCE DOC #${i + 1}
+File: ${t.file}
+Context: ${t.context || "Allgemein"}
+Score: ${t.score.toFixed(2)}
+--------------------------------------------------
+${t.text}
+--------------------------------------------------
+`;
+				})
+				.join("\n\n");
 		},
 	});
 
