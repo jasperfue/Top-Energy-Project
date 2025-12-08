@@ -32,34 +32,32 @@ function Chat() {
 				</Button>
 			</div>
 			{/* Scrollable content */}
-			<div className="min-h-0 overflow-y-auto">
-				<Conversation>
-					<ConversationContent>
-						{messages.map((message, index) => (
-							<Message from={message.role} key={message.id}>
-								<MessageContent>
-									{message.parts.map((part, i) => {
-										switch (part.type) {
-											case "text": // we don't use any reasoning or tool calls in this example
-												return (
-													<Markdown key={`${message.id}-${i}`}>
-														{part.text}
-													</Markdown>
-												);
-											default:
-												return null;
-										}
-									})}
-									{status === "streaming" &&
-										index === messages.length - 1 &&
-										message.role === "assistant" && <AITypingBubble />}
-								</MessageContent>
-							</Message>
-						))}
-					</ConversationContent>
-					<ConversationScrollButton />
-				</Conversation>
-			</div>
+			<Conversation>
+				<ConversationContent>
+					{messages.map((message, index) => (
+						<Message from={message.role} key={message.id}>
+							<MessageContent>
+								{message.parts.map((part, i) => {
+									switch (part.type) {
+										case "text": // we don't use any reasoning or tool calls in this example
+											return (
+												<Markdown key={`${message.id}-${i}`}>
+													{part.text}
+												</Markdown>
+											);
+										default:
+											return null;
+									}
+								})}
+								{status === "streaming" &&
+									index === messages.length - 1 &&
+									message.role === "assistant" && <AITypingBubble />}
+							</MessageContent>
+						</Message>
+					))}
+				</ConversationContent>
+				<ConversationScrollButton />
+			</Conversation>
 			<PromptInputComponent sendMessage={sendMessage} status={status} />
 		</div>
 	);
