@@ -12,7 +12,7 @@ import { AITypingBubble } from "@/components/ui/AITypingBubble.tsx";
 import { Markdown } from "@/components/ui/markdown.tsx";
 import { m } from "@/paraglide/messages.js";
 
-export const Route = createFileRoute("/_pathlessLayout/prototype/chat")({
+export const Route = createFileRoute("/_pathlessLayout/chat")({
 	component: Chat,
 });
 
@@ -50,9 +50,9 @@ function Chat() {
 												<Markdown key={`${message.id}-${i}`}>
 													{part.text}
 												</Markdown>
-											);
+											)
 										default:
-											return null;
+											return null
 									}
 								})}
 								{status === "streaming" &&
@@ -67,5 +67,5 @@ function Chat() {
 			{/* @ts-expect-error*/}
 			<PromptInputComponent sendMessage={sendMessage} status={status} />
 		</div>
-	);
+	)
 }

@@ -65,7 +65,7 @@ function Scenario() {
 
 		const prototypeType = await deferredSlowData;
 		await updateStudyVariant({ data: prototypeType });
-		await nav({ to: `/prototype/${prototypeType}` });
+		await nav({ to: `/${prototypeType}` });
 	};
 
 	return (

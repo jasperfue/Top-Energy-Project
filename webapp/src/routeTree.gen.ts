@@ -16,8 +16,8 @@ import { Route as AffinityForTechnologyRouteImport } from './routes/affinity-for
 import { Route as PathlessLayoutRouteImport } from './routes/_pathlessLayout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiChatRouteImport } from './routes/api.chat'
-import { Route as PathlessLayoutPrototypeDashboardRouteImport } from './routes/_pathlessLayout/prototype/dashboard'
-import { Route as PathlessLayoutPrototypeChatRouteImport } from './routes/_pathlessLayout/prototype/chat'
+import { Route as PathlessLayoutDashboardRouteImport } from './routes/_pathlessLayout/dashboard'
+import { Route as PathlessLayoutChatRouteImport } from './routes/_pathlessLayout/chat'
 
 const ThanksRoute = ThanksRouteImport.update({
   id: '/thanks',
@@ -53,18 +53,16 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PathlessLayoutPrototypeDashboardRoute =
-  PathlessLayoutPrototypeDashboardRouteImport.update({
-    id: '/prototype/dashboard',
-    path: '/prototype/dashboard',
-    getParentRoute: () => PathlessLayoutRoute,
-  } as any)
-const PathlessLayoutPrototypeChatRoute =
-  PathlessLayoutPrototypeChatRouteImport.update({
-    id: '/prototype/chat',
-    path: '/prototype/chat',
-    getParentRoute: () => PathlessLayoutRoute,
-  } as any)
+const PathlessLayoutDashboardRoute = PathlessLayoutDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => PathlessLayoutRoute,
+} as any)
+const PathlessLayoutChatRoute = PathlessLayoutChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => PathlessLayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -72,9 +70,9 @@ export interface FileRoutesByFullPath {
   '/questionnaire': typeof QuestionnaireRoute
   '/scenario': typeof ScenarioRoute
   '/thanks': typeof ThanksRoute
+  '/chat': typeof PathlessLayoutChatRoute
+  '/dashboard': typeof PathlessLayoutDashboardRoute
   '/api/chat': typeof ApiChatRoute
-  '/prototype/chat': typeof PathlessLayoutPrototypeChatRoute
-  '/prototype/dashboard': typeof PathlessLayoutPrototypeDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -82,9 +80,9 @@ export interface FileRoutesByTo {
   '/questionnaire': typeof QuestionnaireRoute
   '/scenario': typeof ScenarioRoute
   '/thanks': typeof ThanksRoute
+  '/chat': typeof PathlessLayoutChatRoute
+  '/dashboard': typeof PathlessLayoutDashboardRoute
   '/api/chat': typeof ApiChatRoute
-  '/prototype/chat': typeof PathlessLayoutPrototypeChatRoute
-  '/prototype/dashboard': typeof PathlessLayoutPrototypeDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -94,9 +92,9 @@ export interface FileRoutesById {
   '/questionnaire': typeof QuestionnaireRoute
   '/scenario': typeof ScenarioRoute
   '/thanks': typeof ThanksRoute
+  '/_pathlessLayout/chat': typeof PathlessLayoutChatRoute
+  '/_pathlessLayout/dashboard': typeof PathlessLayoutDashboardRoute
   '/api/chat': typeof ApiChatRoute
-  '/_pathlessLayout/prototype/chat': typeof PathlessLayoutPrototypeChatRoute
-  '/_pathlessLayout/prototype/dashboard': typeof PathlessLayoutPrototypeDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -106,9 +104,9 @@ export interface FileRouteTypes {
     | '/questionnaire'
     | '/scenario'
     | '/thanks'
+    | '/chat'
+    | '/dashboard'
     | '/api/chat'
-    | '/prototype/chat'
-    | '/prototype/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -116,9 +114,9 @@ export interface FileRouteTypes {
     | '/questionnaire'
     | '/scenario'
     | '/thanks'
+    | '/chat'
+    | '/dashboard'
     | '/api/chat'
-    | '/prototype/chat'
-    | '/prototype/dashboard'
   id:
     | '__root__'
     | '/'
@@ -127,9 +125,9 @@ export interface FileRouteTypes {
     | '/questionnaire'
     | '/scenario'
     | '/thanks'
+    | '/_pathlessLayout/chat'
+    | '/_pathlessLayout/dashboard'
     | '/api/chat'
-    | '/_pathlessLayout/prototype/chat'
-    | '/_pathlessLayout/prototype/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -193,31 +191,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_pathlessLayout/prototype/dashboard': {
-      id: '/_pathlessLayout/prototype/dashboard'
-      path: '/prototype/dashboard'
-      fullPath: '/prototype/dashboard'
-      preLoaderRoute: typeof PathlessLayoutPrototypeDashboardRouteImport
+    '/_pathlessLayout/dashboard': {
+      id: '/_pathlessLayout/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof PathlessLayoutDashboardRouteImport
       parentRoute: typeof PathlessLayoutRoute
     }
-    '/_pathlessLayout/prototype/chat': {
-      id: '/_pathlessLayout/prototype/chat'
-      path: '/prototype/chat'
-      fullPath: '/prototype/chat'
-      preLoaderRoute: typeof PathlessLayoutPrototypeChatRouteImport
+    '/_pathlessLayout/chat': {
+      id: '/_pathlessLayout/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof PathlessLayoutChatRouteImport
       parentRoute: typeof PathlessLayoutRoute
     }
   }
 }
 
 interface PathlessLayoutRouteChildren {
-  PathlessLayoutPrototypeChatRoute: typeof PathlessLayoutPrototypeChatRoute
-  PathlessLayoutPrototypeDashboardRoute: typeof PathlessLayoutPrototypeDashboardRoute
+  PathlessLayoutChatRoute: typeof PathlessLayoutChatRoute
+  PathlessLayoutDashboardRoute: typeof PathlessLayoutDashboardRoute
 }
 
 const PathlessLayoutRouteChildren: PathlessLayoutRouteChildren = {
-  PathlessLayoutPrototypeChatRoute: PathlessLayoutPrototypeChatRoute,
-  PathlessLayoutPrototypeDashboardRoute: PathlessLayoutPrototypeDashboardRoute,
+  PathlessLayoutChatRoute: PathlessLayoutChatRoute,
+  PathlessLayoutDashboardRoute: PathlessLayoutDashboardRoute,
 }
 
 const PathlessLayoutRouteWithChildren = PathlessLayoutRoute._addFileChildren(

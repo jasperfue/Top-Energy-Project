@@ -54,7 +54,7 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip.tsx";
 
-export const Route = createFileRoute("/_pathlessLayout/prototype/dashboard")({
+export const Route = createFileRoute("/_pathlessLayout/dashboard")({
 	component: Dashboard,
 });
 
@@ -120,14 +120,14 @@ function Dashboard() {
 				<section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 					<KpiCard
 						title="Investitionskosten"
-						value={`${KPI_DATA.invest.toLocaleString("de-DE")} €`}
+						value={`${KPI_DATA.invest.toLocaleString(`de-DE`)} €`}
 						subtitle="Einmalige Gesamtkosten"
 						icon={Euro}
 						tooltipData={KPI_DETAILS.invest}
 					/>
 					<KpiCard
 						title="Jährliche Einsparung"
-						value={`${KPI_DATA.savingsYearly.toLocaleString("de-DE")} €`}
+						value={`${KPI_DATA.savingsYearly.toLocaleString(`de-DE`)} €`}
 						subtitle="Betriebskostenreduktion"
 						icon={TrendingDown}
 						trend="positive"
@@ -136,14 +136,14 @@ function Dashboard() {
 					/>
 					<KpiCard
 						title="Amortisation"
-						value={`${KPI_DATA.amortization.toString().replace(".", ",")} Jahre`}
+						value={`${KPI_DATA.amortization.toString().replace(`.`, `,`)} Jahre`}
 						subtitle="Return on Investment"
 						icon={Timer}
 					/>
 					<KpiCard
 						title="CO₂-Bilanz"
-						value={`${KPI_DATA.co2Soll.toString().replace(".", ",")} t/a`}
-						subtitle={`Vorher: ${KPI_DATA.co2Ist.toString().replace(".", ",")} t/a`}
+						value={`${KPI_DATA.co2Soll.toString().replace(`.`, `,`)} t/a`}
+						subtitle={`Vorher: ${KPI_DATA.co2Ist.toString().replace(`.`, `,`)} t/a`}
 						icon={Leaf}
 						highlightClass="text-green-600"
 						trend="positive"
@@ -331,7 +331,7 @@ function Dashboard() {
 			</section>
 			<AssumptionsSection />
 		</main>
-	);
+	)
 }
 
 interface KpiCardProps {
@@ -399,7 +399,7 @@ function KpiCard({
 				<Icon className="h-4 w-4 text-muted-foreground" />
 			</CardHeader>
 			<CardContent>
-				<div className={`text-2xl font-bold ${highlightClass || ""}`}>
+				<div className={`text-2xl font-bold ${highlightClass || ``}`}>
 					{value}
 				</div>
 				<div className="flex items-center justify-between mt-1 h-5">
@@ -415,7 +415,7 @@ function KpiCard({
 				</div>
 			</CardContent>
 		</Card>
-	);
+	)
 }
 
 interface TechCardProps {
@@ -451,7 +451,7 @@ function TechCard({ icon: Icon, title, specs, description }: TechCardProps) {
 				</div>
 			</CardContent>
 		</Card>
-	);
+	)
 }
 interface CustomTooltipProps {
 	active?: boolean;
@@ -466,7 +466,7 @@ interface CustomTooltipProps {
 			Wartung: number;
 			Erlöse: number;
 			total: number;
-		};
+		}
 	}>;
 	label?: string;
 }
@@ -513,7 +513,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
 					</span>
 				</div>
 			</div>
-		);
+		)
 	}
 
 	return null;
@@ -605,5 +605,5 @@ function AssumptionsSection() {
 				</CardContent>
 			</Card>
 		</section>
-	);
+	)
 }
