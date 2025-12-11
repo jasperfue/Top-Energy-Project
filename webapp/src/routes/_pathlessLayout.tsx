@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { Zap } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
+import { m } from "@/paraglide/messages.js";
 
 export const Route = createFileRoute("/_pathlessLayout")({
 	component: RouteComponent,
@@ -17,19 +18,18 @@ function RouteComponent() {
 						</div>
 						<div>
 							<h2 className="text-xl font-semibold leading-none">
-								Energie-Audit Ergebnis
+								{m.common_energy_audit()}
 							</h2>
-							<span className="text-xs text-muted-foreground">
-								Szenario Vergleich
-							</span>
 						</div>
 					</div>
 					<Button asChild variant="default">
-						<Link to="/questionnaire">Entscheidung treffen & Weiter</Link>
+						<Link to="/questionnaire">
+							{m.common_continue_to_questionnaire()}
+						</Link>
 					</Button>
 				</div>
 			</div>
 			<Outlet />
 		</div>
-	)
+	);
 }

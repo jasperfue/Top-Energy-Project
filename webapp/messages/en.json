@@ -19,6 +19,9 @@
 
 	"common_required_error": "This field is required",
 
+	"common_energy_audit": "Energy Audit Result",
+	"common_continue_to_questionnaire": "Continue to Questionnaire",
+
 	"consent_title": "Study Information & Consent",
 	"consent_blurb": "Brief description of the study, data collection (anonymous/pseudonymous), duration, contact, withdrawal, etc.",
 	"consent_checkbox_label": "I have read the information and give my consent.",
@@ -46,7 +49,6 @@
 	"afftech_q9": "I try to make full use of the capabilities of a technical system.",
 
 	"chat_intro": "### Welcome to Your Energy Audit \uD83C\uDFED\n\nI am your AI energy consultant. I have access to the full simulation data of your facility, modeled with **TOP-Energy®**. Let's analyze how you can reduce operational costs and lower your carbon footprint.\n\n#### \uD83D\uDCCA Scenario Overview\n\nWe are comparing two states of your energy system:\n\n* **Status Quo:** Your current setup. It relies heavily on grid electricity and a fossil-fuel **boiler** for heat. Cooling is provided by standard compression chillers.\n* **Target State:** An optimized system upgraded with three key technologies:\n    1.  **Photovoltaics (PV)** for on-site power generation.\n    2.  **Heat Pump** for efficient heating and cooling.\n    3.  **Battery Storage** to maximize self-consumption.\n\n#### \uD83D\uDCA1 What you can ask me\n\nI can provide detailed insights into financial KPIs and technical specifications based on the audit. Try asking questions like:\n\n* *\"Is the investment in the target state profitable?\"*\n* *\"What is the payback period for the new measures?\"*\n* *\"How much CO₂ can I save per year?\"*\n* *\"What are the investment costs for the heat pump?\"*\n\n**What would you like to know first?**",
-	"chat_continue": "Continue to Questionnaire",
 
 	"questionnaire_title": "Questionnaire",
 	"questionnaire_intro": "Bitte antworten",

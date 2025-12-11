@@ -19,6 +19,9 @@
 
 	"common_required_error": "Dieses Feld ist erforderlich",
 
+	"common_energy_audit": "Energie-Audit Ergebnis",
+	"common_continue_to_questionnaire": "Weiter zum Fragebogen",
+
 	"consent_title": "Studieninformation & Einwilligung",
 	"consent_blurb": "Kurzbeschreibung der Studie, Datenerhebung (anonym/pseudonym), Dauer, Kontakt, Widerruf etc.",
 	"consent_checkbox_label": "Ich habe die Informationen gelesen und willige ein.",
@@ -46,7 +49,6 @@
 	"afftech_q9": "Ich versuche, die Möglichkeiten eines technischen Systems vollständig auszunutzen.",
 
 	"chat_intro": "### Willkommen zu Ihrem Energie-Audit \uD83C\uDFED\n\nIch bin Ihr KI-Energieberater. Ich habe Zugriff auf die vollständigen Audit-Daten Ihres Betriebs, die mit **TOP-Energy®** simuliert wurden. Lassen Sie uns gemeinsam analysieren, wie Sie Ihre Energiekosten senken und CO₂ einsparen können.\n\n#### \uD83D\uDCCA Das Szenario im Überblick\n\nWir vergleichen zwei Zustände Ihres Energiesystems:\n\n* **Der Ist-Zustand:** Ihr aktuelles System. Es basiert stark auf Netzstrombezug und einem fossilen **Heißwasserkessel** für die Wärme. Die Kühlung erfolgt über konventionelle Kältemaschinen.\n* **Der Soll-Zustand (Optimiert):** Eine modernisierte Variante, ergänzt durch drei Schlüsseltechnologien:\n    1.  **Photovoltaik (PV)** zur Eigenstromerzeugung.\n    2.  **Wärmepumpe** zur effizienten Wärme-/Kälteerzeugung.\n    3.  **Batteriespeicher** zur Optimierung des Eigenverbrauchs.\n\n#### \uD83D\uDCA1 Was Sie mich fragen können\n\nIch kann Ihnen detaillierte Auskünfte zu den wirtschaftlichen und technischen Daten geben. Probieren Sie es mit Fragen wie:\n\n* *\"Lohnt sich die Investition in den Soll-Zustand?\"*\n* *\"Wie hoch sind die Investitionskosten für die PV-Anlage?\"*\n* *\"Wie verändert sich meine CO₂-Bilanz?\"*\n* *\"Was ist der Unterschied bei den Betriebskosten?\"*\n\n**Womit wollen wir starten?**",
-	"chat_continue": "Weiter zum Fragebogen",
 
 	"questionnaire_title": "Fragebogen",
 	"questionnaire_intro": "Bitte antworten",
