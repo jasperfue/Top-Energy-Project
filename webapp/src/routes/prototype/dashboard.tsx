@@ -22,6 +22,12 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion.tsx";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +38,14 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table.tsx";
 
 export const Route = createFileRoute("/prototype/dashboard")({
 	component: Dashboard,
@@ -263,7 +277,7 @@ function Dashboard() {
 
 				{/* 3. SECTION: TECHNISCHE DETAILS */}
 				<h3 className="text-lg font-semibold mt-8 mb-4">
-					Implementierte Komponenten (Soll-Zustand)
+					Zu Implementierende Komponenten (Soll-Zustand)
 				</h3>
 				<section className="grid gap-4 md:grid-cols-3">
 					{/* PV-Anlage  */}
@@ -287,8 +301,8 @@ function Dashboard() {
 						specs={[
 							{ label: "Kapazität", value: "321 kWh" },
 							{ label: "Zyklen", value: "268 / Jahr" },
-							{ label: "Invest", value: "73.524 €" },
 							{ label: "Betriebskosten", value: "1.470,5 €/a" },
+							{ label: "Invest", value: "73.524 €" },
 						]}
 						description="Puffert PV-Strom für die Nacht und kappt teure Lastspitzen."
 					/>
@@ -306,6 +320,7 @@ function Dashboard() {
 						description="Ersetzt einen Großteil des Gasverbrauchs durch effizienten Strom."
 					/>
 				</section>
+				<AssumptionsSection />
 			</main>
 		</div>
 	);
@@ -458,3 +473,92 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
 
 	return null;
 };
+
+function AssumptionsSection() {
+	return (
+		<section className="mt-8">
+			<Card>
+				<CardHeader>
+					<CardTitle className="text-lg">Modell-Grundlagen</CardTitle>
+					<CardDescription>
+						Die Berechnung basiert auf folgenden Ist-Daten und Tarifen Ihres
+						Betriebs.
+					</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<Accordion type="single" collapsible className="w-full">
+						{/* TARIFE */}
+						<AccordionItem value="item-1">
+							<AccordionTrigger>Aktuelle Energietarife</AccordionTrigger>
+							<AccordionContent>
+								<Table>
+									<TableHeader>
+										<TableRow>
+											<TableHead>Typ</TableHead>
+											<TableHead>Preis (Arbeit)</TableHead>
+											<TableHead>Grundpreis/Leistung</TableHead>
+											<TableHead>Einspeisevergütung</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
+										<TableRow>
+											<TableCell className="font-medium">Strombezug</TableCell>
+											<TableCell>24,92 ct/kWh</TableCell>
+											<TableCell>153,55 €/kW/a</TableCell>
+											<TableCell>6,2 ct/kWh</TableCell>
+										</TableRow>
+										<TableRow>
+											<TableCell className="font-medium">
+												Brennstoff* (Gas)
+											</TableCell>
+											<TableCell>8,00 ct/kWh</TableCell>
+											<TableCell>500,00 €/a</TableCell>
+										</TableRow>
+									</TableBody>
+								</Table>
+								<p className="text-xs text-muted-foreground mt-2">
+									* CO₂-Preis: 70 €/t | Preissteigerung: 3 %/a
+								</p>
+							</AccordionContent>
+						</AccordionItem>
+
+						{/* VERBRAUCHSDATEN */}
+						<AccordionItem value="item-2">
+							<AccordionTrigger>Jahresbedarf & Lastprofil</AccordionTrigger>
+							<AccordionContent>
+								<div className="grid grid-cols-2 gap-4 text-sm">
+									<div className="space-y-1">
+										<span className="block text-muted-foreground">
+											Strombedarf (Gesamt)
+										</span>
+										<span className="font-medium">
+											395 MWh/a + 70 MWh (Kälte)
+										</span>
+									</div>
+									<div className="space-y-1">
+										<span className="block text-muted-foreground">
+											Spitzenlast (Strom)
+										</span>
+										<span className="font-medium">352,8 kW</span>
+									</div>
+									<div className="space-y-1">
+										<span className="block text-muted-foreground">
+											Thermischer Wärmebedarf (vor allem in den Wintermonaten)
+										</span>
+										<span className="font-medium">126,5 MWh/a</span>
+									</div>
+									<div className="space-y-1">
+										<span className="block text-muted-foreground">
+											Thermischer Kältebedarf (Sommermonate)
+										</span>
+										<span className="font-medium">350 MWh/a</span>
+									</div>
+								</div>
+							</AccordionContent>
+						</AccordionItem>
+					</Accordion>
+				</CardContent>
+			</Card>
+		</section>
+	);
+}
