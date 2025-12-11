@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import {
 	Battery,
 	Euro,
@@ -30,16 +30,15 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion.tsx";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge.tsx";
 import {
 	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+} from "@/components/ui/card.tsx";
+import { Separator } from "@/components/ui/separator.tsx";
 import {
 	Table,
 	TableBody,
@@ -53,9 +52,9 @@ import {
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/ui/tooltip.tsx";
 
-export const Route = createFileRoute("/prototype/dashboard")({
+export const Route = createFileRoute("/_pathlessLayout/prototype/dashboard")({
 	component: Dashboard,
 });
 
@@ -114,248 +113,224 @@ const PIE_DATA_AUTARKIE = [
 
 function Dashboard() {
 	return (
-		<div className="min-h-screen bg-muted/20 pb-10">
-			{/* Header */}
-			<div className="sticky top-0 z-20 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
-				<div className="container mx-auto px-4 flex items-center justify-between py-3">
-					<div className="flex items-center gap-2">
-						<div className="bg-primary/10 p-2 rounded-md">
-							<Zap className="h-5 w-5 text-primary" />
-						</div>
-						<div>
-							<h2 className="text-xl font-semibold leading-none">
-								Energie-Audit Ergebnis
-							</h2>
-							<span className="text-xs text-muted-foreground">
-								Szenario Vergleich
-							</span>
-						</div>
-					</div>
-					<Button asChild variant="default">
-						<Link to="/questionnaire">Entscheidung treffen & Weiter</Link>
-					</Button>
-				</div>
-			</div>
-
-			<main className="container mx-auto px-4 py-8 space-y-8">
+		<main className="container mx-auto px-4 py-8 space-y-8">
+			{/* 1. SECTION: EXECUTIVE SUMMARY (KPIs) */}
+			<TooltipProvider delayDuration={300}>
 				{/* 1. SECTION: EXECUTIVE SUMMARY (KPIs) */}
-				<TooltipProvider delayDuration={300}>
-					{/* 1. SECTION: EXECUTIVE SUMMARY (KPIs) */}
-					<section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-						<KpiCard
-							title="Investitionskosten"
-							value={`${KPI_DATA.invest.toLocaleString("de-DE")} €`}
-							subtitle="Einmalige Gesamtkosten"
-							icon={Euro}
-							tooltipData={KPI_DETAILS.invest}
-						/>
-						<KpiCard
-							title="Jährliche Einsparung"
-							value={`${KPI_DATA.savingsYearly.toLocaleString("de-DE")} €`}
-							subtitle="Betriebskostenreduktion"
-							icon={TrendingDown}
-							trend="positive"
-							trendText="-49% Kosten"
-							tooltipData={KPI_DETAILS.savings}
-						/>
-						<KpiCard
-							title="Amortisation"
-							value={`${KPI_DATA.amortization.toString().replace(".", ",")} Jahre`}
-							subtitle="Return on Investment"
-							icon={Timer}
-						/>
-						<KpiCard
-							title="CO₂-Bilanz"
-							value={`${KPI_DATA.co2Soll.toString().replace(".", ",")} t/a`}
-							subtitle={`Vorher: ${KPI_DATA.co2Ist.toString().replace(".", ",")} t/a`}
-							icon={Leaf}
-							highlightClass="text-green-600"
-							trend="positive"
-							trendText="Klimapositiv"
-							tooltipData={KPI_DETAILS.co2}
-						/>
-					</section>
-				</TooltipProvider>
+				<section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+					<KpiCard
+						title="Investitionskosten"
+						value={`${KPI_DATA.invest.toLocaleString("de-DE")} €`}
+						subtitle="Einmalige Gesamtkosten"
+						icon={Euro}
+						tooltipData={KPI_DETAILS.invest}
+					/>
+					<KpiCard
+						title="Jährliche Einsparung"
+						value={`${KPI_DATA.savingsYearly.toLocaleString("de-DE")} €`}
+						subtitle="Betriebskostenreduktion"
+						icon={TrendingDown}
+						trend="positive"
+						trendText="-49% Kosten"
+						tooltipData={KPI_DETAILS.savings}
+					/>
+					<KpiCard
+						title="Amortisation"
+						value={`${KPI_DATA.amortization.toString().replace(".", ",")} Jahre`}
+						subtitle="Return on Investment"
+						icon={Timer}
+					/>
+					<KpiCard
+						title="CO₂-Bilanz"
+						value={`${KPI_DATA.co2Soll.toString().replace(".", ",")} t/a`}
+						subtitle={`Vorher: ${KPI_DATA.co2Ist.toString().replace(".", ",")} t/a`}
+						icon={Leaf}
+						highlightClass="text-green-600"
+						trend="positive"
+						trendText="Klimapositiv"
+						tooltipData={KPI_DETAILS.co2}
+					/>
+				</section>
+			</TooltipProvider>
 
-				{/* 2. SECTION: VISUALIZATION & CHARTS */}
-				<section className="grid gap-4 md:grid-cols-7">
-					{/* KOSTENVERGLEICH (Breiter) */}
-					<Card className="md:col-span-4">
-						<CardHeader>
-							<CardTitle>Jährlicher Kostenvergleich</CardTitle>
-							<CardDescription>
-								Gesamtbetriebskosten Ist-Zustand vs. Soll-Zustand
-							</CardDescription>
-						</CardHeader>
-						<CardContent className="h-[300px]">
+			{/* 2. SECTION: VISUALIZATION & CHARTS */}
+			<section className="grid gap-4 md:grid-cols-7">
+				{/* KOSTENVERGLEICH (Breiter) */}
+				<Card className="md:col-span-4">
+					<CardHeader>
+						<CardTitle>Jährlicher Kostenvergleich</CardTitle>
+						<CardDescription>
+							Gesamtbetriebskosten Ist-Zustand vs. Soll-Zustand
+						</CardDescription>
+					</CardHeader>
+					<CardContent className="h-[300px]">
+						<ResponsiveContainer width="100%" height="100%">
+							<BarChart
+								data={COST_DATA}
+								margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+							>
+								<CartesianGrid strokeDasharray="3 3" vertical={false} />
+								<XAxis
+									dataKey="name"
+									fontSize={12}
+									tickLine={false}
+									axisLine={false}
+								/>
+								<YAxis
+									unit=" €"
+									fontSize={12}
+									tickLine={false}
+									axisLine={false}
+									tickFormatter={(value) => `${value / 1000}k`}
+								/>
+
+								{/* HIER IST DIE ÄNDERUNG: */}
+								<RechartsTooltip
+									content={<CustomTooltip />}
+									cursor={{ fill: "rgba(0,0,0,0.05)" }} // Optional: Macht den Hover-Hintergrund dezenter
+								/>
+
+								<Legend wrapperStyle={{ paddingTop: "20px" }} />
+								<Bar
+									dataKey="Strom"
+									stackId="a"
+									fill="#3b82f6"
+									name="Strombezug"
+									radius={[0, 0, 4, 4]}
+								/>
+								<Bar
+									dataKey="Brennstoff"
+									stackId="a"
+									fill="#ef4444"
+									name="Brennstoff (Gas)"
+								/>
+								<Bar
+									dataKey="Wartung"
+									stackId="a"
+									fill="#f59e0b"
+									name="Betrieb & Wartung"
+								/>
+								<Bar
+									dataKey="Erlöse"
+									stackId="a"
+									fill="#16a34a"
+									name="Einspeisevergütung"
+									radius={[4, 4, 0, 0]}
+								/>
+							</BarChart>
+						</ResponsiveContainer>
+					</CardContent>
+				</Card>
+
+				{/* AUTARKIE & UNABHÄNGIGKEIT */}
+				<Card className="md:col-span-3">
+					<CardHeader>
+						<CardTitle>Unabhängigkeitsgrad</CardTitle>
+						<CardDescription>
+							Anteil der Eigenversorgung am Gesamtbedarf
+						</CardDescription>
+					</CardHeader>
+					<CardContent className="flex flex-col items-center justify-center h-[300px]">
+						<div className="relative w-full h-[200px]">
 							<ResponsiveContainer width="100%" height="100%">
-								<BarChart
-									data={COST_DATA}
-									margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-								>
-									<CartesianGrid strokeDasharray="3 3" vertical={false} />
-									<XAxis
-										dataKey="name"
-										fontSize={12}
-										tickLine={false}
-										axisLine={false}
-									/>
-									<YAxis
-										unit=" €"
-										fontSize={12}
-										tickLine={false}
-										axisLine={false}
-										tickFormatter={(value) => `${value / 1000}k`}
-									/>
-
-									{/* HIER IST DIE ÄNDERUNG: */}
-									<RechartsTooltip
-										content={<CustomTooltip />}
-										cursor={{ fill: "rgba(0,0,0,0.05)" }} // Optional: Macht den Hover-Hintergrund dezenter
-									/>
-
-									<Legend wrapperStyle={{ paddingTop: "20px" }} />
-									<Bar
-										dataKey="Strom"
-										stackId="a"
-										fill="#3b82f6"
-										name="Strombezug"
-										radius={[0, 0, 4, 4]}
-									/>
-									<Bar
-										dataKey="Brennstoff"
-										stackId="a"
-										fill="#ef4444"
-										name="Brennstoff (Gas)"
-									/>
-									<Bar
-										dataKey="Wartung"
-										stackId="a"
-										fill="#f59e0b"
-										name="Betrieb & Wartung"
-									/>
-									<Bar
-										dataKey="Erlöse"
-										stackId="a"
-										fill="#16a34a"
-										name="Einspeisevergütung"
-										radius={[4, 4, 0, 0]}
-									/>
-								</BarChart>
+								<PieChart>
+									<Pie
+										data={PIE_DATA_AUTARKIE}
+										cx="50%"
+										cy="50%"
+										innerRadius={60}
+										outerRadius={80}
+										paddingAngle={5}
+										dataKey="value"
+									>
+										{PIE_DATA_AUTARKIE.map((entry) => (
+											<Cell key={`cell-${entry.name}`} fill={entry.color} />
+										))}
+									</Pie>
+								</PieChart>
 							</ResponsiveContainer>
-						</CardContent>
-					</Card>
-
-					{/* AUTARKIE & UNABHÄNGIGKEIT */}
-					<Card className="md:col-span-3">
-						<CardHeader>
-							<CardTitle>Unabhängigkeitsgrad</CardTitle>
-							<CardDescription>
-								Anteil der Eigenversorgung am Gesamtbedarf
-							</CardDescription>
-						</CardHeader>
-						<CardContent className="flex flex-col items-center justify-center h-[300px]">
-							<div className="relative w-full h-[200px]">
-								<ResponsiveContainer width="100%" height="100%">
-									<PieChart>
-										<Pie
-											data={PIE_DATA_AUTARKIE}
-											cx="50%"
-											cy="50%"
-											innerRadius={60}
-											outerRadius={80}
-											paddingAngle={5}
-											dataKey="value"
-										>
-											{PIE_DATA_AUTARKIE.map((entry) => (
-												<Cell key={`cell-${entry.name}`} fill={entry.color} />
-											))}
-										</Pie>
-									</PieChart>
-								</ResponsiveContainer>
-								{/* Zentrierter Text im Donut */}
-								<div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-									<span className="text-3xl font-bold">
-										{KPI_DATA.autarky.toString().replace(".", ",")}%
-									</span>
-									<span className="text-xs text-muted-foreground uppercase tracking-wider">
-										Autarkie
-									</span>
-								</div>
+							{/* Zentrierter Text im Donut */}
+							<div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+								<span className="text-3xl font-bold">
+									{KPI_DATA.autarky.toString().replace(".", ",")}%
+								</span>
+								<span className="text-xs text-muted-foreground uppercase tracking-wider">
+									Autarkie
+								</span>
 							</div>
+						</div>
 
-							<div className="mt-4 w-full space-y-2">
-								<div className="flex justify-between text-sm">
-									<span className="flex items-center gap-2">
-										<div className="w-3 h-3 rounded-full bg-green-600" />
-										Eigene Erzeugung
-									</span>
-									<span className="font-medium">
-										{KPI_DATA.autarky.toString().replace(".", ",")}%
-									</span>
-								</div>
-								<Separator />
-								<div className="flex justify-between text-sm">
-									<span className="text-muted-foreground">
-										Eigenverbrauchsquote (PV)
-									</span>
-									<span className="font-medium">
-										{KPI_DATA.selfUse.toString().replace(".", ",")}%
-									</span>
-								</div>
+						<div className="mt-4 w-full space-y-2">
+							<div className="flex justify-between text-sm">
+								<span className="flex items-center gap-2">
+									<div className="w-3 h-3 rounded-full bg-green-600" />
+									Eigene Erzeugung
+								</span>
+								<span className="font-medium">
+									{KPI_DATA.autarky.toString().replace(".", ",")}%
+								</span>
 							</div>
-						</CardContent>
-					</Card>
-				</section>
+							<Separator />
+							<div className="flex justify-between text-sm">
+								<span className="text-muted-foreground">
+									Eigenverbrauchsquote (PV)
+								</span>
+								<span className="font-medium">
+									{KPI_DATA.selfUse.toString().replace(".", ",")}%
+								</span>
+							</div>
+						</div>
+					</CardContent>
+				</Card>
+			</section>
 
-				{/* 3. SECTION: TECHNISCHE DETAILS */}
-				<h3 className="text-lg font-semibold mt-8 mb-4">
-					Zu Implementierende Komponenten (Soll-Zustand)
-				</h3>
-				<section className="grid gap-4 md:grid-cols-3">
-					{/* PV-Anlage  */}
-					<TechCard
-						icon={Zap}
-						title="Photovoltaikanlage"
-						specs={[
-							{ label: "Leistung", value: "684 kWp" },
-							{ label: "Fläche", value: "3.041 m²" },
-							{ label: "Ertrag", value: "673 MWh/a" },
-							{ label: "Betriebskosten", value: "6.000 €/a" },
-							{ label: "Invest", value: "400.000 €" },
-						]}
-						description="Großflächige Dachanlage zur Deckung des Grundbedarfs und Einspeisung."
-					/>
+			{/* 3. SECTION: TECHNISCHE DETAILS */}
+			<h3 className="text-lg font-semibold mt-8 mb-4">
+				Zu Implementierende Komponenten (Soll-Zustand)
+			</h3>
+			<section className="grid gap-4 md:grid-cols-3">
+				{/* PV-Anlage  */}
+				<TechCard
+					icon={Zap}
+					title="Photovoltaikanlage"
+					specs={[
+						{ label: "Leistung", value: "684 kWp" },
+						{ label: "Fläche", value: "3.041 m²" },
+						{ label: "Ertrag", value: "673 MWh/a" },
+						{ label: "Betriebskosten", value: "6.000 €/a" },
+						{ label: "Invest", value: "400.000 €" },
+					]}
+					description="Großflächige Dachanlage zur Deckung des Grundbedarfs und Einspeisung."
+				/>
 
-					{/* Speicher  */}
-					<TechCard
-						icon={Battery}
-						title="Batteriespeicher"
-						specs={[
-							{ label: "Kapazität", value: "321 kWh" },
-							{ label: "Zyklen", value: "268 / Jahr" },
-							{ label: "Betriebskosten", value: "1.470,5 €/a" },
-							{ label: "Invest", value: "73.524 €" },
-						]}
-						description="Puffert PV-Strom für die Nacht und kappt teure Lastspitzen."
-					/>
+				{/* Speicher  */}
+				<TechCard
+					icon={Battery}
+					title="Batteriespeicher"
+					specs={[
+						{ label: "Kapazität", value: "321 kWh" },
+						{ label: "Zyklen", value: "268 / Jahr" },
+						{ label: "Betriebskosten", value: "1.470,5 €/a" },
+						{ label: "Invest", value: "73.524 €" },
+					]}
+					description="Puffert PV-Strom für die Nacht und kappt teure Lastspitzen."
+				/>
 
-					{/* Wärmepumpe  */}
-					<TechCard
-						icon={ThermometerSun}
-						title="Wärmepumpe"
-						specs={[
-							{ label: "Thermische Nennleistung", value: "50 kW" },
-							{ label: "Wärme", value: "126,49 MWh/a" },
-							{ label: "Betriebskosten", value: "375 €/a" },
-							{ label: "Invest", value: "25.000 €" },
-						]}
-						description="Ersetzt einen Großteil des Gasverbrauchs durch effizienten Strom."
-					/>
-				</section>
-				<AssumptionsSection />
-			</main>
-		</div>
+				{/* Wärmepumpe  */}
+				<TechCard
+					icon={ThermometerSun}
+					title="Wärmepumpe"
+					specs={[
+						{ label: "Thermische Nennleistung", value: "50 kW" },
+						{ label: "Wärme", value: "126,49 MWh/a" },
+						{ label: "Betriebskosten", value: "375 €/a" },
+						{ label: "Invest", value: "25.000 €" },
+					]}
+					description="Ersetzt einen Großteil des Gasverbrauchs durch effizienten Strom."
+				/>
+			</section>
+			<AssumptionsSection />
+		</main>
 	);
 }
 
