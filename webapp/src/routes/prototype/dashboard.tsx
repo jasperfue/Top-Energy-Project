@@ -147,17 +147,33 @@ function Dashboard() {
 									margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
 								>
 									<CartesianGrid strokeDasharray="3 3" vertical={false} />
-									<XAxis dataKey="name" />
-									<YAxis unit=" €" />
-									<Tooltip
-										formatter={(value) => `${value.toLocaleString("de-DE")} €`}
+									<XAxis
+										dataKey="name"
+										fontSize={12}
+										tickLine={false}
+										axisLine={false}
 									/>
-									<Legend />
+									<YAxis
+										unit=" €"
+										fontSize={12}
+										tickLine={false}
+										axisLine={false}
+										tickFormatter={(value) => `${value / 1000}k`}
+									/>
+
+									{/* HIER IST DIE ÄNDERUNG: */}
+									<Tooltip
+										content={<CustomTooltip />}
+										cursor={{ fill: "rgba(0,0,0,0.05)" }} // Optional: Macht den Hover-Hintergrund dezenter
+									/>
+
+									<Legend wrapperStyle={{ paddingTop: "20px" }} />
 									<Bar
 										dataKey="Strom"
 										stackId="a"
 										fill="#3b82f6"
 										name="Strombezug"
+										radius={[0, 0, 4, 4]}
 									/>
 									<Bar
 										dataKey="Brennstoff"
@@ -171,12 +187,12 @@ function Dashboard() {
 										fill="#f59e0b"
 										name="Betrieb & Wartung"
 									/>
-									{/* Erlöse werden negativ dargestellt für den Netto-Effekt */}
 									<Bar
 										dataKey="Erlöse"
 										stackId="a"
 										fill="#16a34a"
 										name="Einspeisevergütung"
+										radius={[4, 4, 0, 0]}
 									/>
 								</BarChart>
 							</ResponsiveContainer>
@@ -377,3 +393,68 @@ function TechCard({ icon: Icon, title, specs, description }: TechCardProps) {
 		</Card>
 	);
 }
+interface CustomTooltipProps {
+	active?: boolean;
+	payload?: Array<{
+		value: number;
+		name: string;
+		color: string;
+		payload: {
+			name: string;
+			Strom: number;
+			Brennstoff: number;
+			Wartung: number;
+			Erlöse: number;
+			total: number;
+		};
+	}>;
+	label?: string;
+}
+
+const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
+	if (active && payload && payload.length > 0) {
+		// payload[0].payload ist das Objekt aus COST_DATA
+		const data = payload[0].payload;
+
+		return (
+			<div className="bg-popover border text-popover-foreground shadow-md rounded-lg p-3 text-sm min-w-[180px]">
+				{/* Titel (z.B. "Soll-Zustand") */}
+				<p className="font-semibold mb-2 border-b pb-1">{label}</p>
+
+				{/* Die einzelnen Balken-Werte */}
+				<div className="space-y-1">
+					{payload.map((entry) => (
+						<div
+							key={entry.name}
+							className="flex items-center justify-between gap-4"
+						>
+							<div className="flex items-center gap-2">
+								<div
+									className="w-2 h-2 rounded-full"
+									style={{ backgroundColor: entry.color }}
+								/>
+								<span className="text-muted-foreground">{entry.name}:</span>
+							</div>
+							<span className="font-mono font-medium">
+								{entry.value?.toLocaleString("de-DE")} €
+							</span>
+						</div>
+					))}
+				</div>
+
+				{/* Die Trennlinie */}
+				<div className="my-2 h-[1px] bg-border" />
+
+				{/* Die Gesamtsumme */}
+				<div className="flex items-center justify-between gap-4 pt-1">
+					<span className="font-bold">Gesamt:</span>
+					<span className="font-mono font-bold text-primary">
+						{data.total.toLocaleString("de-DE")} €
+					</span>
+				</div>
+			</div>
+		);
+	}
+
+	return null;
+};
