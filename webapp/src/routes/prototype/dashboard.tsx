@@ -3,6 +3,7 @@ import {
 	Battery,
 	Euro,
 	Leaf,
+	type LucideIcon,
 	ThermometerSun,
 	Timer,
 	TrendingDown,
@@ -257,6 +258,8 @@ function Dashboard() {
 							{ label: "Leistung", value: "684 kWp" },
 							{ label: "Fläche", value: "3.041 m²" },
 							{ label: "Ertrag", value: "673 MWh/a" },
+							{ label: "Betriebskosten", value: "6.000 €/a" },
+							{ label: "Invest", value: "400.000 €" },
 						]}
 						description="Großflächige Dachanlage zur Deckung des Grundbedarfs und Einspeisung."
 					/>
@@ -269,6 +272,7 @@ function Dashboard() {
 							{ label: "Kapazität", value: "321 kWh" },
 							{ label: "Zyklen", value: "268 / Jahr" },
 							{ label: "Invest", value: "73.524 €" },
+							{ label: "Betriebskosten", value: "1.470,5 €/a" },
 						]}
 						description="Puffert PV-Strom für die Nacht und kappt teure Lastspitzen."
 					/>
@@ -278,8 +282,9 @@ function Dashboard() {
 						icon={ThermometerSun}
 						title="Wärmepumpe"
 						specs={[
-							{ label: "Leistung", value: "50 kW_th" },
-							{ label: "Wärme", value: "100 MWh/a" },
+							{ label: "Thermische Nennleistung", value: "50 kW" },
+							{ label: "Wärme", value: "126,49 MWh/a" },
+							{ label: "Betriebskosten", value: "375 €/a" },
 							{ label: "Invest", value: "25.000 €" },
 						]}
 						description="Ersetzt einen Großteil des Gasverbrauchs durch effizienten Strom."
@@ -290,7 +295,15 @@ function Dashboard() {
 	);
 }
 
-// --- Helper Components ---
+interface KpiCardProps {
+	title: string;
+	value: string;
+	subtitle: string;
+	icon: LucideIcon;
+	highlightClass?: string;
+	trend?: "positive" | "negative" | "neutral";
+	trendText?: string;
+}
 
 function KpiCard({
 	title,
@@ -300,7 +313,7 @@ function KpiCard({
 	highlightClass,
 	trend,
 	trendText,
-}: any) {
+}: KpiCardProps) {
 	return (
 		<Card>
 			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -310,13 +323,15 @@ function KpiCard({
 				<Icon className="h-4 w-4 text-muted-foreground" />
 			</CardHeader>
 			<CardContent>
-				<div className={`text-2xl font-bold ${highlightClass}`}>{value}</div>
-				<div className="flex items-center justify-between mt-1">
+				<div className={`text-2xl font-bold ${highlightClass || ""}`}>
+					{value}
+				</div>
+				<div className="flex items-center justify-between mt-1 h-5">
 					<p className="text-xs text-muted-foreground">{subtitle}</p>
-					{trend === "positive" && (
+					{trend === "positive" && trendText && (
 						<Badge
 							variant="outline"
-							className="bg-green-50 text-green-700 border-green-200 text-[10px] px-1"
+							className="bg-green-50 text-green-700 border-green-200 text-[10px] px-1 ml-2"
 						>
 							{trendText}
 						</Badge>
@@ -327,7 +342,14 @@ function KpiCard({
 	);
 }
 
-function TechCard({ icon: Icon, title, specs, description }: any) {
+interface TechCardProps {
+	icon: LucideIcon;
+	title: string;
+	specs: { label: string; value: string }[];
+	description: string;
+}
+
+function TechCard({ icon: Icon, title, specs, description }: TechCardProps) {
 	return (
 		<Card>
 			<CardHeader className="flex flex-row items-center gap-4 pb-2">
@@ -337,11 +359,13 @@ function TechCard({ icon: Icon, title, specs, description }: any) {
 				<CardTitle className="text-base">{title}</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<p className="text-sm text-muted-foreground mb-4 h-10">{description}</p>
+				<p className="text-sm text-muted-foreground mb-4 h-10 line-clamp-2">
+					{description}
+				</p>
 				<div className="space-y-2">
-					{specs.map((spec: any) => (
+					{specs.map((spec) => (
 						<div
-							key={spec}
+							key={spec.label}
 							className="flex justify-between text-sm border-b pb-1 last:border-0"
 						>
 							<span className="text-muted-foreground">{spec.label}</span>
