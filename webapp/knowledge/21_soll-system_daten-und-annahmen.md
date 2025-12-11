@@ -34,11 +34,11 @@ Dieses Dokument enthält die wichtigsten numerischen Daten zum Soll-Zustand.  Hi
 |------------------------------------------------|----------|---------|------------------------------------------------|
 | Optimale Nennleistung (Wärmepumpe)             | `50`     | kW      | thermisch                                      |
 | Aufgenommene elektrische Leistung (Wärmepumpe) | `26,185` | MWh     |                                                |
-| Aufgenommene Wärmeleistung (Wärmepumpe)        | `100,31` | MWh     |                                                |
+| Abgegebene Wärmeleistung (Wärmepumpe)          | `126,49` | MWh/a   |                                                |
 | Investitionskosten (Wärmepumpe)                | `25.000` | €       |                                                |
 | Betriebskosten (Wärmepumpe)                    | `375`    | €/a     | Betriebskosten pro Investitionskosten: 1,5 %/a |
 
-*Zusammenfassung für die Suche: Die Wärmepumpe im Soll-Zustand hat eine optimale Nennleistung von 50 kW (thermisch), nimmt jährlich 26,185 MWh elektrische Leistung auf und liefert 100,31 MWh Wärmeleistung. Die Investitionskosten betragen 25.000 €, mit jährlichen Betriebskosten von 375 €.*
+*Zusammenfassung für die Suche: Die Wärmepumpe im Soll-Zustand hat eine optimale Nennleistung von 50 kW (thermisch), nimmt jährlich 26,185 MWh elektrische Leistung auf und liefert 260,49 MWh/a Wärmeleistung. Die Investitionskosten betragen 25.000 €, mit jährlichen Betriebskosten von 375 €.*
 
 ## CO₂-Emissionen im Soll-Zustand
 
