@@ -60,6 +60,8 @@ function Scenario() {
 	const { deferredSlowData } = Route.useLoaderData();
 
 	const start = async () => {
+		//TODO: Hier vielleicht gucken, ob man doch einen Link daraus machen kann, der zu prototype weiterleitet sobald deferredSlowData verfügbar ist.
+		// Und wenn deferredSlowData verfügbar ist, soll automatisch updateStudyVariant aufgerufen werden.
 		if (isLoading) return;
 		setIsLoading(true);
 
