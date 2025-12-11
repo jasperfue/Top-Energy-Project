@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
 	Battery,
 	Euro,
+	Info,
 	Leaf,
 	type LucideIcon,
 	ThermometerSun,
@@ -9,6 +10,7 @@ import {
 	TrendingDown,
 	Zap,
 } from "lucide-react";
+import { Activity } from "react";
 import {
 	Bar,
 	BarChart,
@@ -17,8 +19,8 @@ import {
 	Legend,
 	Pie,
 	PieChart,
+	Tooltip as RechartsTooltip,
 	ResponsiveContainer,
-	Tooltip,
 	XAxis,
 	YAxis,
 } from "recharts";
@@ -46,6 +48,12 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table.tsx";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export const Route = createFileRoute("/prototype/dashboard")({
 	component: Dashboard,
@@ -59,6 +67,25 @@ const KPI_DATA = {
 	co2Soll: -18.89,
 	autarky: 61.7,
 	selfUse: 38.6,
+};
+const KPI_DETAILS = {
+	invest: [
+		{ label: "PV-Anlage (3.041 m²)", value: "400.000 €" },
+		{ label: "Batteriespeicher (321 kWh)", value: "73.524 €" },
+		{ label: "Wärmepumpe (50 kW)", value: "25.000 €" },
+	],
+	savings: [
+		{ label: "Stromkosten-Reduktion", value: "88.900 €" },
+		{ label: "Brennstoff-Einsparung", value: "12.500 €" },
+		{ label: "Einspeiseerlöse", value: "20.960 €" },
+		{ label: "Abzgl. neue Betriebskosten", value: "- 7.845 €" },
+	],
+	co2: [
+		{ label: "Rest-Strombezug", value: "17,27 t" },
+		{ label: "Rest-Brennstoff", value: "0,01 t" },
+		{ label: "Gutschrift Einspeisung", value: "- 36,17 t" },
+		{ label: "Summe", value: "- 18,89 t" },
+	],
 };
 
 const COST_DATA = [
@@ -112,37 +139,43 @@ function Dashboard() {
 
 			<main className="container mx-auto px-4 py-8 space-y-8">
 				{/* 1. SECTION: EXECUTIVE SUMMARY (KPIs) */}
-				<section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-					<KpiCard
-						title="Investitionskosten"
-						value={`${KPI_DATA.invest.toLocaleString("de-DE")} €`}
-						subtitle="Einmalige Gesamtkosten"
-						icon={Euro}
-					/>
-					<KpiCard
-						title="Jährliche Einsparung"
-						value={`${KPI_DATA.savingsYearly.toLocaleString("de-DE")} €`}
-						subtitle="Betriebskostenreduktion"
-						icon={TrendingDown}
-						trend="positive"
-						trendText="-49% Kosten"
-					/>
-					<KpiCard
-						title="Amortisation"
-						value={`${KPI_DATA.amortization.toString().replace(".", ",")} Jahre`}
-						subtitle="Return on Investment"
-						icon={Timer}
-					/>
-					<KpiCard
-						title="CO₂-Bilanz"
-						value={`${KPI_DATA.co2Soll.toString().replace(".", ",")} t/a`}
-						subtitle={`Vorher: ${KPI_DATA.co2Ist.toString().replace(".", ",")} t/a`}
-						icon={Leaf}
-						highlightClass="text-green-600"
-						trend="positive"
-						trendText="Klimapositiv"
-					/>
-				</section>
+				<TooltipProvider delayDuration={300}>
+					{/* 1. SECTION: EXECUTIVE SUMMARY (KPIs) */}
+					<section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+						<KpiCard
+							title="Investitionskosten"
+							value={`${KPI_DATA.invest.toLocaleString("de-DE")} €`}
+							subtitle="Einmalige Gesamtkosten"
+							icon={Euro}
+							tooltipData={KPI_DETAILS.invest}
+						/>
+						<KpiCard
+							title="Jährliche Einsparung"
+							value={`${KPI_DATA.savingsYearly.toLocaleString("de-DE")} €`}
+							subtitle="Betriebskostenreduktion"
+							icon={TrendingDown}
+							trend="positive"
+							trendText="-49% Kosten"
+							tooltipData={KPI_DETAILS.savings}
+						/>
+						<KpiCard
+							title="Amortisation"
+							value={`${KPI_DATA.amortization.toString().replace(".", ",")} Jahre`}
+							subtitle="Return on Investment"
+							icon={Timer}
+						/>
+						<KpiCard
+							title="CO₂-Bilanz"
+							value={`${KPI_DATA.co2Soll.toString().replace(".", ",")} t/a`}
+							subtitle={`Vorher: ${KPI_DATA.co2Ist.toString().replace(".", ",")} t/a`}
+							icon={Leaf}
+							highlightClass="text-green-600"
+							trend="positive"
+							trendText="Klimapositiv"
+							tooltipData={KPI_DETAILS.co2}
+						/>
+					</section>
+				</TooltipProvider>
 
 				{/* 2. SECTION: VISUALIZATION & CHARTS */}
 				<section className="grid gap-4 md:grid-cols-7">
@@ -176,7 +209,7 @@ function Dashboard() {
 									/>
 
 									{/* HIER IST DIE ÄNDERUNG: */}
-									<Tooltip
+									<RechartsTooltip
 										content={<CustomTooltip />}
 										cursor={{ fill: "rgba(0,0,0,0.05)" }} // Optional: Macht den Hover-Hintergrund dezenter
 									/>
@@ -334,8 +367,8 @@ interface KpiCardProps {
 	highlightClass?: string;
 	trend?: "positive" | "negative" | "neutral";
 	trendText?: string;
+	tooltipData?: { label: string; value: string }[];
 }
-
 function KpiCard({
 	title,
 	value,
@@ -344,13 +377,50 @@ function KpiCard({
 	highlightClass,
 	trend,
 	trendText,
+	tooltipData,
 }: KpiCardProps) {
 	return (
-		<Card>
+		<Card className="relative overflow-visible">
 			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-				<CardTitle className="text-sm font-medium text-muted-foreground">
-					{title}
-				</CardTitle>
+				<div className="flex items-center gap-2">
+					<CardTitle className="text-sm font-medium text-muted-foreground">
+						{title}
+					</CardTitle>
+					{/* Tooltip Icon, wenn Daten vorhanden sind */}
+					<Activity mode={!tooltipData ? "hidden" : "visible"}>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<Info className="h-3.5 w-3.5 text-muted-foreground/50 hover:text-primary cursor-help transition-colors" />
+							</TooltipTrigger>
+							<TooltipContent
+								side="right"
+								align="start"
+								className="p-0 overflow-hidden shadow-lg border-none"
+							>
+								<div className="bg-popover border text-popover-foreground p-3 min-w-[200px]">
+									<p className="font-semibold text-xs text-muted-foreground uppercase mb-2">
+										Zusammensetzung
+									</p>
+									<div className="space-y-1.5">
+										{tooltipData?.map((item) => (
+											<div
+												key={item.label}
+												className="flex justify-between text-sm gap-4"
+											>
+												<span className="text-muted-foreground">
+													{item.label}
+												</span>
+												<span className="font-mono font-medium">
+													{item.value}
+												</span>
+											</div>
+										))}
+									</div>
+								</div>
+							</TooltipContent>
+						</Tooltip>
+					</Activity>
+				</div>
 				<Icon className="h-4 w-4 text-muted-foreground" />
 			</CardHeader>
 			<CardContent>
