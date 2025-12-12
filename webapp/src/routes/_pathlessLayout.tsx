@@ -1,6 +1,12 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	Link,
+	Outlet,
+	useLocation,
+} from "@tanstack/react-router";
 import { Zap } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
+import { cn } from "@/lib/utils.ts";
 import { m } from "@/paraglide/messages.js";
 
 export const Route = createFileRoute("/_pathlessLayout")({
@@ -8,8 +14,15 @@ export const Route = createFileRoute("/_pathlessLayout")({
 });
 
 function RouteComponent() {
+	const pathname = useLocation({ select: (s) => s.pathname });
+	const isAppMode = pathname.startsWith("/chat");
 	return (
-		<div>
+		<div
+			className={cn(
+				"flex flex-col bg-background",
+				isAppMode ? "h-dvh overflow-hidden" : "min-h-dvh",
+			)}
+		>
 			<div className="sticky top-0 z-20 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
 				<div className="container mx-auto px-4 flex items-center justify-between py-3">
 					<div className="flex items-center gap-2">
@@ -29,7 +42,9 @@ function RouteComponent() {
 					</Button>
 				</div>
 			</div>
-			<Outlet />
+			<div className={cn(isAppMode ? "flex-1 min-h-0 relative" : "flex-1")}>
+				<Outlet />
+			</div>
 		</div>
 	);
 }
