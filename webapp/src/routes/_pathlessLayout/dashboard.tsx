@@ -83,21 +83,33 @@ function Dashboard() {
 
 	const KPI_DETAILS = {
 		invest: [
-			{ label: m.dashboard_kpi_invest_label_pv(), value: "400.000 €" },
-			{ label: m.dashboard_kpi_invest_label_battery(), value: "73.524 €" },
-			{ label: m.dashboard_kpi_invest_label_hp(), value: "25.000 €" },
+			{ label: m.dashboard_kpi_invest_label_pv(), value: `${fmt(400000)} €` },
+			{
+				label: m.dashboard_kpi_invest_label_battery(),
+				value: `${fmt(73524)} €`,
+			},
+			{ label: m.dashboard_kpi_invest_label_hp(), value: `${fmt(25000)} €` },
 		],
 		savings: [
-			{ label: m.dashboard_kpi_savings_label_elec(), value: "88.900 €" },
-			{ label: m.dashboard_kpi_savings_label_fuel(), value: "12.500 €" },
-			{ label: m.dashboard_kpi_savings_label_feedin(), value: "20.960 €" },
-			{ label: m.dashboard_kpi_savings_label_opex(), value: "- 7.845 €" },
+			{ label: m.dashboard_kpi_savings_label_elec(), value: `${fmt(88900)} €` },
+			{ label: m.dashboard_kpi_savings_label_fuel(), value: `${fmt(12500)} €` },
+			{
+				label: m.dashboard_kpi_savings_label_feedin(),
+				value: `${fmt(20960)} €`,
+			},
+			{
+				label: m.dashboard_kpi_savings_label_opex(),
+				value: `- ${fmt(7845)} €`,
+			},
 		],
 		co2: [
-			{ label: m.dashboard_kpi_co2_label_rest_elec(), value: "17,27 t" },
-			{ label: m.dashboard_kpi_co2_label_rest_fuel(), value: "0,01 t" },
-			{ label: m.dashboard_kpi_co2_label_credit(), value: "- 36,17 t" },
-			{ label: m.dashboard_kpi_co2_label_sum(), value: "- 18,89 t" },
+			{
+				label: m.dashboard_kpi_co2_label_rest_elec(),
+				value: `${fmt(17.27)} t`,
+			},
+			{ label: m.dashboard_kpi_co2_label_rest_fuel(), value: `${fmt(0.01)} t` },
+			{ label: m.dashboard_kpi_co2_label_credit(), value: `- ${fmt(36.17)} t` },
+			{ label: m.dashboard_kpi_co2_label_sum(), value: `- ${fmt(18.89)} t` },
 		],
 	};
 
