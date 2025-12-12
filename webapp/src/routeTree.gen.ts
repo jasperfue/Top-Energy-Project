@@ -13,10 +13,11 @@ import { Route as ThanksRouteImport } from './routes/thanks'
 import { Route as ScenarioRouteImport } from './routes/scenario'
 import { Route as QuestionnaireRouteImport } from './routes/questionnaire'
 import { Route as AffinityForTechnologyRouteImport } from './routes/affinity-for-technology'
+import { Route as PathlessLayoutRouteImport } from './routes/_pathlessLayout'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PrototypeDashboardRouteImport } from './routes/prototype/dashboard'
-import { Route as PrototypeChatRouteImport } from './routes/prototype/chat'
 import { Route as ApiChatRouteImport } from './routes/api.chat'
+import { Route as PathlessLayoutDashboardRouteImport } from './routes/_pathlessLayout/dashboard'
+import { Route as PathlessLayoutChatRouteImport } from './routes/_pathlessLayout/chat'
 
 const ThanksRoute = ThanksRouteImport.update({
   id: '/thanks',
@@ -38,25 +39,29 @@ const AffinityForTechnologyRoute = AffinityForTechnologyRouteImport.update({
   path: '/affinity-for-technology',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PathlessLayoutRoute = PathlessLayoutRouteImport.update({
+  id: '/_pathlessLayout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrototypeDashboardRoute = PrototypeDashboardRouteImport.update({
-  id: '/prototype/dashboard',
-  path: '/prototype/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrototypeChatRoute = PrototypeChatRouteImport.update({
-  id: '/prototype/chat',
-  path: '/prototype/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PathlessLayoutDashboardRoute = PathlessLayoutDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => PathlessLayoutRoute,
+} as any)
+const PathlessLayoutChatRoute = PathlessLayoutChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => PathlessLayoutRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -65,9 +70,9 @@ export interface FileRoutesByFullPath {
   '/questionnaire': typeof QuestionnaireRoute
   '/scenario': typeof ScenarioRoute
   '/thanks': typeof ThanksRoute
+  '/chat': typeof PathlessLayoutChatRoute
+  '/dashboard': typeof PathlessLayoutDashboardRoute
   '/api/chat': typeof ApiChatRoute
-  '/prototype/chat': typeof PrototypeChatRoute
-  '/prototype/dashboard': typeof PrototypeDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,20 +80,21 @@ export interface FileRoutesByTo {
   '/questionnaire': typeof QuestionnaireRoute
   '/scenario': typeof ScenarioRoute
   '/thanks': typeof ThanksRoute
+  '/chat': typeof PathlessLayoutChatRoute
+  '/dashboard': typeof PathlessLayoutDashboardRoute
   '/api/chat': typeof ApiChatRoute
-  '/prototype/chat': typeof PrototypeChatRoute
-  '/prototype/dashboard': typeof PrototypeDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_pathlessLayout': typeof PathlessLayoutRouteWithChildren
   '/affinity-for-technology': typeof AffinityForTechnologyRoute
   '/questionnaire': typeof QuestionnaireRoute
   '/scenario': typeof ScenarioRoute
   '/thanks': typeof ThanksRoute
+  '/_pathlessLayout/chat': typeof PathlessLayoutChatRoute
+  '/_pathlessLayout/dashboard': typeof PathlessLayoutDashboardRoute
   '/api/chat': typeof ApiChatRoute
-  '/prototype/chat': typeof PrototypeChatRoute
-  '/prototype/dashboard': typeof PrototypeDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -98,9 +104,9 @@ export interface FileRouteTypes {
     | '/questionnaire'
     | '/scenario'
     | '/thanks'
+    | '/chat'
+    | '/dashboard'
     | '/api/chat'
-    | '/prototype/chat'
-    | '/prototype/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -108,30 +114,30 @@ export interface FileRouteTypes {
     | '/questionnaire'
     | '/scenario'
     | '/thanks'
+    | '/chat'
+    | '/dashboard'
     | '/api/chat'
-    | '/prototype/chat'
-    | '/prototype/dashboard'
   id:
     | '__root__'
     | '/'
+    | '/_pathlessLayout'
     | '/affinity-for-technology'
     | '/questionnaire'
     | '/scenario'
     | '/thanks'
+    | '/_pathlessLayout/chat'
+    | '/_pathlessLayout/dashboard'
     | '/api/chat'
-    | '/prototype/chat'
-    | '/prototype/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PathlessLayoutRoute: typeof PathlessLayoutRouteWithChildren
   AffinityForTechnologyRoute: typeof AffinityForTechnologyRoute
   QuestionnaireRoute: typeof QuestionnaireRoute
   ScenarioRoute: typeof ScenarioRoute
   ThanksRoute: typeof ThanksRoute
   ApiChatRoute: typeof ApiChatRoute
-  PrototypeChatRoute: typeof PrototypeChatRoute
-  PrototypeDashboardRoute: typeof PrototypeDashboardRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -164,25 +170,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AffinityForTechnologyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_pathlessLayout': {
+      id: '/_pathlessLayout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PathlessLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/prototype/dashboard': {
-      id: '/prototype/dashboard'
-      path: '/prototype/dashboard'
-      fullPath: '/prototype/dashboard'
-      preLoaderRoute: typeof PrototypeDashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/prototype/chat': {
-      id: '/prototype/chat'
-      path: '/prototype/chat'
-      fullPath: '/prototype/chat'
-      preLoaderRoute: typeof PrototypeChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
@@ -192,18 +191,45 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_pathlessLayout/dashboard': {
+      id: '/_pathlessLayout/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof PathlessLayoutDashboardRouteImport
+      parentRoute: typeof PathlessLayoutRoute
+    }
+    '/_pathlessLayout/chat': {
+      id: '/_pathlessLayout/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof PathlessLayoutChatRouteImport
+      parentRoute: typeof PathlessLayoutRoute
+    }
   }
 }
 
+interface PathlessLayoutRouteChildren {
+  PathlessLayoutChatRoute: typeof PathlessLayoutChatRoute
+  PathlessLayoutDashboardRoute: typeof PathlessLayoutDashboardRoute
+}
+
+const PathlessLayoutRouteChildren: PathlessLayoutRouteChildren = {
+  PathlessLayoutChatRoute: PathlessLayoutChatRoute,
+  PathlessLayoutDashboardRoute: PathlessLayoutDashboardRoute,
+}
+
+const PathlessLayoutRouteWithChildren = PathlessLayoutRoute._addFileChildren(
+  PathlessLayoutRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PathlessLayoutRoute: PathlessLayoutRouteWithChildren,
   AffinityForTechnologyRoute: AffinityForTechnologyRoute,
   QuestionnaireRoute: QuestionnaireRoute,
   ScenarioRoute: ScenarioRoute,
   ThanksRoute: ThanksRoute,
   ApiChatRoute: ApiChatRoute,
-  PrototypeChatRoute: PrototypeChatRoute,
-  PrototypeDashboardRoute: PrototypeDashboardRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

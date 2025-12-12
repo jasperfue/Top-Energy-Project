@@ -1,0 +1,659 @@
+import { createFileRoute } from "@tanstack/react-router";
+import {
+	Battery,
+	Euro,
+	Info,
+	Leaf,
+	type LucideIcon,
+	ThermometerSun,
+	Timer,
+	TrendingDown,
+	Zap,
+} from "lucide-react";
+import {
+	Bar,
+	BarChart,
+	CartesianGrid,
+	Cell,
+	Legend,
+	Pie,
+	PieChart,
+	Tooltip as RechartsTooltip,
+	ReferenceLine,
+	ResponsiveContainer,
+	XAxis,
+	YAxis,
+} from "recharts";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion.tsx";
+import { Badge } from "@/components/ui/badge.tsx";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card.tsx";
+import { Separator } from "@/components/ui/separator.tsx";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table.tsx";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip.tsx";
+import * as m from "@/paraglide/messages";
+import { getLocale } from "@/paraglide/runtime";
+
+export const Route = createFileRoute("/_pathlessLayout/dashboard")({
+	component: Dashboard,
+});
+
+// Statische Rohdaten (Zahlen) bleiben außerhalb
+const RAW_DATA = {
+	invest: 498524,
+	savingsYearly: 93581,
+	amortization: 5.95,
+	co2Ist: 76.55,
+	co2Soll: -18.89,
+	autarky: 61.7,
+	selfUse: 38.6,
+};
+
+function Dashboard() {
+	// Aktuelle Locale für Zahlenformatierung (de-DE oder en-US)
+	const currentLocale = getLocale();
+
+	// Helper für Währungsformatierung ohne Währungssymbol (da wir € hardcoden oder separat haben)
+	const fmt = (num: number) => num.toLocaleString(currentLocale);
+
+	// --- DATENSTRUKTUREN (JETZT INNERHALB DER KOMPONENTE FÜR ÜBERSETZUNG) ---
+
+	const KPI_DETAILS = {
+		invest: [
+			{ label: m.dashboard_kpi_invest_label_pv(), value: `${fmt(400000)} €` },
+			{
+				label: m.dashboard_kpi_invest_label_battery(),
+				value: `${fmt(73524)} €`,
+			},
+			{ label: m.dashboard_kpi_invest_label_hp(), value: `${fmt(25000)} €` },
+		],
+		savings: [
+			{ label: m.dashboard_kpi_savings_label_elec(), value: `${fmt(88900)} €` },
+			{ label: m.dashboard_kpi_savings_label_fuel(), value: `${fmt(12500)} €` },
+			{
+				label: m.dashboard_kpi_savings_label_feedin(),
+				value: `${fmt(20960)} €`,
+			},
+			{
+				label: m.dashboard_kpi_savings_label_opex(),
+				value: `- ${fmt(7845)} €`,
+			},
+		],
+		co2: [
+			{
+				label: m.dashboard_kpi_co2_label_rest_elec(),
+				value: `${fmt(17.27)} t`,
+			},
+			{ label: m.dashboard_kpi_co2_label_rest_fuel(), value: `${fmt(0.01)} t` },
+			{ label: m.dashboard_kpi_co2_label_credit(), value: `- ${fmt(36.17)} t` },
+			{ label: m.dashboard_kpi_co2_label_sum(), value: `- ${fmt(18.89)} t` },
+		],
+	};
+
+	const COST_DATA = [
+		{
+			name: m.dashboard_status_ist(),
+			Strom: 177250,
+			Brennstoff: 13032,
+			Wartung: 0,
+			Erlöse: 0,
+			total: 190282,
+		},
+		{
+			name: m.dashboard_status_soll(),
+			Strom: 88350,
+			Brennstoff: 506,
+			Wartung: 7845,
+			Erlöse: -20960,
+			total: 75741,
+		},
+	];
+
+	const PIE_DATA_AUTARKIE = [
+		{
+			name: m.dashboard_legend_grid(),
+			value: 100 - RAW_DATA.autarky,
+			color: "#94a3b8",
+		},
+		{
+			name: m.dashboard_legend_autarky_pv(),
+			value: RAW_DATA.autarky,
+			color: "#16a34a",
+		},
+	];
+
+	return (
+		<main className="container mx-auto px-4 py-8 space-y-8">
+			<TooltipProvider delayDuration={300}>
+				{/* 1. SECTION: EXECUTIVE SUMMARY (KPIs) */}
+				<section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+					<KpiCard
+						title={m.dashboard_kpi_invest_title()}
+						value={`${fmt(RAW_DATA.invest)} €`}
+						subtitle={m.dashboard_kpi_invest_subtitle()}
+						icon={Euro}
+						tooltipData={KPI_DETAILS.invest}
+					/>
+					<KpiCard
+						title={m.dashboard_kpi_savings_title()}
+						value={`${fmt(RAW_DATA.savingsYearly)} €`}
+						subtitle={m.dashboard_kpi_savings_subtitle()}
+						icon={TrendingDown}
+						trend="positive"
+						trendText={m.dashboard_kpi_savings_trend()}
+						tooltipData={KPI_DETAILS.savings}
+					/>
+					<KpiCard
+						title={m.dashboard_kpi_amortization_title()}
+						value={`${fmt(RAW_DATA.amortization)} ${m.dashboard_kpi_amortization_unit()}`}
+						subtitle={m.dashboard_kpi_amortization_subtitle()}
+						icon={Timer}
+					/>
+					<KpiCard
+						title={m.dashboard_kpi_co2_title()}
+						value={`${fmt(RAW_DATA.co2Soll)} t/a`}
+						subtitle={m.dashboard_kpi_co2_subtitle({
+							value: fmt(RAW_DATA.co2Ist),
+						})}
+						icon={Leaf}
+						highlightClass="text-green-600"
+						trend="positive"
+						trendText={m.dashboard_kpi_co2_trend()}
+						tooltipData={KPI_DETAILS.co2}
+					/>
+				</section>
+			</TooltipProvider>
+
+			{/* 2. SECTION: VISUALIZATION & CHARTS */}
+			<section className="grid gap-4 md:grid-cols-7">
+				{/* KOSTENVERGLEICH */}
+				<Card className="md:col-span-4">
+					<CardHeader>
+						<CardTitle>{m.dashboard_chart_cost_title()}</CardTitle>
+						<CardDescription>{m.dashboard_chart_cost_desc()}</CardDescription>
+					</CardHeader>
+					<CardContent className="h-[350px]">
+						<ResponsiveContainer width="100%" height="100%">
+							<BarChart
+								data={COST_DATA}
+								margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+								stackOffset="sign" // WICHTIG: Erlaubt Stapelung in beide Richtungen
+							>
+								{/* Dezentes Grid */}
+								<CartesianGrid
+									strokeDasharray="3 3"
+									vertical={false}
+									stroke="#e5e7eb"
+								/>
+
+								{/* Die Null-Linie deutlich hervorheben */}
+								<ReferenceLine y={0} stroke="#64748b" strokeWidth={1} />
+
+								<XAxis
+									dataKey="name"
+									fontSize={12}
+									tickLine={false}
+									axisLine={false}
+									dy={10} // Abstand zur Achse etwas erhöhen
+								/>
+								<YAxis
+									unit=" €"
+									fontSize={12}
+									tickLine={false}
+									axisLine={false}
+									tickFormatter={(value) => `${value / 1000}k`}
+								/>
+
+								<RechartsTooltip
+									content={<CustomTooltip />}
+									cursor={{ fill: "rgba(0,0,0,0.05)" }}
+								/>
+
+								<Legend wrapperStyle={{ paddingTop: "20px" }} />
+
+								{/* POSITIVE WERTE (Gehen automatisch nach OBEN) */}
+								{/* Wir geben dem obersten positiven Element (Wartung) den Radius oben */}
+								<Bar
+									dataKey="Strom"
+									stackId="a"
+									fill="#3b82f6"
+									name={m.dashboard_legend_electricity()}
+								/>
+								<Bar
+									dataKey="Brennstoff"
+									stackId="a"
+									fill="#ef4444"
+									name={m.dashboard_legend_fuel()}
+									radius={[4, 4, 0, 0]}
+								/>
+								<Bar
+									dataKey="Wartung"
+									stackId="a"
+									fill="#f59e0b"
+									name={m.dashboard_legend_maintenance()}
+									radius={[4, 4, 0, 0]} // Radius nur oben
+								/>
+
+								{/* NEGATIVE WERTE (Gehen automatisch nach UNTEN) */}
+								<Bar
+									dataKey="Erlöse"
+									stackId="a"
+									fill="#16a34a"
+									name={m.dashboard_legend_feedin()}
+									radius={[4, 4, 0, 0]} // Radius nur unten
+								/>
+							</BarChart>
+						</ResponsiveContainer>
+					</CardContent>
+				</Card>
+
+				{/* AUTARKIE */}
+				<Card className="md:col-span-3">
+					<CardHeader>
+						<CardTitle>{m.dashboard_chart_autarky_title()}</CardTitle>
+						<CardDescription>
+							{m.dashboard_chart_autarky_desc()}
+						</CardDescription>
+					</CardHeader>
+					<CardContent className="flex flex-col items-center justify-center h-[300px]">
+						<div className="relative w-full h-[200px]">
+							<ResponsiveContainer width="100%" height="100%">
+								<PieChart>
+									<Pie
+										data={PIE_DATA_AUTARKIE}
+										cx="50%"
+										cy="50%"
+										innerRadius={60}
+										outerRadius={80}
+										paddingAngle={5}
+										dataKey="value"
+									>
+										{PIE_DATA_AUTARKIE.map((entry) => (
+											<Cell key={`cell-${entry.name}`} fill={entry.color} />
+										))}
+									</Pie>
+								</PieChart>
+							</ResponsiveContainer>
+							<div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+								<span className="text-3xl font-bold">
+									{fmt(RAW_DATA.autarky)}%
+								</span>
+								<span className="text-xs text-muted-foreground uppercase tracking-wider">
+									{m.dashboard_label_autarky()}
+								</span>
+							</div>
+						</div>
+
+						<div className="mt-4 w-full space-y-2">
+							<div className="flex justify-between text-sm">
+								<span className="flex items-center gap-2">
+									<div className="w-3 h-3 rounded-full bg-green-600" />
+									{m.dashboard_label_own_generation()}
+								</span>
+								<span className="font-medium">{fmt(RAW_DATA.autarky)}%</span>
+							</div>
+							<Separator />
+							<div className="flex justify-between text-sm">
+								<span className="text-muted-foreground">
+									{m.dashboard_label_self_consumption()}
+								</span>
+								<span className="font-medium">{fmt(RAW_DATA.selfUse)}%</span>
+							</div>
+						</div>
+					</CardContent>
+				</Card>
+			</section>
+
+			{/* 3. SECTION: TECHNISCHE DETAILS */}
+			<h3 className="text-lg font-semibold mt-8 mb-4">
+				{m.dashboard_tech_section_title()}
+			</h3>
+			<section className="grid gap-4 md:grid-cols-3">
+				{/* PV-Anlage */}
+				<TechCard
+					icon={Zap}
+					title={m.dashboard_tech_pv_title()}
+					specs={[
+						{ label: m.dashboard_spec_power(), value: "684 kWp" },
+						{ label: m.dashboard_spec_area(), value: "3.041 m²" },
+						{ label: m.dashboard_spec_yield(), value: "673 MWh/a" },
+						{ label: m.dashboard_spec_opex(), value: "6.000 €/a" },
+						{ label: m.dashboard_spec_invest(), value: "400.000 €" },
+					]}
+					description={m.dashboard_tech_pv_desc()}
+				/>
+
+				{/* Speicher */}
+				<TechCard
+					icon={Battery}
+					title={m.dashboard_tech_battery_title()}
+					specs={[
+						{ label: m.dashboard_spec_capacity(), value: "321 kWh" },
+						{
+							label: m.dashboard_spec_cycles(),
+							value: `268 / ${m.dashboard_unit_year()}`,
+						},
+						{ label: m.dashboard_spec_opex(), value: "1.470,5 €/a" },
+						{ label: m.dashboard_spec_invest(), value: "73.524 €" },
+					]}
+					description={m.dashboard_tech_battery_desc()}
+				/>
+
+				{/* Wärmepumpe */}
+				<TechCard
+					icon={ThermometerSun}
+					title={m.dashboard_tech_hp_title()}
+					specs={[
+						{ label: m.dashboard_spec_thermal_power(), value: "50 kW" },
+						{ label: m.dashboard_spec_heat(), value: "126,49 MWh/a" },
+						{ label: m.dashboard_spec_opex(), value: "375 €/a" },
+						{ label: m.dashboard_spec_invest(), value: "25.000 €" },
+					]}
+					description={m.dashboard_tech_hp_desc()}
+				/>
+			</section>
+			<AssumptionsSection />
+		</main>
+	);
+}
+
+// --- SUB-COMPONENTS ---
+
+interface KpiCardProps {
+	title: string;
+	value: string;
+	subtitle: string;
+	icon: LucideIcon;
+	highlightClass?: string;
+	trend?: "positive" | "negative" | "neutral";
+	trendText?: string;
+	tooltipData?: { label: string; value: string }[];
+}
+function KpiCard({
+	title,
+	value,
+	subtitle,
+	icon: Icon,
+	highlightClass,
+	trend,
+	trendText,
+	tooltipData,
+}: KpiCardProps) {
+	return (
+		<Card className="relative overflow-visible">
+			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+				<div className="flex items-center gap-2">
+					<CardTitle className="text-sm font-medium text-muted-foreground">
+						{title}
+					</CardTitle>
+					<div className={!tooltipData ? "hidden" : "block"}>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<Info className="h-3.5 w-3.5 text-muted-foreground/50 hover:text-primary cursor-help transition-colors" />
+							</TooltipTrigger>
+							<TooltipContent
+								side="right"
+								align="start"
+								className="p-0 overflow-hidden shadow-lg border-none"
+							>
+								<div className="bg-popover border text-popover-foreground p-3 min-w-[200px]">
+									<p className="font-semibold text-xs text-muted-foreground uppercase mb-2">
+										{m.dashboard_tooltip_composition()}
+									</p>
+									<div className="space-y-1.5">
+										{tooltipData?.map((item) => (
+											<div
+												key={item.label}
+												className="flex justify-between text-sm gap-4"
+											>
+												<span className="text-muted-foreground">
+													{item.label}
+												</span>
+												<span className="font-mono font-medium">
+													{item.value}
+												</span>
+											</div>
+										))}
+									</div>
+								</div>
+							</TooltipContent>
+						</Tooltip>
+					</div>
+				</div>
+				<Icon className="h-4 w-4 text-muted-foreground" />
+			</CardHeader>
+			<CardContent>
+				<div className={`text-2xl font-bold ${highlightClass || ``}`}>
+					{value}
+				</div>
+				<div className="flex items-center justify-between mt-1 h-5">
+					<p className="text-xs text-muted-foreground">{subtitle}</p>
+					{trend === "positive" && trendText && (
+						<Badge
+							variant="outline"
+							className="bg-green-50 text-green-700 border-green-200 text-[10px] px-1 ml-2"
+						>
+							{trendText}
+						</Badge>
+					)}
+				</div>
+			</CardContent>
+		</Card>
+	);
+}
+
+interface TechCardProps {
+	icon: LucideIcon;
+	title: string;
+	specs: { label: string; value: string }[];
+	description: string;
+}
+
+function TechCard({ icon: Icon, title, specs, description }: TechCardProps) {
+	return (
+		<Card>
+			<CardHeader className="flex flex-row items-center gap-4 pb-2">
+				<div className="p-2 bg-primary/10 rounded-lg">
+					<Icon className="h-6 w-6 text-primary" />
+				</div>
+				<CardTitle className="text-base">{title}</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<p className="text-sm text-muted-foreground mb-4 h-10 line-clamp-2">
+					{description}
+				</p>
+				<div className="space-y-2">
+					{specs.map((spec) => (
+						<div
+							key={spec.label}
+							className="flex justify-between text-sm border-b pb-1 last:border-0"
+						>
+							<span className="text-muted-foreground">{spec.label}</span>
+							<span className="font-medium">{spec.value}</span>
+						</div>
+					))}
+				</div>
+			</CardContent>
+		</Card>
+	);
+}
+
+interface CustomTooltipProps {
+	active?: boolean;
+	payload?: Array<{
+		value: number;
+		name: string;
+		color: string;
+		payload: {
+			name: string;
+			Strom: number;
+			Brennstoff: number;
+			Wartung: number;
+			Erlöse: number;
+			total: number;
+		};
+	}>;
+	label?: string;
+}
+
+const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
+	// Hole locale für number formatting im Tooltip
+	const currentLocale = getLocale();
+
+	if (active && payload && payload.length > 0) {
+		const data = payload[0].payload;
+
+		return (
+			<div className="bg-popover border text-popover-foreground shadow-md rounded-lg p-3 text-sm min-w-[180px]">
+				<p className="font-semibold mb-2 border-b pb-1">{label}</p>
+
+				<div className="space-y-1">
+					{payload.map((entry) => (
+						<div
+							key={entry.name}
+							className="flex items-center justify-between gap-4"
+						>
+							<div className="flex items-center gap-2">
+								<div
+									className="w-2 h-2 rounded-full"
+									style={{ backgroundColor: entry.color }}
+								/>
+								<span className="text-muted-foreground">{entry.name}:</span>
+							</div>
+							<span className="font-mono font-medium">
+								{entry.value?.toLocaleString(currentLocale)} €
+							</span>
+						</div>
+					))}
+				</div>
+
+				<div className="my-2 h-[1px] bg-border" />
+
+				<div className="flex items-center justify-between gap-4 pt-1">
+					<span className="font-bold">{m.dashboard_tooltip_total()}</span>
+					<span className="font-mono font-bold text-primary">
+						{data.total.toLocaleString(currentLocale)} €
+					</span>
+				</div>
+			</div>
+		);
+	}
+	return null;
+};
+
+function AssumptionsSection() {
+	return (
+		<section className="mt-8">
+			<Card>
+				<CardHeader>
+					<CardTitle className="text-lg">
+						{m.dashboard_assumptions_title()}
+					</CardTitle>
+					<CardDescription>{m.dashboard_assumptions_desc()}</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<Accordion type="single" collapsible className="w-full">
+						{/* TARIFE */}
+						<AccordionItem value="item-1">
+							<AccordionTrigger>
+								{m.dashboard_assumptions_tariffs()}
+							</AccordionTrigger>
+							<AccordionContent>
+								<Table>
+									<TableHeader>
+										<TableRow>
+											<TableHead>{m.dashboard_table_type()}</TableHead>
+											<TableHead>{m.dashboard_table_price()}</TableHead>
+											<TableHead>{m.dashboard_table_base_price()}</TableHead>
+											<TableHead>{m.dashboard_table_feedin()}</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
+										<TableRow>
+											<TableCell className="font-medium">
+												{m.dashboard_row_electricity()}
+											</TableCell>
+											<TableCell>24,92 ct/kWh</TableCell>
+											<TableCell>153,55 €/kW/a</TableCell>
+											<TableCell>6,2 ct/kWh</TableCell>
+										</TableRow>
+										<TableRow>
+											<TableCell className="font-medium">
+												{m.dashboard_row_fuel()}
+											</TableCell>
+											<TableCell>8,00 ct/kWh</TableCell>
+											<TableCell>500,00 €/a</TableCell>
+										</TableRow>
+									</TableBody>
+								</Table>
+								<p className="text-xs text-muted-foreground mt-2">
+									{m.dashboard_footer_note()}
+								</p>
+							</AccordionContent>
+						</AccordionItem>
+
+						{/* VERBRAUCHSDATEN */}
+						<AccordionItem value="item-2">
+							<AccordionTrigger>
+								{m.dashboard_assumptions_load()}
+							</AccordionTrigger>
+							<AccordionContent>
+								<div className="grid grid-cols-2 gap-4 text-sm">
+									<div className="space-y-1">
+										<span className="block text-muted-foreground">
+											{m.dashboard_load_elec_total()}
+										</span>
+										<span className="font-medium">
+											395 MWh/a + 70 MWh (
+											{m.dashboard_load_cool().split(" ")[1]})
+										</span>
+									</div>
+									<div className="space-y-1">
+										<span className="block text-muted-foreground">
+											{m.dashboard_load_elec_peak()}
+										</span>
+										<span className="font-medium">352,8 kW</span>
+									</div>
+									<div className="space-y-1">
+										<span className="block text-muted-foreground">
+											{m.dashboard_load_heat()}
+										</span>
+										<span className="font-medium">126,5 MWh/a</span>
+									</div>
+									<div className="space-y-1">
+										<span className="block text-muted-foreground">
+											{m.dashboard_load_cool()}
+										</span>
+										<span className="font-medium">350 MWh/a</span>
+									</div>
+								</div>
+							</AccordionContent>
+						</AccordionItem>
+					</Accordion>
+				</CardContent>
+			</Card>
+		</section>
+	);
+}

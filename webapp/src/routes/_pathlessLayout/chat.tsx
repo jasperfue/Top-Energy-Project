@@ -1,5 +1,5 @@
 import { useChat } from "@ai-sdk/react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { DefaultChatTransport } from "ai";
 import {
 	Conversation,
@@ -9,11 +9,10 @@ import {
 import { Message, MessageContent } from "@/components/ai-elements/message.tsx";
 import PromptInputComponent from "@/components/PromptInput.tsx";
 import { AITypingBubble } from "@/components/ui/AITypingBubble.tsx";
-import { Button } from "@/components/ui/button.tsx";
 import { Markdown } from "@/components/ui/markdown.tsx";
 import { m } from "@/paraglide/messages.js";
 
-export const Route = createFileRoute("/prototype/chat")({
+export const Route = createFileRoute("/_pathlessLayout/chat")({
 	component: Chat,
 });
 
@@ -37,14 +36,7 @@ function Chat() {
 	});
 
 	return (
-		<div className="grid py-4 h-dvh grid-rows-[auto_1fr_auto]">
-			{/* Header */}
-			<div className="flex items-center justify-between py-3">
-				<h2 className="text-xl font-semibold">Chat</h2>
-				<Button asChild>
-					<Link to="/questionnaire">{m.chat_continue()}</Link>
-				</Button>
-			</div>
+		<div className="grid pb-4 h-dvh grid-rows-[1fr_auto]">
 			{/* Scrollable content */}
 			<Conversation>
 				<ConversationContent>
@@ -58,9 +50,9 @@ function Chat() {
 												<Markdown key={`${message.id}-${i}`}>
 													{part.text}
 												</Markdown>
-											);
+											)
 										default:
-											return null;
+											return null
 									}
 								})}
 								{status === "streaming" &&
@@ -75,5 +67,5 @@ function Chat() {
 			{/* @ts-expect-error*/}
 			<PromptInputComponent sendMessage={sendMessage} status={status} />
 		</div>
-	);
+	)
 }
