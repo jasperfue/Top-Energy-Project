@@ -109,7 +109,7 @@ export function AffinityForTechnologyForm() {
 
 	const submit = form.handleSubmit(async (values) => {
 		await submitAffinityForTechnologyForm({ data: values });
-		void nav({ to: "/scenario" });
+		await nav({ to: "/scenario" });
 	});
 
 	return (

@@ -14,10 +14,9 @@ export function getRouter() {
 			output: ({ url }) => localizeUrl(url),
 		},
 		context: { queryClient },
-		defaultPreload: "intent",
+		defaultPreload: "render",
 		scrollRestoration: true,
 		defaultStructuralSharing: true,
-		defaultPreloadStaleTime: 0,
 		defaultPendingComponent: () => (
 			<div className="flex items-center justify-center h-screen">
 				<Spinner />

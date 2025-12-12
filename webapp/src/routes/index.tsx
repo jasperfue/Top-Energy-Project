@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useId, useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
@@ -10,7 +10,6 @@ export const Route = createFileRoute("/")({
 });
 
 function Consent() {
-	const nav = useNavigate();
 	const [consent, setConsent] = useState(false);
 	const checkboxId = useId();
 
@@ -31,11 +30,8 @@ function Consent() {
 				<span>{m.consent_checkbox_label()}</span>
 			</label>
 			<div className="flex justify-end">
-				<Button
-					disabled={!consent}
-					onClick={() => nav({ to: "/affinity-for-technology" })}
-				>
-					{m.common_continue()}
+				<Button disabled={!consent} asChild>
+					<Link to="/affinity-for-technology">{m.common_continue()}</Link>
 				</Button>
 			</div>
 		</main>
