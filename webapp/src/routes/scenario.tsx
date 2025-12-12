@@ -1,7 +1,11 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	useNavigate,
+	useRouter,
+} from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -58,16 +62,32 @@ function Scenario() {
 	const nav = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const { deferredSlowData } = Route.useLoaderData();
+	const router = useRouter();
+
+	useEffect(() => {
+		deferredSlowData
+			.then((prototypeType) => {
+				void router.preloadRoute({
+					to: `/${prototypeType}`,
+				});
+			})
+			.catch((err) => {
+				console.error("Failed to resolve prototype type for preloading", err);
+			});
+	}, [deferredSlowData, router]);
 
 	const start = async () => {
-		//TODO: Hier vielleicht gucken, ob man doch einen Link daraus machen kann, der zu prototype weiterleitet sobald deferredSlowData verfügbar ist.
-		// Und wenn deferredSlowData verfügbar ist, soll automatisch updateStudyVariant aufgerufen werden.
 		if (isLoading) return;
 		setIsLoading(true);
 
-		const prototypeType = await deferredSlowData;
-		await updateStudyVariant({ data: prototypeType });
-		await nav({ to: `/${prototypeType}` });
+		try {
+			const prototypeType = await deferredSlowData;
+			await updateStudyVariant({ data: prototypeType });
+			await nav({ to: `/${prototypeType}` });
+		} catch (error) {
+			console.error("Error during start sequence:", error);
+			setIsLoading(false);
+		}
 	};
 
 	return (

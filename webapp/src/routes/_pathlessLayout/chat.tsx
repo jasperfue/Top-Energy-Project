@@ -36,7 +36,7 @@ function Chat() {
 	});
 
 	return (
-		<div className="grid pb-4 h-dvh grid-rows-[1fr_auto]">
+		<div className="grid pb-4 h-full grid-rows-[1fr_auto]">
 			{/* Scrollable content */}
 			<Conversation>
 				<ConversationContent>
@@ -50,9 +50,9 @@ function Chat() {
 												<Markdown key={`${message.id}-${i}`}>
 													{part.text}
 												</Markdown>
-											)
+											);
 										default:
-											return null
+											return null;
 									}
 								})}
 								{status === "streaming" &&
@@ -67,5 +67,5 @@ function Chat() {
 			{/* @ts-expect-error*/}
 			<PromptInputComponent sendMessage={sendMessage} status={status} />
 		</div>
-	)
+	);
 }
