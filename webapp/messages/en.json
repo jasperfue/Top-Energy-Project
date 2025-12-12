@@ -48,6 +48,7 @@
 	"afftech_q8": "It is enough for me to know the basic functions of a technical system.",
 	"afftech_q9": "I try to make full use of the capabilities of a technical system.",
 
+	"chat_prompt_placeholder": "What would you like to know?",
 	"chat_intro": "### Welcome to Your Energy Audit \uD83C\uDFED\n\nI am your AI energy consultant. I have access to the full simulation data of your facility, modeled with **TOP-Energy®**. Let's analyze how you can reduce operational costs and lower your carbon footprint.\n\n#### \uD83D\uDCCA Scenario Overview\n\nWe are comparing two states of your energy system:\n\n* **Status Quo:** Your current setup. It relies heavily on grid electricity and a fossil-fuel **boiler** for heat. Cooling is provided by standard compression chillers.\n* **Target State:** An optimized system upgraded with three key technologies:\n    1.  **Photovoltaics (PV)** for on-site power generation.\n    2.  **Heat Pump** for efficient heating and cooling.\n    3.  **Battery Storage** to maximize self-consumption.\n\n#### \uD83D\uDCA1 What you can ask me\n\nI can provide detailed insights into financial KPIs and technical specifications based on the audit. Try asking questions like:\n\n* *\"Is the investment in the target state profitable?\"*\n* *\"What is the payback period for the new measures?\"*\n* *\"How much CO₂ can I save per year?\"*\n* *\"What are the investment costs for the heat pump?\"*\n\n**What would you like to know first?**",
 
 	"dashboard_kpi_invest_title": "Investment Costs",

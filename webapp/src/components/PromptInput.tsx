@@ -11,6 +11,7 @@ import {
 	PromptInputTextarea,
 	PromptInputTools,
 } from "@/components/ai-elements/prompt-input.tsx";
+import { m } from "@/paraglide/messages.js";
 
 type PromptInputComponentProps = {
 	status: ChatStatus;
@@ -41,6 +42,7 @@ const PromptInputComponent = ({
 					onChange={(e) => setText(e.target.value)}
 					ref={textareaRef}
 					value={text}
+					placeholder={m.chat_prompt_placeholder()}
 				/>
 			</PromptInputBody>
 			<PromptInputFooter>
