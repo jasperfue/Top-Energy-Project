@@ -1,6 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	useNavigate,
+	useRouter,
+} from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
@@ -35,6 +40,13 @@ type FormValues = z.infer<typeof formSchema>;
 
 function Questionnaire() {
 	const nav = useNavigate();
+	const router = useRouter();
+
+	useEffect(() => {
+		void router.preloadRoute({
+			to: "/thanks",
+		});
+	}, [router]);
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
