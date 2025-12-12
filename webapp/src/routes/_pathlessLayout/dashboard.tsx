@@ -53,8 +53,6 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip.tsx";
-
-// TODO: Passe diesen Pfad an dein Paraglide-Setup an
 import * as m from "@/paraglide/messages";
 import { getLocale } from "@/paraglide/runtime";
 
