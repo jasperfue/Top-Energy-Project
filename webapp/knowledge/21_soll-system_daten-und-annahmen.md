@@ -58,7 +58,7 @@ Dieses Dokument enthält die wichtigsten numerischen Daten zum Soll-Zustand.  Hi
 | Summe Stromkosten      | `88.350`    | €/a     | **ohne** Berücksichtigung von Einspeiseerlösen                                                              |
 | Summe Erlöse           | `20.960`    | €/a     | Einnahmen aus Stromeinspeisung (werden erst bei den Gesamtkosten abgezogen)                                 |
 | Summe Brennstoffkosten | `505,73`    | €/a     | von Heißwasserkessel                                                                                        |
-| Gesamte Betriebskosten | `96.701,23` | €/a     | = Stromkosten (Netzbezug) + Brennstoffkosten + Betriebskosten der neuen Komponente - Erlöse aus Einspeisung |
+| Gesamte Betriebskosten | `75.741,24` | €/a     | = Stromkosten (Netzbezug) + Brennstoffkosten + Betriebskosten der neuen Komponente - Erlöse aus Einspeisung |
 | Investitionskosten     | `498.524`   | €       | Summe der Investitionskosten für die 3 neuen Komponenten                                                    |
 | Amortisationszeit      | `5,95`      | Jahre   |                                                                                                             |
 

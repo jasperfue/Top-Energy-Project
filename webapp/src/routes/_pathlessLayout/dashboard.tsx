@@ -128,7 +128,7 @@ function Dashboard() {
 			Brennstoff: 506,
 			Wartung: 7845,
 			Erlöse: -20960,
-			total: 96701,
+			total: 75741,
 		},
 	];
 
