@@ -19,6 +19,7 @@ import {
 	Pie,
 	PieChart,
 	Tooltip as RechartsTooltip,
+	ReferenceLine,
 	ResponsiveContainer,
 	XAxis,
 	YAxis,
@@ -195,18 +196,29 @@ function Dashboard() {
 						<CardTitle>{m.dashboard_chart_cost_title()}</CardTitle>
 						<CardDescription>{m.dashboard_chart_cost_desc()}</CardDescription>
 					</CardHeader>
-					<CardContent className="h-[300px]">
+					<CardContent className="h-[350px]">
 						<ResponsiveContainer width="100%" height="100%">
 							<BarChart
 								data={COST_DATA}
 								margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+								stackOffset="sign" // WICHTIG: Erlaubt Stapelung in beide Richtungen
 							>
-								<CartesianGrid strokeDasharray="3 3" vertical={false} />
+								{/* Dezentes Grid */}
+								<CartesianGrid
+									strokeDasharray="3 3"
+									vertical={false}
+									stroke="#e5e7eb"
+								/>
+
+								{/* Die Null-Linie deutlich hervorheben */}
+								<ReferenceLine y={0} stroke="#64748b" strokeWidth={1} />
+
 								<XAxis
 									dataKey="name"
 									fontSize={12}
 									tickLine={false}
 									axisLine={false}
+									dy={10} // Abstand zur Achse etwas erhöhen
 								/>
 								<YAxis
 									unit=" €"
@@ -222,31 +234,37 @@ function Dashboard() {
 								/>
 
 								<Legend wrapperStyle={{ paddingTop: "20px" }} />
+
+								{/* POSITIVE WERTE (Gehen automatisch nach OBEN) */}
+								{/* Wir geben dem obersten positiven Element (Wartung) den Radius oben */}
 								<Bar
 									dataKey="Strom"
 									stackId="a"
 									fill="#3b82f6"
 									name={m.dashboard_legend_electricity()}
-									radius={[0, 0, 4, 4]}
 								/>
 								<Bar
 									dataKey="Brennstoff"
 									stackId="a"
 									fill="#ef4444"
 									name={m.dashboard_legend_fuel()}
+									radius={[4, 4, 0, 0]}
 								/>
 								<Bar
 									dataKey="Wartung"
 									stackId="a"
 									fill="#f59e0b"
 									name={m.dashboard_legend_maintenance()}
+									radius={[4, 4, 0, 0]} // Radius nur oben
 								/>
+
+								{/* NEGATIVE WERTE (Gehen automatisch nach UNTEN) */}
 								<Bar
 									dataKey="Erlöse"
 									stackId="a"
 									fill="#16a34a"
 									name={m.dashboard_legend_feedin()}
-									radius={[4, 4, 0, 0]}
+									radius={[4, 4, 0, 0]} // Radius nur unten
 								/>
 							</BarChart>
 						</ResponsiveContainer>
