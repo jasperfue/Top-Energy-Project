@@ -128,5 +128,20 @@
 
 	"trust_q1": "Ich bin zuversichtlich, was das System betrifft.",
 	"trust_q2": "Das System ist zuverlässig.",
-	"trust_q3": "Ich kann dem System vertrauen."
+	"trust_q3": "Ich kann dem System vertrauen.",
+
+	"understanding_q1": "Ich habe eine klare Vorstellung davon, wie die vorgeschlagene Energielösung für meinen Betrieb aussieht.",
+	"understanding_q2": "Ich verstehe, warum genau diese Kombination an Maßnahmen für meinen Betrieb sinnvoll ist.",
+
+	"understanding_q3": "Welche technischen Komponenten umfasst die empfohlene Lösung im Soll-Zustand?",
+	"understanding_q3_option1": "Photovoltaikanlage, Batteriespeicher & Wärmepumpe",
+	"understanding_q3_option2": "Nur eine Photovoltaikanlage",
+	"understanding_q3_option3": "Windkraftanlage & Gas-BHKW",
+	"understanding_q3_option4": "Ich weiß es nicht",
+
+	"understanding_q4": "Wie verändern sich die jährlichen Gesamtkosten durch die Maßnahmen ca.?",
+	"understanding_q4_option1": "Die Kosten sinken um ca. 61k€ pro Jahr",
+	"understanding_q4_option2": "Sie bleiben gleich, aber werden CO2-neutral",
+	"understanding_q4_option3": "Sie sinken fast auf die Hälfte um ca. 93k€ pro Jahr",
+	"understanding_q4_option4": "Ich weiß es nicht"
 }
