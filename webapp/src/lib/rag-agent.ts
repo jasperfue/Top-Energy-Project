@@ -65,7 +65,7 @@ ${t.text}
 
 	const model = createXai({
 		apiKey: process.env.XAI_API_KEY,
-	}).chat("grok-4-fast-reasoning");
+	}).chat("grok-4-1-fast-reasoning");
 
 	return new Agent({
 		model,
