@@ -28,7 +28,19 @@ const trustAnswers = z.object({
 
 const understandingAnswers = z.object({
 	understanding_q1: Likert7,
-	understanding_q2: z.enum(["q2_option_a", "q2_option_b", "q2_option_c"]),
+	understanding_q2: Likert7,
+	understanding_q3: z.enum([
+		"understanding_q3_option1",
+		"understanding_q3_option2",
+		"understanding_q3_option3",
+		"understanding_q3_option4",
+	]),
+	understanding_q4: z.enum([
+		"understanding_q4_option1",
+		"understanding_q4_option2",
+		"understanding_q4_option3",
+		"understanding_q4_option4",
+	]),
 });
 
 const formSchema = z.object({
@@ -56,6 +68,8 @@ function Questionnaire() {
 			trust_q3: undefined,
 			understanding_q1: undefined,
 			understanding_q2: undefined,
+			understanding_q3: undefined,
+			understanding_q4: undefined,
 		},
 		mode: "onSubmit",
 	});
@@ -116,19 +130,63 @@ function Questionnaire() {
 							name="understanding_q1"
 							control={form.control}
 							options={likert7Options}
-							rowLabel={"Objektive Verständnisfrage 1"}
+							rowLabel={m.understanding_q1()}
 							required
 							showHeader
 						/>
-						<MultipleChoiceQuestion
+						<LikertScale
 							name="understanding_q2"
 							control={form.control}
-							question={"Subjektive Verständnisfrage 2"}
+							options={likert7Options}
+							rowLabel={m.understanding_q2()}
+							required
+						/>
+						<MultipleChoiceQuestion
+							name="understanding_q3"
+							control={form.control}
+							question={m.understanding_q3()}
 							required
 							options={[
-								{ value: "q2_option_a", label: "Test Antwort 1" },
-								{ value: "q2_option_b", label: "Test Antwort 2" },
-								{ value: "q2_option_c", label: "Test Antwort 3" },
+								{
+									value: "understanding_q3_option1",
+									label: m.understanding_q3_option1(),
+								},
+								{
+									value: "understanding_q3_option2",
+									label: m.understanding_q3_option2(),
+								},
+								{
+									value: "understanding_q3_option3",
+									label: m.understanding_q3_option3(),
+								},
+								{
+									value: "understanding_q3_option4",
+									label: m.understanding_q3_option4(),
+								},
+							]}
+						/>
+						<MultipleChoiceQuestion
+							name="understanding_q4"
+							control={form.control}
+							question={m.understanding_q4()}
+							required
+							options={[
+								{
+									value: "understanding_q4_option1",
+									label: m.understanding_q4_option1(),
+								},
+								{
+									value: "understanding_q4_option2",
+									label: m.understanding_q4_option2(),
+								},
+								{
+									value: "understanding_q4_option3",
+									label: m.understanding_q4_option3(),
+								},
+								{
+									value: "understanding_q4_option4",
+									label: m.understanding_q4_option4(),
+								},
 							]}
 						/>
 					</CardContent>

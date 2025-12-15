@@ -128,5 +128,20 @@
 
 	"trust_q1": "I am confident in the system.",
 	"trust_q2": "The system is reliable.",
-	"trust_q3": "I can trust the system."
+	"trust_q3": "I can trust the system.",
+
+	"understanding_q1": "I have a clear idea of what the proposed energy solution for my company looks like.",
+	"understanding_q2": "I understand why exactly this combination of measures is beneficial for my company.",
+
+	"understanding_q3": "Which technical components does the recommended solution (Target State) include?",
+	"understanding_q3_option1": "Photovoltaic system, battery storage & heat pump",
+	"understanding_q3_option2": "Only a photovoltaic system",
+	"understanding_q3_option3": "Wind turbine & gas CHP",
+	"understanding_q3_option4": "I do not know",
+
+	"understanding_q4": "How do the total annual costs change approximately due to the measures?",
+	"understanding_q4_option1": "Costs decrease by approx. 61k€ per year",
+	"understanding_q4_option2": "They remain the same, but become carbon neutral",
+	"understanding_q4_option3": "They drop to almost half, by approx. 93k€ per year",
+	"understanding_q4_option4": "I do not know"
 }
