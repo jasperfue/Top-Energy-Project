@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
 	Battery,
 	Euro,
@@ -10,6 +10,7 @@ import {
 	TrendingDown,
 	Zap,
 } from "lucide-react";
+import { useState } from "react";
 import {
 	Bar,
 	BarChart,
@@ -24,6 +25,7 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
+import { StudyHeader } from "@/components/StudyHeader.tsx";
 import {
 	Accordion,
 	AccordionContent,
@@ -53,8 +55,10 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip.tsx";
+import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import * as m from "@/paraglide/messages";
 import { getLocale } from "@/paraglide/runtime";
+import { finishTask } from "@/routes/_pathlessLayout/chat.tsx";
 
 export const Route = createFileRoute("/_pathlessLayout/dashboard")({
 	component: Dashboard,
@@ -72,13 +76,29 @@ const RAW_DATA = {
 };
 
 function Dashboard() {
-	// Aktuelle Locale für Zahlenformatierung (de-DE oder en-US)
-	const currentLocale = getLocale();
+	const nav = useNavigate();
+	const [isFinishing, setIsFinishing] = useState(false);
+	usePreloadRoute("/questionnaire");
 
-	// Helper für Währungsformatierung ohne Währungssymbol (da wir € hardcoden oder separat haben)
+	const currentLocale = getLocale();
 	const fmt = (num: number) => num.toLocaleString(currentLocale);
 
-	// --- DATENSTRUKTUREN (JETZT INNERHALB DER KOMPONENTE FÜR ÜBERSETZUNG) ---
+	const handleFinish = async () => {
+		if (isFinishing) return;
+		setIsFinishing(true);
+
+		try {
+			await finishTask({
+				data: {},
+			});
+
+			await nav({ to: "/questionnaire" });
+		} catch (error) {
+			console.error("Navigation failed", error);
+			// Fallback, falls Server-Call fehlschlägt
+			await nav({ to: "/questionnaire" });
+		}
+	};
 
 	const KPI_DETAILS = {
 		invest: [
@@ -145,237 +165,251 @@ function Dashboard() {
 	];
 
 	return (
-		<main className="container mx-auto px-4 py-8 space-y-8">
-			<TooltipProvider delayDuration={300}>
-				{/* 1. SECTION: EXECUTIVE SUMMARY (KPIs) */}
-				<section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-					<KpiCard
-						title={m.dashboard_kpi_invest_title()}
-						value={`${fmt(RAW_DATA.invest)} €`}
-						subtitle={m.dashboard_kpi_invest_subtitle()}
-						icon={Euro}
-						tooltipData={KPI_DETAILS.invest}
-					/>
-					<KpiCard
-						title={m.dashboard_kpi_savings_title()}
-						value={`${fmt(RAW_DATA.savingsYearly)} €`}
-						subtitle={m.dashboard_kpi_savings_subtitle()}
-						icon={TrendingDown}
-						trend="positive"
-						trendText={m.dashboard_kpi_savings_trend()}
-						tooltipData={KPI_DETAILS.savings}
-					/>
-					<KpiCard
-						title={m.dashboard_kpi_amortization_title()}
-						value={`${fmt(RAW_DATA.amortization)} ${m.dashboard_kpi_amortization_unit()}`}
-						subtitle={m.dashboard_kpi_amortization_subtitle()}
-						icon={Timer}
-					/>
-					<KpiCard
-						title={m.dashboard_kpi_co2_title()}
-						value={`${fmt(RAW_DATA.co2Soll)} t/a`}
-						subtitle={m.dashboard_kpi_co2_subtitle({
-							value: fmt(RAW_DATA.co2Ist),
-						})}
-						icon={Leaf}
-						highlightClass="text-green-600"
-						trend="positive"
-						trendText={m.dashboard_kpi_co2_trend()}
-						tooltipData={KPI_DETAILS.co2}
-					/>
-				</section>
-			</TooltipProvider>
+		// WRAPPER: Nimmt die volle Höhe ein und organisiert Header und Content untereinander
+		<div className="flex flex-col h-dvh overflow-hidden bg-background">
+			<StudyHeader onFinish={handleFinish} isLoading={isFinishing} />
 
-			{/* 2. SECTION: VISUALIZATION & CHARTS */}
-			<section className="grid gap-4 md:grid-cols-7">
-				{/* KOSTENVERGLEICH */}
-				<Card className="md:col-span-4">
-					<CardHeader>
-						<CardTitle>{m.dashboard_chart_cost_title()}</CardTitle>
-						<CardDescription>{m.dashboard_chart_cost_desc()}</CardDescription>
-					</CardHeader>
-					<CardContent className="h-[350px]">
-						<ResponsiveContainer width="100%" height="100%">
-							<BarChart
-								data={COST_DATA}
-								margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-								stackOffset="sign" // WICHTIG: Erlaubt Stapelung in beide Richtungen
-							>
-								{/* Dezentes Grid */}
-								<CartesianGrid
-									strokeDasharray="3 3"
-									vertical={false}
-									stroke="#e5e7eb"
-								/>
+			{/* CONTENT AREA: Dieser Bereich scrollt */}
+			<div className="flex-1 overflow-y-auto min-h-0">
+				<main className="container mx-auto px-4 py-8 space-y-8">
+					<TooltipProvider delayDuration={300}>
+						{/* 1. SECTION: EXECUTIVE SUMMARY (KPIs) */}
+						<section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+							<KpiCard
+								title={m.dashboard_kpi_invest_title()}
+								value={`${fmt(RAW_DATA.invest)} €`}
+								subtitle={m.dashboard_kpi_invest_subtitle()}
+								icon={Euro}
+								tooltipData={KPI_DETAILS.invest}
+							/>
+							<KpiCard
+								title={m.dashboard_kpi_savings_title()}
+								value={`${fmt(RAW_DATA.savingsYearly)} €`}
+								subtitle={m.dashboard_kpi_savings_subtitle()}
+								icon={TrendingDown}
+								trend="positive"
+								trendText={m.dashboard_kpi_savings_trend()}
+								tooltipData={KPI_DETAILS.savings}
+							/>
+							<KpiCard
+								title={m.dashboard_kpi_amortization_title()}
+								value={`${fmt(RAW_DATA.amortization)} ${m.dashboard_kpi_amortization_unit()}`}
+								subtitle={m.dashboard_kpi_amortization_subtitle()}
+								icon={Timer}
+							/>
+							<KpiCard
+								title={m.dashboard_kpi_co2_title()}
+								value={`${fmt(RAW_DATA.co2Soll)} t/a`}
+								subtitle={m.dashboard_kpi_co2_subtitle({
+									value: fmt(RAW_DATA.co2Ist),
+								})}
+								icon={Leaf}
+								highlightClass="text-green-600"
+								trend="positive"
+								trendText={m.dashboard_kpi_co2_trend()}
+								tooltipData={KPI_DETAILS.co2}
+							/>
+						</section>
+					</TooltipProvider>
 
-								{/* Die Null-Linie deutlich hervorheben */}
-								<ReferenceLine y={0} stroke="#64748b" strokeWidth={1} />
-
-								<XAxis
-									dataKey="name"
-									fontSize={12}
-									tickLine={false}
-									axisLine={false}
-									dy={10} // Abstand zur Achse etwas erhöhen
-								/>
-								<YAxis
-									unit=" €"
-									fontSize={12}
-									tickLine={false}
-									axisLine={false}
-									tickFormatter={(value) => `${value / 1000}k`}
-								/>
-
-								<RechartsTooltip
-									content={<CustomTooltip />}
-									cursor={{ fill: "rgba(0,0,0,0.05)" }}
-								/>
-
-								<Legend wrapperStyle={{ paddingTop: "20px" }} />
-
-								{/* POSITIVE WERTE (Gehen automatisch nach OBEN) */}
-								{/* Wir geben dem obersten positiven Element (Wartung) den Radius oben */}
-								<Bar
-									dataKey="Strom"
-									stackId="a"
-									fill="#3b82f6"
-									name={m.dashboard_legend_electricity()}
-								/>
-								<Bar
-									dataKey="Brennstoff"
-									stackId="a"
-									fill="#ef4444"
-									name={m.dashboard_legend_fuel()}
-									radius={[4, 4, 0, 0]}
-								/>
-								<Bar
-									dataKey="Wartung"
-									stackId="a"
-									fill="#f59e0b"
-									name={m.dashboard_legend_maintenance()}
-									radius={[4, 4, 0, 0]} // Radius nur oben
-								/>
-
-								{/* NEGATIVE WERTE (Gehen automatisch nach UNTEN) */}
-								<Bar
-									dataKey="Erlöse"
-									stackId="a"
-									fill="#16a34a"
-									name={m.dashboard_legend_feedin()}
-									radius={[4, 4, 0, 0]} // Radius nur unten
-								/>
-							</BarChart>
-						</ResponsiveContainer>
-					</CardContent>
-				</Card>
-
-				{/* AUTARKIE */}
-				<Card className="md:col-span-3">
-					<CardHeader>
-						<CardTitle>{m.dashboard_chart_autarky_title()}</CardTitle>
-						<CardDescription>
-							{m.dashboard_chart_autarky_desc()}
-						</CardDescription>
-					</CardHeader>
-					<CardContent className="flex flex-col items-center justify-center h-[300px]">
-						<div className="relative w-full h-[200px]">
-							<ResponsiveContainer width="100%" height="100%">
-								<PieChart>
-									<Pie
-										data={PIE_DATA_AUTARKIE}
-										cx="50%"
-										cy="50%"
-										innerRadius={60}
-										outerRadius={80}
-										paddingAngle={5}
-										dataKey="value"
+					{/* 2. SECTION: VISUALIZATION & CHARTS */}
+					<section className="grid gap-4 md:grid-cols-7">
+						{/* KOSTENVERGLEICH */}
+						<Card className="md:col-span-4">
+							<CardHeader>
+								<CardTitle>{m.dashboard_chart_cost_title()}</CardTitle>
+								<CardDescription>
+									{m.dashboard_chart_cost_desc()}
+								</CardDescription>
+							</CardHeader>
+							<CardContent className="h-[350px]">
+								<ResponsiveContainer width="100%" height="100%">
+									<BarChart
+										data={COST_DATA}
+										margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+										stackOffset="sign" // WICHTIG: Erlaubt Stapelung in beide Richtungen
 									>
-										{PIE_DATA_AUTARKIE.map((entry) => (
-											<Cell key={`cell-${entry.name}`} fill={entry.color} />
-										))}
-									</Pie>
-								</PieChart>
-							</ResponsiveContainer>
-							<div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-								<span className="text-3xl font-bold">
-									{fmt(RAW_DATA.autarky)}%
-								</span>
-								<span className="text-xs text-muted-foreground uppercase tracking-wider">
-									{m.dashboard_label_autarky()}
-								</span>
-							</div>
-						</div>
+										{/* Dezentes Grid */}
+										<CartesianGrid
+											strokeDasharray="3 3"
+											vertical={false}
+											stroke="#e5e7eb"
+										/>
 
-						<div className="mt-4 w-full space-y-2">
-							<div className="flex justify-between text-sm">
-								<span className="flex items-center gap-2">
-									<div className="w-3 h-3 rounded-full bg-green-600" />
-									{m.dashboard_label_own_generation()}
-								</span>
-								<span className="font-medium">{fmt(RAW_DATA.autarky)}%</span>
-							</div>
-							<Separator />
-							<div className="flex justify-between text-sm">
-								<span className="text-muted-foreground">
-									{m.dashboard_label_self_consumption()}
-								</span>
-								<span className="font-medium">{fmt(RAW_DATA.selfUse)}%</span>
-							</div>
-						</div>
-					</CardContent>
-				</Card>
-			</section>
+										{/* Die Null-Linie deutlich hervorheben */}
+										<ReferenceLine y={0} stroke="#64748b" strokeWidth={1} />
 
-			{/* 3. SECTION: TECHNISCHE DETAILS */}
-			<h3 className="text-lg font-semibold mt-8 mb-4">
-				{m.dashboard_tech_section_title()}
-			</h3>
-			<section className="grid gap-4 md:grid-cols-3">
-				{/* PV-Anlage */}
-				<TechCard
-					icon={Zap}
-					title={m.dashboard_tech_pv_title()}
-					specs={[
-						{ label: m.dashboard_spec_power(), value: "684 kWp" },
-						{ label: m.dashboard_spec_area(), value: "3.041 m²" },
-						{ label: m.dashboard_spec_yield(), value: "673 MWh/a" },
-						{ label: m.dashboard_spec_opex(), value: "6.000 €/a" },
-						{ label: m.dashboard_spec_invest(), value: "400.000 €" },
-					]}
-					description={m.dashboard_tech_pv_desc()}
-				/>
+										<XAxis
+											dataKey="name"
+											fontSize={12}
+											tickLine={false}
+											axisLine={false}
+											dy={10} // Abstand zur Achse etwas erhöhen
+										/>
+										<YAxis
+											unit=" €"
+											fontSize={12}
+											tickLine={false}
+											axisLine={false}
+											tickFormatter={(value) => `${value / 1000}k`}
+										/>
 
-				{/* Speicher */}
-				<TechCard
-					icon={Battery}
-					title={m.dashboard_tech_battery_title()}
-					specs={[
-						{ label: m.dashboard_spec_capacity(), value: "321 kWh" },
-						{
-							label: m.dashboard_spec_cycles(),
-							value: `268 / ${m.dashboard_unit_year()}`,
-						},
-						{ label: m.dashboard_spec_opex(), value: "1.470,5 €/a" },
-						{ label: m.dashboard_spec_invest(), value: "73.524 €" },
-					]}
-					description={m.dashboard_tech_battery_desc()}
-				/>
+										<RechartsTooltip
+											content={<CustomTooltip />}
+											cursor={{ fill: "rgba(0,0,0,0.05)" }}
+										/>
 
-				{/* Wärmepumpe */}
-				<TechCard
-					icon={ThermometerSun}
-					title={m.dashboard_tech_hp_title()}
-					specs={[
-						{ label: m.dashboard_spec_thermal_power(), value: "50 kW" },
-						{ label: m.dashboard_spec_heat(), value: "126,49 MWh/a" },
-						{ label: m.dashboard_spec_opex(), value: "375 €/a" },
-						{ label: m.dashboard_spec_invest(), value: "25.000 €" },
-					]}
-					description={m.dashboard_tech_hp_desc()}
-				/>
-			</section>
-			<AssumptionsSection />
-		</main>
+										<Legend wrapperStyle={{ paddingTop: "20px" }} />
+
+										{/* POSITIVE WERTE (Gehen automatisch nach OBEN) */}
+										{/* Wir geben dem obersten positiven Element (Wartung) den Radius oben */}
+										<Bar
+											dataKey="Strom"
+											stackId="a"
+											fill="#3b82f6"
+											name={m.dashboard_legend_electricity()}
+										/>
+										<Bar
+											dataKey="Brennstoff"
+											stackId="a"
+											fill="#ef4444"
+											name={m.dashboard_legend_fuel()}
+											radius={[4, 4, 0, 0]}
+										/>
+										<Bar
+											dataKey="Wartung"
+											stackId="a"
+											fill="#f59e0b"
+											name={m.dashboard_legend_maintenance()}
+											radius={[4, 4, 0, 0]} // Radius nur oben
+										/>
+
+										{/* NEGATIVE WERTE (Gehen automatisch nach UNTEN) */}
+										<Bar
+											dataKey="Erlöse"
+											stackId="a"
+											fill="#16a34a"
+											name={m.dashboard_legend_feedin()}
+											radius={[4, 4, 0, 0]} // Radius nur unten
+										/>
+									</BarChart>
+								</ResponsiveContainer>
+							</CardContent>
+						</Card>
+
+						{/* AUTARKIE */}
+						<Card className="md:col-span-3">
+							<CardHeader>
+								<CardTitle>{m.dashboard_chart_autarky_title()}</CardTitle>
+								<CardDescription>
+									{m.dashboard_chart_autarky_desc()}
+								</CardDescription>
+							</CardHeader>
+							<CardContent className="flex flex-col items-center justify-center h-[300px]">
+								<div className="relative w-full h-[200px]">
+									<ResponsiveContainer width="100%" height="100%">
+										<PieChart>
+											<Pie
+												data={PIE_DATA_AUTARKIE}
+												cx="50%"
+												cy="50%"
+												innerRadius={60}
+												outerRadius={80}
+												paddingAngle={5}
+												dataKey="value"
+											>
+												{PIE_DATA_AUTARKIE.map((entry) => (
+													<Cell key={`cell-${entry.name}`} fill={entry.color} />
+												))}
+											</Pie>
+										</PieChart>
+									</ResponsiveContainer>
+									<div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+										<span className="text-3xl font-bold">
+											{fmt(RAW_DATA.autarky)}%
+										</span>
+										<span className="text-xs text-muted-foreground uppercase tracking-wider">
+											{m.dashboard_label_autarky()}
+										</span>
+									</div>
+								</div>
+
+								<div className="mt-4 w-full space-y-2">
+									<div className="flex justify-between text-sm">
+										<span className="flex items-center gap-2">
+											<div className="w-3 h-3 rounded-full bg-green-600" />
+											{m.dashboard_label_own_generation()}
+										</span>
+										<span className="font-medium">
+											{fmt(RAW_DATA.autarky)}%
+										</span>
+									</div>
+									<Separator />
+									<div className="flex justify-between text-sm">
+										<span className="text-muted-foreground">
+											{m.dashboard_label_self_consumption()}
+										</span>
+										<span className="font-medium">
+											{fmt(RAW_DATA.selfUse)}%
+										</span>
+									</div>
+								</div>
+							</CardContent>
+						</Card>
+					</section>
+
+					{/* 3. SECTION: TECHNISCHE DETAILS */}
+					<h3 className="text-lg font-semibold mt-8 mb-4">
+						{m.dashboard_tech_section_title()}
+					</h3>
+					<section className="grid gap-4 md:grid-cols-3">
+						{/* PV-Anlage */}
+						<TechCard
+							icon={Zap}
+							title={m.dashboard_tech_pv_title()}
+							specs={[
+								{ label: m.dashboard_spec_power(), value: "684 kWp" },
+								{ label: m.dashboard_spec_area(), value: "3.041 m²" },
+								{ label: m.dashboard_spec_yield(), value: "673 MWh/a" },
+								{ label: m.dashboard_spec_opex(), value: "6.000 €/a" },
+								{ label: m.dashboard_spec_invest(), value: "400.000 €" },
+							]}
+							description={m.dashboard_tech_pv_desc()}
+						/>
+
+						{/* Speicher */}
+						<TechCard
+							icon={Battery}
+							title={m.dashboard_tech_battery_title()}
+							specs={[
+								{ label: m.dashboard_spec_capacity(), value: "321 kWh" },
+								{
+									label: m.dashboard_spec_cycles(),
+									value: `268 / ${m.dashboard_unit_year()}`,
+								},
+								{ label: m.dashboard_spec_opex(), value: "1.470,5 €/a" },
+								{ label: m.dashboard_spec_invest(), value: "73.524 €" },
+							]}
+							description={m.dashboard_tech_battery_desc()}
+						/>
+
+						{/* Wärmepumpe */}
+						<TechCard
+							icon={ThermometerSun}
+							title={m.dashboard_tech_hp_title()}
+							specs={[
+								{ label: m.dashboard_spec_thermal_power(), value: "50 kW" },
+								{ label: m.dashboard_spec_heat(), value: "126,49 MWh/a" },
+								{ label: m.dashboard_spec_opex(), value: "375 €/a" },
+								{ label: m.dashboard_spec_invest(), value: "25.000 €" },
+							]}
+							description={m.dashboard_tech_hp_desc()}
+						/>
+					</section>
+					<AssumptionsSection />
+				</main>
+			</div>
+		</div>
 	);
 }
 
