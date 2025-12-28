@@ -6,7 +6,6 @@ import {
 	PromptInputBody,
 	PromptInputFooter,
 	type PromptInputMessage,
-	PromptInputSpeechButton,
 	PromptInputSubmit,
 	PromptInputTextarea,
 	PromptInputTools,
@@ -46,12 +45,7 @@ const PromptInputComponent = ({
 				/>
 			</PromptInputBody>
 			<PromptInputFooter>
-				<PromptInputTools>
-					<PromptInputSpeechButton
-						onTranscriptionChange={setText}
-						textareaRef={textareaRef}
-					/>
-				</PromptInputTools>
+				<PromptInputTools></PromptInputTools>
 				<PromptInputSubmit disabled={!text && !status} status={status} />
 			</PromptInputFooter>
 		</PromptInput>
