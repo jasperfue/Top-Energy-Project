@@ -6,6 +6,7 @@ import {
 	HeadContent,
 	Outlet,
 	Scripts,
+	useLocation,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import ReactCountryFlag from "react-country-flag";
@@ -62,6 +63,22 @@ const getCountryCode = (locale: string) =>
 	locale === "en" ? "GB" : locale.toUpperCase();
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+	const location = useLocation();
+
+	// Calculate progress based on current route
+	const getProgress = (pathname: string) => {
+		if (pathname === "/") return 5;
+		if (pathname.includes("affinity-for-technology")) return 20;
+		if (pathname.includes("scenario")) return 40;
+		// Both variants represent the same stage
+		if (pathname.includes("dashboard") || pathname.includes("chat")) return 60;
+		if (pathname.includes("questionnaire")) return 80;
+		if (pathname.includes("thanks")) return 100;
+		return 0;
+	};
+
+	const progress = getProgress(location.pathname);
+
 	return (
 		<html lang={getLocale()} className="h-full">
 			<head>
@@ -78,7 +95,19 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					paddingBottom: "env(safe-area-inset-bottom)",
 				}}
 			>
-				<div className="flex-1 flex min-h-0">
+				{/* Sticky Progress Bar at the top */}
+				<div className="fixed top-0 left-0 w-full h-1.5 z-50 bg-muted">
+					<div
+						className="h-full bg-primary transition-all duration-700 ease-in-out"
+						style={{ width: `${progress}%` }}
+						role="progressbar"
+						aria-valuenow={progress}
+						aria-valuemin={0}
+						aria-valuemax={100}
+					/>
+				</div>
+
+				<div className="flex-1 flex min-h-0 pt-4">
 					<div className="container mx-auto px-4 sm:px-6 lg:px-8">
 						{children}
 					</div>
