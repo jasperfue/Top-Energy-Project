@@ -1,11 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-	createFileRoute,
-	useNavigate,
-	useRouter,
-} from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
@@ -13,6 +8,7 @@ import { MultipleChoiceQuestion } from "@/components/MultipleChoiceQuestion.tsx"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { m } from "@/paraglide/messages.js";
 import { Likert7, likert7Options } from "@/routes/affinity-for-technology.tsx";
 
@@ -52,13 +48,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 function Questionnaire() {
 	const nav = useNavigate();
-	const router = useRouter();
-
-	useEffect(() => {
-		void router.preloadRoute({
-			to: "/thanks",
-		});
-	}, [router]);
+	usePreloadRoute("/thanks");
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
