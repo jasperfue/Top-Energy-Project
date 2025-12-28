@@ -51,7 +51,26 @@ const updateStudyVariant = createServerFn({ method: "POST" })
 	});
 
 const getPrototypeType = createServerFn().handler(
-	async (): Promise<"chat" | "dashboard"> => {
+	async (): Promise<{ variant: "chat" | "dashboard"; isExisting: boolean }> => {
+		const session = await useUserSession();
+
+		// Check if there is already a record for the current user
+		if (session.data.recId) {
+			try {
+				const userRecord = await airtable.find(session.data.recId);
+				const currentVariant = userRecord.fields?.Studienvariante;
+
+				if (currentVariant === "Chat") {
+					return { variant: "chat", isExisting: true };
+				}
+				if (currentVariant === "Dashboard") {
+					return { variant: "dashboard", isExisting: true };
+				}
+			} catch (error) {
+				console.error("Failed to fetch existing user record:", error);
+			}
+		}
+
 		const allRecords = await airtable
 			.select({ fields: ["Studienvariante"] })
 			.all();
@@ -63,7 +82,8 @@ const getPrototypeType = createServerFn().handler(
 			else if (v === "Dashboard") counts.dashboard++;
 		}
 
-		return counts.chat > counts.dashboard ? "dashboard" : "chat";
+		const newVariant = counts.chat > counts.dashboard ? "dashboard" : "chat";
+		return { variant: newVariant, isExisting: false };
 	},
 );
 
@@ -75,9 +95,9 @@ function Scenario() {
 
 	useEffect(() => {
 		deferredSlowData
-			.then((prototypeType) => {
+			.then(({ variant }) => {
 				void router.preloadRoute({
-					to: `/${prototypeType}`,
+					to: `/${variant}`,
 				});
 			})
 			.catch((err) => {
@@ -90,9 +110,12 @@ function Scenario() {
 		setIsLoading(true);
 
 		try {
-			const prototypeType = await deferredSlowData;
-			await updateStudyVariant({ data: prototypeType });
-			await nav({ to: `/${prototypeType}` });
+			const { variant, isExisting } = await deferredSlowData;
+			// Only update if the variant is not already set in Airtable
+			if (!isExisting) {
+				await updateStudyVariant({ data: variant });
+			}
+			await nav({ to: `/${variant}` });
 		} catch (error) {
 			console.error("Error during start sequence:", error);
 			setIsLoading(false);
