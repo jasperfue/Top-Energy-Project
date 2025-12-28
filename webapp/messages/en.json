@@ -179,5 +179,9 @@
 	"understanding_q4_option1": "Costs decrease by approx. 61k€ per year",
 	"understanding_q4_option2": "They remain the same, but become carbon neutral",
 	"understanding_q4_option3": "They drop to almost half, by approx. 93k€ per year",
-	"understanding_q4_option4": "I do not know"
+	"understanding_q4_option4": "I do not know",
+
+	"intention_q1": "I would use the results of this system as a basis for my investment decision.",
+	"intention_q2": "If I were to plan such a system again, I would use this tool.",
+	"intention_q3": "I would recommend this system to colleagues in a similar situation."
 }

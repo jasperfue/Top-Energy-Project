@@ -50,10 +50,17 @@ const ueqAnswers = z.object({
 	ueq_8: Likert7,
 });
 
+const intentionAnswers = z.object({
+	intention_q1: Likert7,
+	intention_q2: Likert7,
+	intention_q3: Likert7,
+});
+
 const formSchema = z.object({
 	...understandingAnswers.shape,
 	...trustAnswers.shape,
 	...ueqAnswers.shape,
+	...intentionAnswers.shape,
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -92,6 +99,9 @@ function Questionnaire() {
 			ueq_6: undefined,
 			ueq_7: undefined,
 			ueq_8: undefined,
+			intention_q1: undefined,
+			intention_q2: undefined,
+			intention_q3: undefined,
 		},
 		mode: "onSubmit",
 	});
@@ -241,6 +251,32 @@ function Questionnaire() {
 									label: m.understanding_q4_option4(),
 								},
 							]}
+						/>
+					</CardContent>
+				</Card>
+				<Card>
+					<CardContent className="space-y-5">
+						<LikertScale
+							name="intention_q1"
+							control={form.control}
+							options={likert7Options}
+							rowLabel={m.intention_q1()}
+							required
+							showHeader
+						/>
+						<LikertScale
+							name="intention_q2"
+							control={form.control}
+							options={likert7Options}
+							rowLabel={m.intention_q2()}
+							required
+						/>
+						<LikertScale
+							name="intention_q3"
+							control={form.control}
+							options={likert7Options}
+							rowLabel={m.intention_q3()}
+							required
 						/>
 					</CardContent>
 				</Card>

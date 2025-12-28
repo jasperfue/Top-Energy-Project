@@ -179,5 +179,9 @@
 	"understanding_q4_option1": "Die Kosten sinken um ca. 61k€ pro Jahr",
 	"understanding_q4_option2": "Sie bleiben gleich, aber werden CO2-neutral",
 	"understanding_q4_option3": "Sie sinken fast auf die Hälfte um ca. 93k€ pro Jahr",
-	"understanding_q4_option4": "Ich weiß es nicht"
+	"understanding_q4_option4": "Ich weiß es nicht",
+
+	"intention_q1": "Ich würde die Ergebnisse dieses Systems als Grundlage für meine Investitionsentscheidung nutzen.",
+	"intention_q2": "Wenn ich erneut vor einer solchen Planung stünde, würde ich auf dieses System zurückgreifen.",
+	"intention_q3": "Ich würde dieses System Kollegen in ähnlicher Situation weiterempfehlen."
 }
