@@ -108,7 +108,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					/>
 				</div>
 
-				<div className="flex-1 flex min-h-0 pt-4">
+				<div className="flex-1 flex min-h-0">
 					<div className="container mx-auto px-4 sm:px-6 lg:px-8">
 						{children}
 					</div>
