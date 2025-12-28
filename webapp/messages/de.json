@@ -133,13 +133,15 @@
 	"dashboard_load_heat": "Thermischer Wärmebedarf (Winter)",
 	"dashboard_load_cool": "Thermischer Kältebedarf (Sommer)",
 
-	"questionnaire_title": "Fragebogen",
-	"questionnaire_intro": "Bitte antworten",
+	"questionnaire_title": "Abschließende Bewertung",
+	"questionnaire_intro": "<p>Vielen Dank, dass Sie die Aufgabe bearbeitet haben.</p><p>Bitte beantworten Sie die folgenden Fragen <strong>ehrlich und spontan</strong>. Es geht uns darum, das System zu verbessern – kritisches Feedback ist daher ausdrücklich erwünscht.</p><p><strong>Hinweis:</strong> Bei Fragen zu Ihrem persönlichen Eindruck gibt es kein Richtig oder Falsch. Im Abschnitt 'Verständnisfragen' testen wir nicht Ihr Gedächtnis, sondern wie gut das System die Informationen vermitteln konnte.</p>",
 
+	"questionnaire_section_general": "Allgemeine Einschätzung",
 	"trust_q1": "Ich bin zuversichtlich, was das System betrifft.",
 	"trust_q2": "Das System ist zuverlässig.",
 	"trust_q3": "Ich kann dem System vertrauen.",
 
+	"questionnaire_section_impression": "Ihr Eindruck",
 	"ueq_instruction": "Bitte bewerten Sie das System nun anhand der folgenden Gegensatzpaare.",
 
 	"ueq_1_min": "behindernd",
@@ -166,6 +168,7 @@
 	"ueq_8_min": "herkömmlich",
 	"ueq_8_max": "neuartig",
 
+	"questionnaire_section_understanding": "Verständnisfragen",
 	"understanding_q1": "Ich habe eine klare Vorstellung davon, wie die vorgeschlagene Energielösung für meinen Betrieb aussieht.",
 	"understanding_q2": "Ich verstehe, warum genau diese Kombination an Maßnahmen für meinen Betrieb sinnvoll ist.",
 
@@ -181,7 +184,12 @@
 	"understanding_q4_option3": "Sie sinken fast auf die Hälfte um ca. 93k€ pro Jahr",
 	"understanding_q4_option4": "Ich weiß es nicht",
 
+	"questionnaire_section_intention": "Abschlussbewertung",
 	"intention_q1": "Ich würde die Ergebnisse dieses Systems als Grundlage für meine Investitionsentscheidung nutzen.",
 	"intention_q2": "Wenn ich erneut vor einer solchen Planung stünde, würde ich auf dieses System zurückgreifen.",
-	"intention_q3": "Ich würde dieses System Kollegen in ähnlicher Situation weiterempfehlen."
+	"intention_q3": "Ich würde dieses System Kollegen in ähnlicher Situation weiterempfehlen.",
+
+	"questionnaire_section_feedback": "Anmerkungen",
+	"questionnaire_feedback_label": "Haben Sie noch Anmerkungen zur Studie oder zum System? (Optional)",
+	"questionnaire_feedback_placeholder": "Hier können Sie Feedback eingeben..."
 }

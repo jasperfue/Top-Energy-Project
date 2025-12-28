@@ -6,8 +6,10 @@ import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
 import { MultipleChoiceQuestion } from "@/components/MultipleChoiceQuestion.tsx";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label.tsx";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea.tsx";
 import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { m } from "@/paraglide/messages.js";
 import { Likert7, likert7Options } from "@/routes/affinity-for-technology.tsx";
@@ -56,11 +58,16 @@ const intentionAnswers = z.object({
 	intention_q3: Likert7,
 });
 
+const feedbackAnswer = z.object({
+	feedback: z.string().optional(),
+});
+
 const formSchema = z.object({
 	...understandingAnswers.shape,
 	...trustAnswers.shape,
 	...ueqAnswers.shape,
 	...intentionAnswers.shape,
+	...feedbackAnswer.shape,
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -102,6 +109,7 @@ function Questionnaire() {
 			intention_q1: undefined,
 			intention_q2: undefined,
 			intention_q3: undefined,
+			feedback: "",
 		},
 		mode: "onSubmit",
 	});
@@ -142,6 +150,9 @@ function Questionnaire() {
 
 			<form onSubmit={submit} className="max-w-fit mx-auto space-y-3">
 				<Card>
+					<CardHeader>
+						<CardTitle>{m.questionnaire_section_general()}</CardTitle>
+					</CardHeader>
 					<CardContent className="space-y-5">
 						<LikertScale
 							name="trust_q1"
@@ -168,6 +179,9 @@ function Questionnaire() {
 					</CardContent>
 				</Card>
 				<Card>
+					<CardHeader>
+						<CardTitle>{m.questionnaire_section_impression()}</CardTitle>
+					</CardHeader>
 					<CardContent className="space-y-2">
 						<div className="mb-6 p-4 bg-muted/50 rounded-lg text-sm">
 							{m.ueq_instruction()}
@@ -188,6 +202,9 @@ function Questionnaire() {
 					</CardContent>
 				</Card>
 				<Card>
+					<CardHeader>
+						<CardTitle>{m.questionnaire_section_understanding()}</CardTitle>
+					</CardHeader>
 					<CardContent className="space-y-5">
 						<LikertScale
 							name="understanding_q1"
@@ -255,6 +272,9 @@ function Questionnaire() {
 					</CardContent>
 				</Card>
 				<Card>
+					<CardHeader>
+						<CardTitle>{m.questionnaire_section_intention()}</CardTitle>
+					</CardHeader>
 					<CardContent className="space-y-5">
 						<LikertScale
 							name="intention_q1"
@@ -277,6 +297,26 @@ function Questionnaire() {
 							options={likert7Options}
 							rowLabel={m.intention_q3()}
 							required
+						/>
+					</CardContent>
+				</Card>
+
+				<Card>
+					<CardHeader>
+						<CardTitle>{m.questionnaire_section_feedback()}</CardTitle>
+					</CardHeader>
+					<CardContent className="space-y-2">
+						<Label
+							htmlFor="feedback"
+							className="text-muted-foreground font-normal"
+						>
+							{m.questionnaire_feedback_label()}
+						</Label>
+						<Textarea
+							id="feedback"
+							placeholder={m.questionnaire_feedback_placeholder()}
+							{...form.register("feedback")}
+							className="mt-2 resize-none h-24"
 						/>
 					</CardContent>
 				</Card>
