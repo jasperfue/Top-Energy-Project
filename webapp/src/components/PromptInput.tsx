@@ -16,16 +16,22 @@ import { m } from "@/paraglide/messages.js";
 type PromptInputComponentProps = {
 	status: ChatStatus;
 	sendMessage: ReturnType<typeof useChat>["sendMessage"];
+	stop: () => Promise<void>;
 };
 
 const PromptInputComponent = ({
 	status,
 	sendMessage,
+	stop,
 }: PromptInputComponentProps) => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const hydrated = useHydrated();
 
 	const handleSubmit = (message: PromptInputMessage) => {
+		if (status === "streaming") {
+			void stop();
+			return;
+		}
 		if (!message.text || !hydrated) return;
 
 		void sendMessage({ text: message.text });

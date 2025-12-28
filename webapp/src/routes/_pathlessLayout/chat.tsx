@@ -57,7 +57,7 @@ function Chat() {
 	const navigate = useNavigate();
 	const [isFinishing, setIsFinishing] = useState(false);
 	usePreloadRoute("/questionnaire");
-	const { messages, sendMessage, status } = useChat({
+	const { messages, sendMessage, status, stop } = useChat({
 		transport: new DefaultChatTransport({
 			api: "/api/chat",
 		}),
@@ -88,11 +88,16 @@ function Chat() {
 
 			await navigate({ to: "/questionnaire" });
 		} catch (error) {
-			console.error("Failed to finish task or navigate to questionnaire", error);
+			console.error(
+				"Failed to finish task or navigate to questionnaire",
+				error,
+			);
 			// Reset loading state and inform the user so they can retry
 			setIsFinishing(false);
 			if (typeof window !== "undefined") {
-				window.alert("An error occurred while finishing the task. Please try again.");
+				window.alert(
+					"An error occurred while finishing the task. Please try again.",
+				);
 			}
 		}
 	};
@@ -131,8 +136,12 @@ function Chat() {
 						</ConversationContent>
 						<ConversationScrollButton />
 					</Conversation>
-					{/* @ts-expect-error*/}
-					<PromptInputComponent sendMessage={sendMessage} status={status} />
+					<PromptInputComponent
+						stop={stop}
+						// @ts-expect-error
+						sendMessage={sendMessage}
+						status={status}
+					/>
 				</div>
 			</div>
 		</div>
