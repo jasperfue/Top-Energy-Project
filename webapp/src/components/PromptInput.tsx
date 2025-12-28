@@ -1,4 +1,5 @@
 import type { useChat } from "@ai-sdk/react";
+import { useHydrated } from "@tanstack/react-router";
 import type { ChatStatus } from "ai";
 import { useRef, useState } from "react";
 import {
@@ -23,14 +24,13 @@ const PromptInputComponent = ({
 }: PromptInputComponentProps) => {
 	const [text, setText] = useState("");
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const hydrated = useHydrated();
 
 	const handleSubmit = (message: PromptInputMessage) => {
-		const hasText = Boolean(message.text);
-
-		if (!hasText) {
+		if (!message.text) {
 			return;
 		}
-		void sendMessage({ text });
+		void sendMessage({ text: message.text });
 		setText("");
 	};
 
@@ -46,7 +46,12 @@ const PromptInputComponent = ({
 			</PromptInputBody>
 			<PromptInputFooter>
 				<PromptInputTools></PromptInputTools>
-				<PromptInputSubmit disabled={!text && !status} status={status} />
+				<PromptInputSubmit
+					disabled={
+						!(status === "ready" || status === "streaming") || !hydrated
+					}
+					status={status}
+				/>
 			</PromptInputFooter>
 		</PromptInput>
 	);
