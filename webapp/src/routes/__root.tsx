@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
@@ -18,6 +19,7 @@ import {
 	SelectItem,
 	SelectTrigger,
 } from "@/components/ui/select.tsx";
+import * as m from "@/paraglide/messages";
 import { getLocale, locales, setLocale } from "@/paraglide/runtime";
 import { seo } from "@/types/utils.ts";
 import stylesCss from "../styles.css?url";
@@ -34,18 +36,14 @@ export const Route = createRootRouteWithContext<{
 				name: "viewport",
 				content: "width=device-width, initial-scale=1",
 			},
-			...seo({
-				title:
-					"TanStack Start | Type-Safe, Client-First, Full-Stack React Framework",
-				description: `TanStack Start is a type-safe, client-first, full-stack React framework. `,
-			}),
+			...seo({ title: m.study_title(), description: m.study_description() }),
 		],
 		links: [
 			{ rel: "stylesheet", href: stylesCss },
 			{ rel: "manifest", href: "/site.webmanifest", color: "#ffffff" },
 			{
 				rel: "icon",
-				href: "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>",
+				href: "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%22 y=%22.9em%22 font-size=%2290%22 text-anchor=%22middle%22>⚡</text></svg>",
 			},
 		],
 	}),
