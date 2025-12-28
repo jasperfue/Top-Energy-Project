@@ -140,6 +140,32 @@
 	"trust_q2": "The system is reliable.",
 	"trust_q3": "I can trust the system.",
 
+	"ueq_instruction": "Please assess the system using the following pairs of contrasting attributes.",
+
+	"ueq_1_min": "obstructive",
+	"ueq_1_max": "supportive",
+
+	"ueq_2_min": "complicated",
+	"ueq_2_max": "easy",
+
+	"ueq_3_min": "inefficient",
+	"ueq_3_max": "efficient",
+
+	"ueq_4_min": "confusing",
+	"ueq_4_max": "clear",
+
+	"ueq_5_min": "boring",
+	"ueq_5_max": "exciting",
+
+	"ueq_6_min": "not interesting",
+	"ueq_6_max": "interesting",
+
+	"ueq_7_min": "conventional",
+	"ueq_7_max": "inventive",
+
+	"ueq_8_min": "usual",
+	"ueq_8_max": "leading edge",
+
 	"understanding_q1": "I have a clear idea of what the proposed energy solution for my company looks like.",
 	"understanding_q2": "I understand why exactly this combination of measures is beneficial for my company.",
 

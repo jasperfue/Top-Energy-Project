@@ -39,12 +39,36 @@ const understandingAnswers = z.object({
 	]),
 });
 
+const ueqAnswers = z.object({
+	ueq_1: Likert7,
+	ueq_2: Likert7,
+	ueq_3: Likert7,
+	ueq_4: Likert7,
+	ueq_5: Likert7,
+	ueq_6: Likert7,
+	ueq_7: Likert7,
+	ueq_8: Likert7,
+});
+
 const formSchema = z.object({
 	...understandingAnswers.shape,
 	...trustAnswers.shape,
+	...ueqAnswers.shape,
 });
 
 type FormValues = z.infer<typeof formSchema>;
+
+function getUeqOptions(minLabel: string, maxLabel: string) {
+	return [
+		{ value: 1, label: minLabel },
+		{ value: 2, label: "" },
+		{ value: 3, label: "" },
+		{ value: 4, label: "" },
+		{ value: 5, label: "" },
+		{ value: 6, label: "" },
+		{ value: 7, label: maxLabel },
+	];
+}
 
 function Questionnaire() {
 	const nav = useNavigate();
@@ -60,6 +84,14 @@ function Questionnaire() {
 			understanding_q2: undefined,
 			understanding_q3: undefined,
 			understanding_q4: undefined,
+			ueq_1: undefined,
+			ueq_2: undefined,
+			ueq_3: undefined,
+			ueq_4: undefined,
+			ueq_5: undefined,
+			ueq_6: undefined,
+			ueq_7: undefined,
+			ueq_8: undefined,
 		},
 		mode: "onSubmit",
 	});
@@ -69,6 +101,17 @@ function Questionnaire() {
 		// TODO: send to airtable with ServerFn
 		void nav({ to: "/thanks" });
 	});
+
+	const ueqItems = [
+		{ name: "ueq_1", min: m.ueq_1_min(), max: m.ueq_1_max(), isSwapped: false },
+		{ name: "ueq_2", min: m.ueq_2_max(), max: m.ueq_2_min(), isSwapped: true },
+		{ name: "ueq_3", min: m.ueq_3_min(), max: m.ueq_3_max(), isSwapped: false },
+		{ name: "ueq_4", min: m.ueq_4_max(), max: m.ueq_4_min(), isSwapped: true },
+		{ name: "ueq_5", min: m.ueq_5_min(), max: m.ueq_5_max(), isSwapped: false },
+		{ name: "ueq_6", min: m.ueq_6_max(), max: m.ueq_6_min(), isSwapped: true },
+		{ name: "ueq_7", min: m.ueq_7_min(), max: m.ueq_7_max(), isSwapped: false },
+		{ name: "ueq_8", min: m.ueq_8_max(), max: m.ueq_8_min(), isSwapped: true },
+	] as const;
 
 	return (
 		<main className="mx-auto p-6 space-y-6">
@@ -112,6 +155,26 @@ function Questionnaire() {
 							rowLabel={m.trust_q3()}
 							required
 						/>
+					</CardContent>
+				</Card>
+				<Card>
+					<CardContent className="space-y-2">
+						<div className="mb-6 p-4 bg-muted/50 rounded-lg text-sm">
+							{m.ueq_instruction()}
+						</div>
+
+						<div className="max-w-xl mx-auto space-y-7">
+							{ueqItems.map((item) => (
+								<LikertScale
+									key={item.name}
+									name={item.name}
+									control={form.control}
+									options={getUeqOptions(item.min, item.max)}
+									required
+									showHeader
+								/>
+							))}
+						</div>
 					</CardContent>
 				</Card>
 				<Card>
@@ -195,5 +258,3 @@ function Questionnaire() {
 		</main>
 	);
 }
-
-export default Questionnaire;
