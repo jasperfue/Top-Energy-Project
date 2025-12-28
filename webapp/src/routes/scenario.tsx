@@ -42,6 +42,7 @@ const updateStudyVariant = createServerFn({ method: "POST" })
 					id: session.data.recId,
 					fields: {
 						Studienvariante: data === "chat" ? "Chat" : "Dashboard",
+						Startzeit: new Date().toISOString(),
 					},
 				},
 			])

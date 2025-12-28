@@ -40,7 +40,7 @@ export function LikertScale<TFieldValues extends FieldValues>({
 				{rowLabel && (
 					<Label htmlFor={name} className="leading-snug self-end">
 						{rowLabel}
-						{required ? " *" : ""}
+						{/*{required ? " *" : ""}*/}
 					</Label>
 				)}
 

@@ -1,12 +1,12 @@
 import type { useChat } from "@ai-sdk/react";
+import { useHydrated } from "@tanstack/react-router";
 import type { ChatStatus } from "ai";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import {
 	PromptInput,
 	PromptInputBody,
 	PromptInputFooter,
 	type PromptInputMessage,
-	PromptInputSpeechButton,
 	PromptInputSubmit,
 	PromptInputTextarea,
 	PromptInputTools,
@@ -16,43 +16,44 @@ import { m } from "@/paraglide/messages.js";
 type PromptInputComponentProps = {
 	status: ChatStatus;
 	sendMessage: ReturnType<typeof useChat>["sendMessage"];
+	stop: () => Promise<void>;
 };
 
 const PromptInputComponent = ({
 	status,
 	sendMessage,
+	stop,
 }: PromptInputComponentProps) => {
-	const [text, setText] = useState("");
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const hydrated = useHydrated();
 
 	const handleSubmit = (message: PromptInputMessage) => {
-		const hasText = Boolean(message.text);
-
-		if (!hasText) {
+		if (status === "streaming") {
+			void stop();
 			return;
 		}
-		void sendMessage({ text });
-		setText("");
+		if (!message.text || !hydrated) return;
+
+		void sendMessage({ text: message.text });
+		if (textareaRef.current) textareaRef.current.value = "";
 	};
 
 	return (
 		<PromptInput onSubmit={handleSubmit} className="mt-4" globalDrop multiple>
 			<PromptInputBody>
 				<PromptInputTextarea
-					onChange={(e) => setText(e.target.value)}
 					ref={textareaRef}
-					value={text}
 					placeholder={m.chat_prompt_placeholder()}
 				/>
 			</PromptInputBody>
 			<PromptInputFooter>
-				<PromptInputTools>
-					<PromptInputSpeechButton
-						onTranscriptionChange={setText}
-						textareaRef={textareaRef}
-					/>
-				</PromptInputTools>
-				<PromptInputSubmit disabled={!text && !status} status={status} />
+				<PromptInputTools></PromptInputTools>
+				<PromptInputSubmit
+					disabled={
+						!(status === "ready" || status === "streaming") || !hydrated
+					}
+					status={status}
+				/>
 			</PromptInputFooter>
 		</PromptInput>
 	);

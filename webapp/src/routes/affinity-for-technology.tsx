@@ -1,12 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-	createFileRoute,
-	useNavigate,
-	useRouter,
-} from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
@@ -14,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { airtable } from "@/lib/airtable.ts";
+import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { m } from "@/paraglide/messages.js";
 
@@ -95,13 +91,7 @@ const submitAffinityForTechnologyForm = createServerFn({ method: "POST" })
 
 export function AffinityForTechnologyForm() {
 	const nav = useNavigate();
-	const router = useRouter();
-
-	useEffect(() => {
-		void router.preloadRoute({
-			to: "/scenario",
-		});
-	}, [router]);
+	usePreloadRoute("/scenario");
 
 	const form = useForm<AffTechFormValues>({
 		resolver: zodResolver(afftechAnswers),

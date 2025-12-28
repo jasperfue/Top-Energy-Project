@@ -133,13 +133,42 @@
 	"dashboard_load_heat": "Thermal Heat Demand (Winter)",
 	"dashboard_load_cool": "Thermal Cooling Demand (Summer)",
 
-	"questionnaire_title": "Questionnaire",
-	"questionnaire_intro": "Bitte antworten",
+	"questionnaire_title": "Final Evaluation",
+	"questionnaire_intro": "<p>Thank you for completing the task.</p><p>Please answer the following questions <strong>honestly and spontaneously</strong>. Our goal is to improve the system, so critical feedback is highly appreciated.</p><p><strong>Note:</strong> There are no right or wrong answers regarding your personal impression. In the 'Comprehension' section, we are not testing your memory, but rather how well the system was able to convey the information.</p>",
 
+	"questionnaire_section_general": "General Assessment",
 	"trust_q1": "I am confident in the system.",
 	"trust_q2": "The system is reliable.",
 	"trust_q3": "I can trust the system.",
 
+	"questionnaire_section_impression": "Your Impression",
+	"ueq_instruction": "Please assess the system using the following pairs of contrasting attributes.",
+
+	"ueq_1_min": "obstructive",
+	"ueq_1_max": "supportive",
+
+	"ueq_2_min": "complicated",
+	"ueq_2_max": "easy",
+
+	"ueq_3_min": "inefficient",
+	"ueq_3_max": "efficient",
+
+	"ueq_4_min": "confusing",
+	"ueq_4_max": "clear",
+
+	"ueq_5_min": "boring",
+	"ueq_5_max": "exciting",
+
+	"ueq_6_min": "not interesting",
+	"ueq_6_max": "interesting",
+
+	"ueq_7_min": "conventional",
+	"ueq_7_max": "inventive",
+
+	"ueq_8_min": "usual",
+	"ueq_8_max": "leading edge",
+
+	"questionnaire_section_understanding": "Comprehension Questions",
 	"understanding_q1": "I have a clear idea of what the proposed energy solution for my company looks like.",
 	"understanding_q2": "I understand why exactly this combination of measures is beneficial for my company.",
 
@@ -153,5 +182,14 @@
 	"understanding_q4_option1": "Costs decrease by approx. 61k€ per year",
 	"understanding_q4_option2": "They remain the same, but become carbon neutral",
 	"understanding_q4_option3": "They drop to almost half, by approx. 93k€ per year",
-	"understanding_q4_option4": "I do not know"
+	"understanding_q4_option4": "I do not know",
+
+	"questionnaire_section_intention": "Final Assessment",
+	"intention_q1": "I would use the results of this system as a basis for my investment decision.",
+	"intention_q2": "If I were to plan such a system again, I would use this tool.",
+	"intention_q3": "I would recommend this system to colleagues in a similar situation.",
+
+	"questionnaire_section_feedback": "Comments",
+	"questionnaire_feedback_label": "Do you have any further comments regarding the study or the system? (Optional)",
+	"questionnaire_feedback_placeholder": "Enter your feedback here..."
 }
