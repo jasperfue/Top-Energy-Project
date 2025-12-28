@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -10,7 +11,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label.tsx";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea.tsx";
+import { airtable } from "@/lib/airtable.ts";
 import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
+import { useUserSession } from "@/lib/useUserSession.ts";
 import { m } from "@/paraglide/messages.js";
 import { Likert7, likert7Options } from "@/routes/affinity-for-technology.tsx";
 
@@ -43,13 +46,13 @@ const understandingAnswers = z.object({
 
 const ueqAnswers = z.object({
 	ueq_1: Likert7,
-	ueq_2: Likert7,
+	ueq_2_swapped: Likert7,
 	ueq_3: Likert7,
-	ueq_4: Likert7,
+	ueq_4_swapped: Likert7,
 	ueq_5: Likert7,
-	ueq_6: Likert7,
+	ueq_6_swapped: Likert7,
 	ueq_7: Likert7,
-	ueq_8: Likert7,
+	ueq_8_swapped: Likert7,
 });
 
 const intentionAnswers = z.object({
@@ -84,6 +87,31 @@ function getUeqOptions(minLabel: string, maxLabel: string) {
 	];
 }
 
+const submitQuestionnaire = createServerFn({ method: "POST" })
+	.inputValidator(formSchema)
+	.handler(async ({ data }) => {
+		const session = await useUserSession();
+
+		if (!session.data.recId) {
+			throw new Error("No record ID found in session");
+		}
+
+		await airtable
+			.update([
+				{
+					id: session.data.recId,
+					fields: {
+						...data,
+					},
+				},
+			])
+			.catch((err) => {
+				console.error("Airtable Error:", err);
+				throw new Error("Failed to save data");
+			});
+		await session.clear();
+	});
+
 function Questionnaire() {
 	const nav = useNavigate();
 	usePreloadRoute("/thanks");
@@ -99,13 +127,13 @@ function Questionnaire() {
 			understanding_q3: undefined,
 			understanding_q4: undefined,
 			ueq_1: undefined,
-			ueq_2: undefined,
+			ueq_2_swapped: undefined,
 			ueq_3: undefined,
-			ueq_4: undefined,
+			ueq_4_swapped: undefined,
 			ueq_5: undefined,
-			ueq_6: undefined,
+			ueq_6_swapped: undefined,
 			ueq_7: undefined,
-			ueq_8: undefined,
+			ueq_8_swapped: undefined,
 			intention_q1: undefined,
 			intention_q2: undefined,
 			intention_q3: undefined,
@@ -115,20 +143,41 @@ function Questionnaire() {
 	});
 
 	const submit = form.handleSubmit(async (values) => {
-		console.log("Questionnaire submit", values);
-		// TODO: send to airtable with ServerFn
-		void nav({ to: "/thanks" });
+		try {
+			console.log("Submitting questionnaire...", values);
+			await submitQuestionnaire({ data: values });
+			await nav({ to: "/thanks" });
+		} catch (error) {
+			console.error("Failed to submit questionnaire:", error);
+			alert("Fehler beim Speichern. Bitte versuchen Sie es erneut.");
+		}
 	});
 
 	const ueqItems = [
-		{ name: "ueq_1", min: m.ueq_1_min(), max: m.ueq_1_max(), isSwapped: false },
-		{ name: "ueq_2", min: m.ueq_2_max(), max: m.ueq_2_min(), isSwapped: true },
-		{ name: "ueq_3", min: m.ueq_3_min(), max: m.ueq_3_max(), isSwapped: false },
-		{ name: "ueq_4", min: m.ueq_4_max(), max: m.ueq_4_min(), isSwapped: true },
-		{ name: "ueq_5", min: m.ueq_5_min(), max: m.ueq_5_max(), isSwapped: false },
-		{ name: "ueq_6", min: m.ueq_6_max(), max: m.ueq_6_min(), isSwapped: true },
-		{ name: "ueq_7", min: m.ueq_7_min(), max: m.ueq_7_max(), isSwapped: false },
-		{ name: "ueq_8", min: m.ueq_8_max(), max: m.ueq_8_min(), isSwapped: true },
+		{ name: "ueq_1", min: m.ueq_1_min(), max: m.ueq_1_max() },
+		{
+			name: "ueq_2_swapped",
+			min: m.ueq_2_max(),
+			max: m.ueq_2_min(),
+		},
+		{ name: "ueq_3", min: m.ueq_3_min(), max: m.ueq_3_max() },
+		{
+			name: "ueq_4_swapped",
+			min: m.ueq_4_max(),
+			max: m.ueq_4_min(),
+		},
+		{ name: "ueq_5", min: m.ueq_5_min(), max: m.ueq_5_max() },
+		{
+			name: "ueq_6_swapped",
+			min: m.ueq_6_max(),
+			max: m.ueq_6_min(),
+		},
+		{ name: "ueq_7", min: m.ueq_7_min(), max: m.ueq_7_max() },
+		{
+			name: "ueq_8_swapped",
+			min: m.ueq_8_max(),
+			max: m.ueq_8_min(),
+		},
 	] as const;
 
 	return (
