@@ -91,12 +91,16 @@ function Dashboard() {
 			await finishTask({
 				data: {},
 			});
-
 			await nav({ to: "/questionnaire" });
 		} catch (error) {
-			console.error("Navigation failed", error);
-			// Fallback, falls Server-Call fehlschlägt
-			await nav({ to: "/questionnaire" });
+			console.error(
+				"Failed to finish task before navigating to questionnaire",
+				error,
+			);
+			setIsFinishing(false);
+			window.alert(
+				"Es ist ein Fehler beim Speichern aufgetreten. Bitte versuchen Sie es erneut.",
+			);
 		}
 	};
 

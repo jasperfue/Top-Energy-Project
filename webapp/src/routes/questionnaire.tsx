@@ -107,7 +107,7 @@ const submitQuestionnaire = createServerFn({ method: "POST" })
 			])
 			.catch((err) => {
 				console.error("Airtable Error:", err);
-				throw new Error("Failed to save data");
+				throw new Error("Failed to save data", err);
 			});
 		await session.clear();
 	});

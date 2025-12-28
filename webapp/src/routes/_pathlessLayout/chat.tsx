@@ -45,6 +45,7 @@ export const finishTask = createServerFn({ method: "POST" })
 			])
 			.catch((err: Error) => {
 				console.error("Error saving finish task data:", err);
+				throw err;
 			});
 	});
 
@@ -87,9 +88,12 @@ function Chat() {
 
 			await navigate({ to: "/questionnaire" });
 		} catch (error) {
-			console.error("Navigation failed", error);
-			// Fallback navigation in case of error
-			await navigate({ to: "/questionnaire" });
+			console.error("Failed to finish task or navigate to questionnaire", error);
+			// Reset loading state and inform the user so they can retry
+			setIsFinishing(false);
+			if (typeof window !== "undefined") {
+				window.alert("An error occurred while finishing the task. Please try again.");
+			}
 		}
 	};
 
