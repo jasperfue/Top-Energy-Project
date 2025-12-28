@@ -1,6 +1,9 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 
+	"study_title": "Energy Systems Interaction Study",
+	"study_description": "Academic research study regarding user interaction with energy management systems.",
+
 	"common_continue": "Continue",
 	"common_likert6_1": "completely disagree",
 	"common_likert6_2": "largely disagree",

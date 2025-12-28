@@ -1,6 +1,9 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 
+	"study_title": "Studie zu Energiesystemen",
+	"study_description": "Wissenschaftliche Studie zur Benutzerinteraktion mit Energiemanagement-Systemen.",
+
 	"common_continue": "Weiter",
 	"common_likert6_1": "stimmt gar nicht",
 	"common_likert6_2": "stimmt weitgehend nicht",
