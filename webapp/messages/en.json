@@ -189,10 +189,10 @@
 	"understanding_q3_option4": "I do not know",
 
 	"understanding_q4": "How do the total annual costs change approximately due to the measures?",
-	"understanding_q4_option1": "Costs decrease by approx. 61k€ per year",
-	"understanding_q4_option2": "They remain the same, but become carbon neutral",
-	"understanding_q4_option3": "They drop to almost half, by approx. 93k€ per year",
-	"understanding_q4_option4": "I do not know",
+	"understanding_q4_option1": "Costs decrease by approx. 61k€ per year.",
+	"understanding_q4_option2": "They remain the same, but become carbon neutral.",
+	"understanding_q4_option3": "They drop by approximately 60%, which is a decrease of about €114k per year.",
+	"understanding_q4_option4": "I do not know.",
 
 	"questionnaire_section_intention": "Final Assessment",
 	"intention_q1": "I would use the results of this system as a basis for my investment decision.",

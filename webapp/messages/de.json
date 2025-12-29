@@ -183,15 +183,15 @@
 	"understanding_q2": "Ich verstehe, warum genau diese Kombination an Maßnahmen für meinen Betrieb sinnvoll ist.",
 
 	"understanding_q3": "Welche technischen Komponenten umfasst die empfohlene Lösung im Soll-Zustand?",
-	"understanding_q3_option1": "Photovoltaikanlage, Batteriespeicher & Wärmepumpe",
-	"understanding_q3_option2": "Nur eine Photovoltaikanlage",
-	"understanding_q3_option3": "Windkraftanlage & Gas-BHKW",
+	"understanding_q3_option1": "PV-Anlage, Batteriespeicher & Wärmepumpe",
+	"understanding_q3_option2": "PV-Anlage & Batteriespeicher",
+	"understanding_q3_option3": "Windkraftanlage, Biomasseheizung & Solarthermie",
 	"understanding_q3_option4": "Ich weiß es nicht",
 
 	"understanding_q4": "Wie verändern sich die jährlichen Gesamtkosten durch die Maßnahmen ca.?",
-	"understanding_q4_option1": "Die Kosten sinken um ca. 61k€ pro Jahr",
-	"understanding_q4_option2": "Sie bleiben gleich, aber werden CO2-neutral",
-	"understanding_q4_option3": "Sie sinken fast auf die Hälfte um ca. 93k€ pro Jahr",
+	"understanding_q4_option1": "Sie sinken um ca. 30%, was eine Einsparung von ca. 61.000 € pro Jahr bedeutet",
+	"understanding_q4_option2": "Sie sinken um ca. 60%, was eine Einsparung von ca. 114k€ pro Jahr bedeutet",
+	"understanding_q4_option3": "Sie bleiben gleich, bei voller CO2-Neutralität",
 	"understanding_q4_option4": "Ich weiß es nicht",
 
 	"questionnaire_section_intention": "Abschlussbewertung",
