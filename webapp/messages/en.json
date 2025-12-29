@@ -201,5 +201,10 @@
 
 	"questionnaire_section_feedback": "Comments",
 	"questionnaire_feedback_label": "Do you have any further comments regarding the study or the system? (Optional)",
-	"questionnaire_feedback_placeholder": "Enter your feedback here..."
+	"questionnaire_feedback_placeholder": "Enter your feedback here...",
+
+	"thanks_title": "Thank You!",
+	"thanks_subtitle": "Your answers have been successfully saved. Thank you very much for supporting this Master's thesis.",
+	"thanks_close_hint": "You may now close this browser window.",
+	"thanks_contact_header": "Contact for Inquiries"
 }

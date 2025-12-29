@@ -201,5 +201,10 @@
 
 	"questionnaire_section_feedback": "Anmerkungen",
 	"questionnaire_feedback_label": "Haben Sie noch Anmerkungen zur Studie oder zum System? (Optional)",
-	"questionnaire_feedback_placeholder": "Hier können Sie Feedback eingeben..."
+	"questionnaire_feedback_placeholder": "Hier können Sie Feedback eingeben...",
+
+	"thanks_title": "Vielen Dank!",
+	"thanks_subtitle": "Ihre Antworten wurden erfolgreich gespeichert. Wir bedanken uns herzlich für Ihre Unterstützung bei dieser Masterarbeit.",
+	"thanks_close_hint": "Sie können dieses Browserfenster nun schließen.",
+	"thanks_contact_header": "Kontakt bei Rückfragen"
 }
