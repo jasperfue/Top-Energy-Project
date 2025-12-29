@@ -53,16 +53,17 @@ Dieses Dokument enthält die wichtigsten numerischen Daten zum Soll-Zustand.  Hi
 
 # Summe Kosten/Erlöse im Soll-Zustand
 
-| Parameter              | Wert        | Einheit | Anmerkung                                                                                                   |
-|------------------------|-------------|---------|-------------------------------------------------------------------------------------------------------------|
-| Summe Stromkosten      | `88.350`    | €/a     | **ohne** Berücksichtigung von Einspeiseerlösen                                                              |
-| Summe Erlöse           | `20.960`    | €/a     | Einnahmen aus Stromeinspeisung (werden erst bei den Gesamtkosten abgezogen)                                 |
-| Summe Brennstoffkosten | `505,73`    | €/a     | von Heißwasserkessel                                                                                        |
-| Gesamte Betriebskosten | `75.741,24` | €/a     | = Stromkosten (Netzbezug) + Brennstoffkosten + Betriebskosten der neuen Komponente - Erlöse aus Einspeisung |
-| Investitionskosten     | `498.524`   | €       | Summe der Investitionskosten für die 3 neuen Komponenten                                                    |
-| Amortisationszeit      | `5,95`      | Jahre   |                                                                                                             |
+| Parameter                       | Wert        | Einheit | Anmerkung                                                                                                   |
+|---------------------------------|-------------|---------|-------------------------------------------------------------------------------------------------------------|
+| Summe Stromkosten               | `88.350`    | €/a     | **ohne** Berücksichtigung von Einspeiseerlösen                                                              |
+| Summe Erlöse                    | `20.960`    | €/a     | Einnahmen aus Stromeinspeisung (werden erst bei den Gesamtkosten abgezogen)                                 |
+| Summe Brennstoffkosten          | `505,73`    | €/a     | von Heißwasserkessel                                                                                        |
+| Betriebskosten neue Komponenten | `7.845,50`  | €/a     | Summe der Betriebskosten für Wärmepumpe, PV und Stromspeicher                                               |
+| Gesamte Betriebskosten          | `75.741,23` | €/a     | = Stromkosten (Netzbezug) + Brennstoffkosten + Betriebskosten der neuen Komponente - Erlöse aus Einspeisung |
+| Investitionskosten              | `498.524`   | €       | Summe der Investitionskosten für die 3 neuen Komponenten                                                    |
+| Amortisationszeit               | `5,95`      | Jahre   |                                                                                                             |
 
-*Zusammenfassung für die Suche: Im Soll-Zustand betragen die jährlichen Stromkosten 88.350 €, die Erlöse aus Stromeinspeisung 20.960 €, die Brennstoffkosten 505,73 €, und die gesamten Betriebskosten belaufen sich auf 96.701,23 €. Die Investitionskosten für die neuen Komponenten betragen 498.524 €, mit einer Amortisationszeit von 5,95 Jahren.*
+*Zusammenfassung für die Suche: Im Soll-Zustand betragen die jährlichen Stromkosten 88.350 €, die Erlöse aus Stromeinspeisung 20.960 €, die Brennstoffkosten 505,73 € und die Betriebskosten für die neuen Komponenten 7.845,50 €. Damit belaufen sich die gesamten Betriebskosten auf 75.741,23 €. Die Investitionskosten für die neuen Komponenten betragen 498.524 €, mit einer Amortisationszeit von 5,95 Jahren.*
 
 
 

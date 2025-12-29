@@ -10,8 +10,7 @@ Das Szenario wird in zwei Zuständen abgebildet:
 2. **Soll-Zustand (optimierte Lösung)**  
    Erweiterter Systemzustand mit zusätzlichen Effizienz- und Dekarbonisierungsmaßnahmen.
 
-Die Daten basieren auf realen Lastprofilen und Tarifen und wurden mithilfe von TOP-Energy®
-modelliert, simuliert und ausgewertet.
+Die Daten basieren auf realen Lastprofilen und Tarifen und wurden genaustens modelliert, simuliert und ausgewertet.
 
 ## Abgebildete Systemkomponenten
 
