@@ -44,7 +44,7 @@ export function createRagAgent(request: Request) {
 		execute: async ({ question }) => {
 			const q = clean(question);
 			if (!q) return "(no query provided)";
-			const top = await retrieveTopK(q, 10, 0.4, request);
+			const top = await retrieveTopK(q, 15, 0.2, request);
 
 			if (!top.length) return "(no relevant context)";
 			return top
