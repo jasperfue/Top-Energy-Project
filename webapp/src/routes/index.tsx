@@ -1,7 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { Loader2 } from "lucide-react";
 import { useId, useState } from "react";
 import { z } from "zod";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
@@ -58,7 +65,7 @@ function Consent() {
 	};
 
 	return (
-		<main className="mx-auto max-w-2xl p-6 space-y-8">
+		<main className="mx-auto max-w-2xl p-6 space-y-6">
 			{/* HEADER SECTION */}
 			<div className="space-y-3">
 				<h1 className="text-3xl font-bold tracking-tight text-primary">
@@ -92,6 +99,23 @@ function Consent() {
 					</CardContent>
 				</Card>
 			</section>
+
+			{/* DATENSCHUTZ ACCORDION (WICHTIG!) */}
+			<Accordion type="single" collapsible className="w-full">
+				<AccordionItem value="privacy">
+					<AccordionTrigger className="text-sm text-muted-foreground">
+						{m.landing_privacy_trigger()}
+					</AccordionTrigger>
+					<AccordionContent className="text-sm text-muted-foreground space-y-2 leading-relaxed">
+						<p>{m.landing_privacy_p1()}</p>
+						<p>{m.landing_privacy_p2()}</p>
+						<p>
+							<strong>{m.landing_privacy_p3_strong()}</strong>{" "}
+							{m.landing_privacy_p3()}
+						</p>
+					</AccordionContent>
+				</AccordionItem>
+			</Accordion>
 
 			{/* SCREENING CHECKBOX */}
 			<div className="p-5 border rounded-xl bg-card shadow-sm space-y-4">
@@ -128,7 +152,11 @@ function Consent() {
 					disabled={isLoading}
 					className="w-full sm:w-auto"
 				>
-					{isLoading ? "Loading..." : m.common_start_study()}
+					{isLoading ? (
+						<Loader2 className="h-4 w-4 animate-spin" />
+					) : (
+						m.common_start_study()
+					)}
 				</Button>
 			</div>
 		</main>

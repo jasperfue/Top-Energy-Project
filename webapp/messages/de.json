@@ -33,6 +33,12 @@
 	"landing_checkbox_sublabel": "Ich verfüge über grundlegendes wirtschaftliches oder technisches Verständnis und bin in der Lage, mich gedanklich in ein Investitionsszenario hineinzuversetzen.",
 	"common_start_study": "Studie starten",
 
+	"landing_privacy_trigger": "Informationen zu Datenschutz & Freiwilligkeit",
+	"landing_privacy_p1": "Die Teilnahme an dieser Studie ist freiwillig und kann jederzeit ohne Angabe von Gründen abgebrochen werden. Die erhobenen Daten werden streng vertraulich behandelt, anonymisiert gespeichert (Zuweisung einer zufälligen ID) und ausschließlich für wissenschaftliche Zwecke im Rahmen der Masterarbeit verwendet.",
+	"landing_privacy_p2": "IP-Adressen werden nicht dauerhaft gespeichert. Es sind keine Rückschlüsse auf Ihre Person möglich.",
+	"landing_privacy_p3_strong": "Hinweis zum KI-Chat:",
+	"landing_privacy_p3": "In Teilen der Studie interagieren Sie mit einem KI-System (basierend auf xAI/Grok). Ihre Eingaben werden zur Verarbeitung an den API-Provider gesendet. Bitte geben Sie daher im Chat keine Klarnamen oder personenbezogenen Daten ein.",
+
 	"scenario_title": "Ihr Szenario: Der Energie-Check",
 	"scenario_role_label": "Ihre Rolle",
 	"scenario_role_text": "Stellen Sie sich vor: Sie sind Inhaber eines mittelständischen Produktionsunternehmens (KMU). Ihr Betrieb läuft im 3-Schicht-Betrieb und hat einen hohen Energiebedarf für Maschinen, Kälte und Wärme.",

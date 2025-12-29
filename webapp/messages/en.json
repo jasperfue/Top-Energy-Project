@@ -33,6 +33,12 @@
 	"landing_checkbox_sublabel": "I have a basic understanding of business or technology and am capable of mentally immersing myself in an investment scenario.",
 	"common_start_study": "Start Study",
 
+	"landing_privacy_trigger": "Information on Data Privacy & Consent",
+	"landing_privacy_p1": "Participation in this study is voluntary and can be terminated at any time without giving reasons. The collected data will be treated strictly confidentially, stored anonymously (assignment of a random ID), and used exclusively for scientific purposes within the scope of the Master's thesis.",
+	"landing_privacy_p2": "IP addresses are not stored permanently. No conclusions can be drawn about your person.",
+	"landing_privacy_p3_strong": "Note on AI Chat:",
+	"landing_privacy_p3": "In parts of the study, you will interact with an AI system (based on xAI/Grok). Your inputs will be sent to the API provider for processing. Therefore, please do not enter any real names or personal data in the chat.",
+
 	"scenario_title": "Your Scenario: The Energy Audit",
 	"scenario_role_label": "Your Role",
 	"scenario_role_text": "Imagine: You are the owner of a medium-sized manufacturing company (SME). Your facility operates in 3 shifts and has a high energy demand for machinery, cooling, and heating.",
