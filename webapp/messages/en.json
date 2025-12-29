@@ -25,9 +25,19 @@
 	"common_energy_audit": "Energy Audit Result",
 	"common_continue_to_questionnaire": "Continue to Questionnaire",
 
-	"consent_title": "Study Information & Consent",
-	"consent_blurb": "Brief description of the study, data collection (anonymous/pseudonymous), duration, contact, withdrawal, etc.",
-	"consent_checkbox_label": "I have read the information and give my consent.",
+	"landing_title": "Study on Decision Support in Energy Systems",
+	"landing_intro": "Welcome to this scientific study. The aim is to compare different presentation formats of investment data for operational energy systems.",
+	"landing_context_title": "Principal Investigator & Contact",
+	"landing_eligibility_title": "Eligibility",
+	"landing_checkbox_label": "I confirm that I match the target profile.",
+	"landing_checkbox_sublabel": "I have a basic understanding of business or technology and am capable of mentally immersing myself in an investment scenario.",
+	"common_start_study": "Start Study",
+
+	"landing_privacy_trigger": "Information on Data Privacy & Consent",
+	"landing_privacy_p1": "Participation in this study is voluntary and can be terminated at any time without giving reasons. The collected data will be treated strictly confidentially, stored anonymously (assignment of a random ID), and used exclusively for scientific purposes within the scope of the Master's thesis.",
+	"landing_privacy_p2": "IP addresses are not stored permanently. No conclusions can be drawn about your person.",
+	"landing_privacy_p3_strong": "Note on AI Chat:",
+	"landing_privacy_p3": "In parts of the study, you will interact with an AI system (based on xAI/Grok). Your inputs will be sent to the API provider for processing. Therefore, please do not enter any real names or personal data in the chat.",
 
 	"scenario_title": "Your Scenario: The Energy Audit",
 	"scenario_role_label": "Your Role",
@@ -191,5 +201,10 @@
 
 	"questionnaire_section_feedback": "Comments",
 	"questionnaire_feedback_label": "Do you have any further comments regarding the study or the system? (Optional)",
-	"questionnaire_feedback_placeholder": "Enter your feedback here..."
+	"questionnaire_feedback_placeholder": "Enter your feedback here...",
+
+	"thanks_title": "Thank You!",
+	"thanks_subtitle": "Your answers have been successfully saved. Thank you very much for supporting this Master's thesis.",
+	"thanks_close_hint": "You may now close this browser window.",
+	"thanks_contact_header": "Contact for Inquiries"
 }

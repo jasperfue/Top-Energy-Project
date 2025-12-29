@@ -25,9 +25,19 @@
 	"common_energy_audit": "Energie-Audit Ergebnis",
 	"common_continue_to_questionnaire": "Weiter zum Fragebogen",
 
-	"consent_title": "Studieninformation & Einwilligung",
-	"consent_blurb": "Kurzbeschreibung der Studie, Datenerhebung (anonym/pseudonym), Dauer, Kontakt, Widerruf etc.",
-	"consent_checkbox_label": "Ich habe die Informationen gelesen und willige ein.",
+	"landing_title": "Studie zur Entscheidungsunterstützung in Energiesystemen",
+	"landing_intro": "Willkommen zu dieser wissenschaftlichen Studie. Ziel ist es, verschiedene Darstellungsformen von Investitionsdaten für betriebliche Energiesysteme zu vergleichen.",
+	"landing_context_title": "Studienleitung & Kontakt",
+	"landing_eligibility_title": "Teilnahmevoraussetzung",
+	"landing_checkbox_label": "Ich bestätige, dass ich zur Zielgruppe gehöre.",
+	"landing_checkbox_sublabel": "Ich verfüge über grundlegendes wirtschaftliches oder technisches Verständnis und bin in der Lage, mich gedanklich in ein Investitionsszenario hineinzuversetzen.",
+	"common_start_study": "Studie starten",
+
+	"landing_privacy_trigger": "Informationen zu Datenschutz & Freiwilligkeit",
+	"landing_privacy_p1": "Die Teilnahme an dieser Studie ist freiwillig und kann jederzeit ohne Angabe von Gründen abgebrochen werden. Die erhobenen Daten werden streng vertraulich behandelt, anonymisiert gespeichert (Zuweisung einer zufälligen ID) und ausschließlich für wissenschaftliche Zwecke im Rahmen der Masterarbeit verwendet.",
+	"landing_privacy_p2": "IP-Adressen werden nicht dauerhaft gespeichert. Es sind keine Rückschlüsse auf Ihre Person möglich.",
+	"landing_privacy_p3_strong": "Hinweis zum KI-Chat:",
+	"landing_privacy_p3": "In Teilen der Studie interagieren Sie mit einem KI-System (basierend auf xAI/Grok). Ihre Eingaben werden zur Verarbeitung an den API-Provider gesendet. Bitte geben Sie daher im Chat keine Klarnamen oder personenbezogenen Daten ein.",
 
 	"scenario_title": "Ihr Szenario: Der Energie-Check",
 	"scenario_role_label": "Ihre Rolle",
@@ -191,5 +201,10 @@
 
 	"questionnaire_section_feedback": "Anmerkungen",
 	"questionnaire_feedback_label": "Haben Sie noch Anmerkungen zur Studie oder zum System? (Optional)",
-	"questionnaire_feedback_placeholder": "Hier können Sie Feedback eingeben..."
+	"questionnaire_feedback_placeholder": "Hier können Sie Feedback eingeben...",
+
+	"thanks_title": "Vielen Dank!",
+	"thanks_subtitle": "Ihre Antworten wurden erfolgreich gespeichert. Wir bedanken uns herzlich für Ihre Unterstützung bei dieser Masterarbeit.",
+	"thanks_close_hint": "Sie können dieses Browserfenster nun schließen.",
+	"thanks_contact_header": "Kontakt bei Rückfragen"
 }

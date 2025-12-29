@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -75,18 +75,24 @@ type AffTechFormValues = z.infer<typeof afftechAnswers>;
 const submitAffinityForTechnologyForm = createServerFn({ method: "POST" })
 	.inputValidator(afftechAnswers)
 	.handler(async ({ data }) => {
-		const [session, airTableResponse] = await Promise.all([
-			useUserSession(),
-			airtable.create([
+		const session = await useUserSession();
+
+		if (!session.data.recId) {
+			throw redirect({ to: "/" });
+		}
+		await airtable
+			.update([
 				{
+					id: session.data.recId,
 					fields: {
-						"Teilnehmer ID": crypto.randomUUID(),
 						...data,
 					},
 				},
-			]),
-		]);
-		await session.update({ recId: airTableResponse[0].id });
+			])
+			.catch((err) => {
+				console.error("Airtable Update Error:", err);
+				throw err;
+			});
 	});
 
 export function AffinityForTechnologyForm() {
