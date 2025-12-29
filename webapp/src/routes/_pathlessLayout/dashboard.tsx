@@ -67,7 +67,7 @@ export const Route = createFileRoute("/_pathlessLayout/dashboard")({
 // Statische Rohdaten (Zahlen) bleiben außerhalb
 const RAW_DATA = {
 	invest: 498524,
-	savingsYearly: 93581,
+	savingsYearly: 114540.77,
 	amortization: 5.95,
 	co2Ist: 76.55,
 	co2Soll: -18.89,
@@ -115,14 +115,17 @@ function Dashboard() {
 		],
 		savings: [
 			{ label: m.dashboard_kpi_savings_label_elec(), value: `${fmt(88900)} €` },
-			{ label: m.dashboard_kpi_savings_label_fuel(), value: `${fmt(12500)} €` },
+			{
+				label: m.dashboard_kpi_savings_label_fuel(),
+				value: `${fmt(12526.27)} €`,
+			},
 			{
 				label: m.dashboard_kpi_savings_label_feedin(),
 				value: `${fmt(20960)} €`,
 			},
 			{
 				label: m.dashboard_kpi_savings_label_opex(),
-				value: `- ${fmt(7845)} €`,
+				value: `- ${fmt(7845.5)} €`,
 			},
 		],
 		co2: [
