@@ -2,7 +2,7 @@ import { useChat } from "@ai-sdk/react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { DefaultChatTransport } from "ai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import {
 	Conversation,
@@ -74,6 +74,10 @@ function Chat() {
 			},
 		],
 	});
+
+	useEffect(() => {
+		console.log(messages[messages.length - 1]);
+	}, [messages[messages.length - 1]]);
 
 	const handleFinish = async () => {
 		if (isFinishing) return;
