@@ -1,10 +1,9 @@
 import { cn } from "@/lib/utils"
-import { marked } from "marked"
+import { lexer } from "marked"
 import { memo, useId, useMemo } from "react"
 import ReactMarkdown, { type Components } from "react-markdown"
 import remarkBreaks from "remark-breaks"
 import remarkGfm from "remark-gfm"
-import { CodeBlock, CodeBlockCode } from "./code-block"
 
 export type MarkdownProps = {
   children: string
@@ -14,44 +13,24 @@ export type MarkdownProps = {
 }
 
 function parseMarkdownIntoBlocks(markdown: string): string[] {
-  const tokens = marked.lexer(markdown)
+  const tokens = lexer(markdown)
   return tokens.map((token) => token.raw)
 }
 
-function extractLanguage(className?: string): string {
-  if (!className) return "plaintext"
-  const match = className.match(/language-(\w+)/)
-  return match ? match[1] : "plaintext"
-}
-
 const INITIAL_COMPONENTS: Partial<Components> = {
-  code: function CodeComponent({ className, children, ...props }) {
-    const isInline =
-      !props.node?.position?.start.line ||
-      props.node?.position?.start.line === props.node?.position?.end.line
-
-    if (isInline) {
-      return (
-        <span
-          className={cn(
-            "bg-primary-foreground rounded-sm px-1 font-mono text-sm",
-            className
-          )}
-          {...props}
-        >
-          {children}
-        </span>
-      )
-    }
-
-    const language = extractLanguage(className)
-
-    return (
-      <CodeBlock className={className}>
-        <CodeBlockCode code={children as string} language={language} />
-      </CodeBlock>
-    )
-  },
+    code: function CodeComponent({ className, children, ...props }) {
+        return (
+            <code
+                className={cn(
+                    "bg-muted rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
+                    className
+                )}
+                {...props}
+            >
+                {children}
+            </code>
+        )
+    },
   pre: function PreComponent({ children }) {
     return <>{children}</>
   },
