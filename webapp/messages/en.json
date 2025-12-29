@@ -25,9 +25,13 @@
 	"common_energy_audit": "Energy Audit Result",
 	"common_continue_to_questionnaire": "Continue to Questionnaire",
 
-	"consent_title": "Study Information & Consent",
-	"consent_blurb": "Brief description of the study, data collection (anonymous/pseudonymous), duration, contact, withdrawal, etc.",
-	"consent_checkbox_label": "I have read the information and give my consent.",
+	"landing_title": "Study on Decision Support in Energy Systems",
+	"landing_intro": "Welcome to this scientific study. The aim is to compare different presentation formats of investment data for operational energy systems.",
+	"landing_context_title": "Principal Investigator & Contact",
+	"landing_eligibility_title": "Eligibility",
+	"landing_checkbox_label": "I confirm that I match the target profile.",
+	"landing_checkbox_sublabel": "I have a basic understanding of business or technology and am capable of mentally immersing myself in an investment scenario.",
+	"common_start_study": "Start Study",
 
 	"scenario_title": "Your Scenario: The Energy Audit",
 	"scenario_role_label": "Your Role",

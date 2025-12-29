@@ -25,9 +25,13 @@
 	"common_energy_audit": "Energie-Audit Ergebnis",
 	"common_continue_to_questionnaire": "Weiter zum Fragebogen",
 
-	"consent_title": "Studieninformation & Einwilligung",
-	"consent_blurb": "Kurzbeschreibung der Studie, Datenerhebung (anonym/pseudonym), Dauer, Kontakt, Widerruf etc.",
-	"consent_checkbox_label": "Ich habe die Informationen gelesen und willige ein.",
+	"landing_title": "Studie zur Entscheidungsunterstützung in Energiesystemen",
+	"landing_intro": "Willkommen zu dieser wissenschaftlichen Studie. Ziel ist es, verschiedene Darstellungsformen von Investitionsdaten für betriebliche Energiesysteme zu vergleichen.",
+	"landing_context_title": "Studienleitung & Kontakt",
+	"landing_eligibility_title": "Teilnahmevoraussetzung",
+	"landing_checkbox_label": "Ich bestätige, dass ich zur Zielgruppe gehöre.",
+	"landing_checkbox_sublabel": "Ich verfüge über grundlegendes wirtschaftliches oder technisches Verständnis und bin in der Lage, mich gedanklich in ein Investitionsszenario hineinzuversetzen.",
+	"common_start_study": "Studie starten",
 
 	"scenario_title": "Ihr Szenario: Der Energie-Check",
 	"scenario_role_label": "Ihre Rolle",
