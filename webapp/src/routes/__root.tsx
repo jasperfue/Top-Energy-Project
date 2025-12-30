@@ -1,9 +1,7 @@
 /// <reference types="vite/client" />
 
-import type { QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
-	createRootRouteWithContext,
+	createRootRoute,
 	HeadContent,
 	Outlet,
 	Scripts,
@@ -24,9 +22,7 @@ import { getLocale, locales, setLocale } from "@/paraglide/runtime";
 import { seo } from "@/types/utils.ts";
 import stylesCss from "../styles.css?url";
 
-export const Route = createRootRouteWithContext<{
-	queryClient: QueryClient;
-}>()({
+export const Route = createRootRoute({
 	head: () => ({
 		meta: [
 			{
@@ -137,7 +133,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					</Select>
 				</div>
 				<TanStackRouterDevtools position="top-right" />
-				<ReactQueryDevtools buttonPosition="bottom-left" />
 				<Scripts />
 			</body>
 		</html>

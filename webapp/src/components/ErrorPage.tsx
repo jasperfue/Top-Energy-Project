@@ -1,7 +1,5 @@
-import { useQueryErrorResetBoundary } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { AlertCircle } from "lucide-react";
-import { useEffect } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import {
 	Card,
@@ -13,11 +11,6 @@ import {
 
 export default function ErrorPage(error: Error) {
 	const router = useRouter();
-	const { reset } = useQueryErrorResetBoundary();
-
-	useEffect(() => {
-		reset();
-	}, [reset]);
 
 	return (
 		<div className="h-screen w-screen flex items-center justify-center p-4">

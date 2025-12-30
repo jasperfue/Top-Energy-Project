@@ -1,12 +1,12 @@
 import { createXai } from "@ai-sdk/xai";
-import { Experimental_Agent as Agent, stepCountIs, tool } from "ai";
+import { ToolLoopAgent as Agent, stepCountIs, tool } from "ai";
 import { z } from "zod";
 import { retrieveTopK } from "@/lib/retriever";
 
 // Helper to guard empty/whitespace
 const clean = (s: string | undefined | null) => (s ?? "").trim();
 
-export const RAG_SYSTEM_PROMPT = `
+const RAG_SYSTEM_PROMPT = `
 You are an expert energy consultant assisting an SME decision-maker. Your task is to explain the results of an energy audit based strictly on the provided context.
 
 ## CORE BEHAVIOR
@@ -41,28 +41,27 @@ Before calling \`getInformation\`, analyze the user's intent. Do not just pass t
 - Keep paragraphs concise.
 `;
 
-export function createRagAgent(request: Request) {
-	const getInformation = tool({
-		description:
-			"Retrieve relevant knowledge base context. Pass a technical search query based on the user's intent.",
-		inputSchema: z.object({
-			query: z
-				.string()
-				.describe(
-					"a technical, precise search query generated from the user's question",
-				),
-		}),
-		execute: async ({ query }) => {
-			const q = clean(query);
-			if (!q) return "(no query provided)";
+export const getInformation = tool({
+	description:
+		"Retrieve relevant knowledge base context. Pass a technical search query based on the user's intent.",
+	inputSchema: z.object({
+		query: z
+			.string()
+			.describe(
+				"a technical, precise search query generated from the user's question",
+			),
+	}),
+	execute: async ({ query }) => {
+		const q = clean(query);
+		if (!q) return "(no query provided)";
 
-			// Wir nutzen retrieveTopK direkt mit dem vom Agenten optimierten Query
-			const top = await retrieveTopK(q, 12, 0.4, request);
+		// Wir nutzen retrieveTopK direkt mit dem vom Agenten optimierten Query
+		const top = await retrieveTopK(q, 12, 0.4);
 
-			if (!top.length) return "(no relevant context)";
-			return top
-				.map(
-					(t, i) => `
+		if (!top.length) return "(no relevant context)";
+		return top
+			.map(
+				(t, i) => `
 SOURCE DOC #${i + 1}
 File: ${t.file}
 Context: ${t.context || "Allgemein"}
@@ -71,21 +70,21 @@ Score: ${t.score.toFixed(2)}
 ${t.text}
 --------------------------------------------------
 `,
-				)
-				.join("\n\n");
-		},
-	});
+			)
+			.join("\n\n");
+	},
+});
 
-	const model = createXai({
-		apiKey: process.env.XAI_API_KEY,
-	}).chat("grok-4-1-fast-reasoning");
+const model = createXai({
+	apiKey: process.env.XAI_API_KEY,
+}).chat("grok-4-1-fast-reasoning");
 
-	return new Agent({
-		model,
-		system: RAG_SYSTEM_PROMPT,
-		tools: {
-			getInformation,
-		},
-		stopWhen: stepCountIs(5),
-	});
-}
+export const agent = new Agent({
+	model,
+	instructions: RAG_SYSTEM_PROMPT,
+	tools: {
+		getInformation,
+	},
+	toolChoice: "auto",
+	stopWhen: stepCountIs(7),
+});
