@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { convertToModelMessages, type UIMessage } from "ai";
-import { createRagAgent } from "@/lib/rag-agent.ts";
+import { createAgentUIStreamResponse, type UIMessage } from "ai";
+import { agent } from "@/lib/rag-agent.ts";
 
 export const Route = createFileRoute("/api/chat")({
 	server: {
@@ -10,14 +10,13 @@ export const Route = createFileRoute("/api/chat")({
 					const { messages } = (await request.json()) as {
 						messages: UIMessage[];
 					};
+					const abortController = new AbortController();
 
-					const agent = createRagAgent(request);
-
-					const session = agent.stream({
-						messages: convertToModelMessages(messages),
+					return createAgentUIStreamResponse({
+						agent: agent,
+						uiMessages: messages,
+						abortSignal: abortController.signal,
 					});
-
-					return session.toUIMessageStreamResponse();
 				} catch (error) {
 					console.error("Chat API error:", error);
 					return new Response(

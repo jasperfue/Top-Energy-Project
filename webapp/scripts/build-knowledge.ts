@@ -6,7 +6,7 @@ import { embedMany } from "ai";
 import { splitMarkdownByStructure } from "@/lib/markdown-splitter.ts";
 
 const KNOWLEDGE_DIR = path.resolve("knowledge");
-const OUTFILE = path.resolve("public/knowledge.index.json");
+const OUTFILE = path.resolve("knowledge/knowledge.index.json");
 const EMBED_MODEL = createOpenAI({
 	apiKey: process.env.OPENAI_API_KEY,
 }).embedding("text-embedding-3-small");
