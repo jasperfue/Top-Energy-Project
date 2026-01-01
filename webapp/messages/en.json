@@ -198,9 +198,9 @@
 	"understanding_q4_option4": "I do not know.",
 
 	"questionnaire_section_intention": "Final Assessment",
-	"intention_q1": "I would use the results of this system as a basis for my investment decision.",
-	"intention_q2": "If I were to plan such a system again, I would use this tool.",
-	"intention_q3": "I would recommend this system to colleagues in a similar situation.",
+	"intention_q1": "I intend to implement the energy measures recommended by the system.",
+	"intention_q2": "I would rely on this system's analysis for my investment decisions.",
+	"intention_q3": "Assuming I had access to this system, I would use it for future planning.",
 
 	"questionnaire_section_feedback": "Comments",
 	"questionnaire_feedback_label": "Do you have any further comments regarding the study or the system? (Optional)",

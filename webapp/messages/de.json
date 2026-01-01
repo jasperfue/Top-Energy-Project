@@ -198,9 +198,9 @@
 	"understanding_q4_option4": "Ich weiß es nicht",
 
 	"questionnaire_section_intention": "Abschlussbewertung",
-	"intention_q1": "Ich würde die Ergebnisse dieses Systems als Grundlage für meine Investitionsentscheidung nutzen.",
-	"intention_q2": "Wenn ich erneut vor einer solchen Planung stünde, würde ich auf dieses System zurückgreifen.",
-	"intention_q3": "Ich würde dieses System Kollegen in ähnlicher Situation weiterempfehlen.",
+	"intention_q1": "Ich beabsichtige, die vom System empfohlenen Energiemaßnahmen tatsächlich umzusetzen.",
+	"intention_q2": "Ich würde mich bei Investitionsentscheidungen auf die Analyse dieses Systems verlassen.",
+	"intention_q3": "Angenommen ich hätte Zugang zu diesem System, würde ich es für zukünftige Planungen nutzen.",
 
 	"questionnaire_section_feedback": "Anmerkungen",
 	"questionnaire_feedback_label": "Haben Sie noch Anmerkungen zur Studie oder zum System? (Optional)",
