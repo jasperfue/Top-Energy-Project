@@ -147,9 +147,12 @@
 	"questionnaire_intro": "<p>Vielen Dank, dass Sie die Aufgabe bearbeitet haben.</p><p>Bitte beantworten Sie die folgenden Fragen <strong>ehrlich und spontan</strong>. Es geht uns darum, das System zu verbessern – kritisches Feedback ist daher ausdrücklich erwünscht.</p><p><strong>Hinweis:</strong> Bei Fragen zu Ihrem persönlichen Eindruck gibt es kein Richtig oder Falsch. Im Abschnitt 'Verständnisfragen' testen wir nicht Ihr Gedächtnis, sondern wie gut das System die Informationen vermitteln konnte.</p>",
 
 	"questionnaire_section_general": "Allgemeine Einschätzung",
-	"trust_q1": "Ich bin zuversichtlich, was das System betrifft.",
-	"trust_q2": "Das System ist zuverlässig.",
-	"trust_q3": "Ich kann dem System vertrauen.",
+	"trust_comp_q1": "Das System ist kompetent und leistungsfähig in der Analyse.",
+	"trust_comp_q2": "Das System verfügt über das nötige Expertenwissen für diese Aufgabe.",
+	"trust_comp_q3": "Ich bin von den Fähigkeiten des Systems überzeugt.",
+	"trust_ben_q1": "Ich glaube, dass das System in meinem besten Interesse handelt.",
+	"trust_ben_q2": "Das System bemüht sich, mir bei der Lösungsfindung bestmöglich zu helfen.",
+	"trust_ben_q3": "Das System stellt meine Ziele in den Mittelpunkt der Analyse.",
 
 	"questionnaire_section_impression": "Ihr Eindruck",
 	"ueq_instruction": "Bitte bewerten Sie das System nun anhand der folgenden Gegensatzpaare.",
@@ -195,9 +198,9 @@
 	"understanding_q4_option4": "Ich weiß es nicht",
 
 	"questionnaire_section_intention": "Abschlussbewertung",
-	"intention_q1": "Ich würde die Ergebnisse dieses Systems als Grundlage für meine Investitionsentscheidung nutzen.",
-	"intention_q2": "Wenn ich erneut vor einer solchen Planung stünde, würde ich auf dieses System zurückgreifen.",
-	"intention_q3": "Ich würde dieses System Kollegen in ähnlicher Situation weiterempfehlen.",
+	"intention_q1": "Ich beabsichtige, die vom System empfohlenen Energiemaßnahmen tatsächlich umzusetzen.",
+	"intention_q2": "Ich würde mich bei Investitionsentscheidungen auf die Analyse dieses Systems verlassen.",
+	"intention_q3": "Angenommen ich hätte Zugang zu diesem System, würde ich es für zukünftige Planungen nutzen.",
 
 	"questionnaire_section_feedback": "Anmerkungen",
 	"questionnaire_feedback_label": "Haben Sie noch Anmerkungen zur Studie oder zum System? (Optional)",

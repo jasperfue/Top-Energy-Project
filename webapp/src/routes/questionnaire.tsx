@@ -22,9 +22,12 @@ export const Route = createFileRoute("/questionnaire")({
 });
 
 const trustAnswers = z.object({
-	trust_q1: Likert7,
-	trust_q2: Likert7,
-	trust_q3: Likert7,
+	trust_comp_1: Likert7,
+	trust_ben_1: Likert7,
+	trust_comp_2: Likert7,
+	trust_ben_2: Likert7,
+	trust_comp_3: Likert7,
+	trust_ben_3: Likert7,
 });
 
 const understandingAnswers = z.object({
@@ -119,9 +122,13 @@ function Questionnaire() {
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			trust_q1: undefined,
-			trust_q2: undefined,
-			trust_q3: undefined,
+			trust_comp_1: undefined,
+			trust_ben_1: undefined,
+			trust_comp_2: undefined,
+			trust_ben_2: undefined,
+			trust_comp_3: undefined,
+			trust_ben_3: undefined,
+
 			understanding_q1: undefined,
 			understanding_q2: undefined,
 			understanding_q3: undefined,
@@ -153,31 +160,24 @@ function Questionnaire() {
 		}
 	});
 
+	const trustItems = [
+		{ name: "trust_comp_1", label: m.trust_comp_q1() },
+		{ name: "trust_ben_1", label: m.trust_ben_q1() },
+		{ name: "trust_comp_2", label: m.trust_comp_q2() },
+		{ name: "trust_ben_2", label: m.trust_ben_q2() },
+		{ name: "trust_comp_3", label: m.trust_comp_q3() },
+		{ name: "trust_ben_3", label: m.trust_ben_q3() },
+	] as const;
+
 	const ueqItems = [
 		{ name: "ueq_1", min: m.ueq_1_min(), max: m.ueq_1_max() },
-		{
-			name: "ueq_2_swapped",
-			min: m.ueq_2_max(),
-			max: m.ueq_2_min(),
-		},
+		{ name: "ueq_2_swapped", min: m.ueq_2_max(), max: m.ueq_2_min() },
 		{ name: "ueq_3", min: m.ueq_3_min(), max: m.ueq_3_max() },
-		{
-			name: "ueq_4_swapped",
-			min: m.ueq_4_max(),
-			max: m.ueq_4_min(),
-		},
+		{ name: "ueq_4_swapped", min: m.ueq_4_max(), max: m.ueq_4_min() },
 		{ name: "ueq_5", min: m.ueq_5_min(), max: m.ueq_5_max() },
-		{
-			name: "ueq_6_swapped",
-			min: m.ueq_6_max(),
-			max: m.ueq_6_min(),
-		},
+		{ name: "ueq_6_swapped", min: m.ueq_6_max(), max: m.ueq_6_min() },
 		{ name: "ueq_7", min: m.ueq_7_min(), max: m.ueq_7_max() },
-		{
-			name: "ueq_8_swapped",
-			min: m.ueq_8_max(),
-			max: m.ueq_8_min(),
-		},
+		{ name: "ueq_8_swapped", min: m.ueq_8_max(), max: m.ueq_8_min() },
 	] as const;
 
 	return (
@@ -203,30 +203,20 @@ function Questionnaire() {
 						<CardTitle>{m.questionnaire_section_general()}</CardTitle>
 					</CardHeader>
 					<CardContent className="space-y-5">
-						<LikertScale
-							name="trust_q1"
-							control={form.control}
-							options={likert7Options}
-							rowLabel={m.trust_q1()}
-							required
-							showHeader
-						/>
-						<LikertScale
-							name="trust_q2"
-							control={form.control}
-							options={likert7Options}
-							rowLabel={m.trust_q2()}
-							required
-						/>
-						<LikertScale
-							name="trust_q3"
-							control={form.control}
-							options={likert7Options}
-							rowLabel={m.trust_q3()}
-							required
-						/>
+						{trustItems.map((item, index) => (
+							<LikertScale
+								key={item.name}
+								name={item.name}
+								control={form.control}
+								options={likert7Options}
+								rowLabel={item.label}
+								required
+								showHeader={index === 0}
+							/>
+						))}
 					</CardContent>
 				</Card>
+
 				<Card>
 					<CardHeader>
 						<CardTitle>{m.questionnaire_section_impression()}</CardTitle>

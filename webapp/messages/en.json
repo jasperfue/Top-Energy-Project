@@ -147,9 +147,12 @@
 	"questionnaire_intro": "<p>Thank you for completing the task.</p><p>Please answer the following questions <strong>honestly and spontaneously</strong>. Our goal is to improve the system, so critical feedback is highly appreciated.</p><p><strong>Note:</strong> There are no right or wrong answers regarding your personal impression. In the 'Comprehension' section, we are not testing your memory, but rather how well the system was able to convey the information.</p>",
 
 	"questionnaire_section_general": "General Assessment",
-	"trust_q1": "I am confident in the system.",
-	"trust_q2": "The system is reliable.",
-	"trust_q3": "I can trust the system.",
+	"trust_comp_q1": "The system is capable and proficient.",
+	"trust_comp_q2": "The system possesses the necessary expertise for this task.",
+	"trust_comp_q3": "I am confident in the system's analytical skills.",
+	"trust_ben_q1": "I believe that the system acts in my best interest.",
+	"trust_ben_q2": "The system does its best to help me find a solution.",
+	"trust_ben_q3": "The system prioritizes my goals in its analysis.",
 
 	"questionnaire_section_impression": "Your Impression",
 	"ueq_instruction": "Please assess the system using the following pairs of contrasting attributes.",
@@ -195,9 +198,9 @@
 	"understanding_q4_option4": "I do not know.",
 
 	"questionnaire_section_intention": "Final Assessment",
-	"intention_q1": "I would use the results of this system as a basis for my investment decision.",
-	"intention_q2": "If I were to plan such a system again, I would use this tool.",
-	"intention_q3": "I would recommend this system to colleagues in a similar situation.",
+	"intention_q1": "I intend to implement the energy measures recommended by the system.",
+	"intention_q2": "I would rely on this system's analysis for my investment decisions.",
+	"intention_q3": "Assuming I had access to this system, I would use it for future planning.",
 
 	"questionnaire_section_feedback": "Comments",
 	"questionnaire_feedback_label": "Do you have any further comments regarding the study or the system? (Optional)",
