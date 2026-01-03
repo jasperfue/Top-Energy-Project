@@ -5,6 +5,9 @@
 	"study_description": "Academic research study regarding user interaction with energy management systems.",
 
 	"common_continue": "Continue",
+	"common_back": "Back",
+	"common_submit": "Submit",
+
 	"common_likert6_1": "completely disagree",
 	"common_likert6_2": "largely disagree",
 	"common_likert6_3": "slightly disagree",

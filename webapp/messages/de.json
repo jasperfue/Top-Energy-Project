@@ -5,6 +5,9 @@
 	"study_description": "Wissenschaftliche Studie zur Benutzerinteraktion mit Energiemanagement-Systemen.",
 
 	"common_continue": "Weiter",
+	"common_back": "Zurück",
+	"common_submit": "Absenden",
+
 	"common_likert6_1": "stimmt gar nicht",
 	"common_likert6_2": "stimmt weitgehend nicht",
 	"common_likert6_3": "stimmt eher nicht",
