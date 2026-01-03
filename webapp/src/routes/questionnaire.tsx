@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useEffectEvent } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
@@ -242,6 +243,30 @@ function Questionnaire() {
 		{ name: "ueq_8_swapped", min: m.ueq_8_max(), max: m.ueq_8_min() },
 	] as const;
 
+	const checkPreviousSteps = useEffectEvent(async () => {
+		if (step === 1) return;
+
+		const previousSteps = steps.filter((s) => s.id < step);
+
+		const fieldsToCheck = previousSteps.flatMap((s) => s.fields);
+
+		const isValid = await form.trigger(fieldsToCheck);
+
+		if (!isValid) {
+			form.clearErrors();
+			await nav({
+				to: "/questionnaire",
+				search: { step: 1 },
+				replace: true,
+			});
+		}
+	});
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: We need Step here
+	useEffect(() => {
+		void checkPreviousSteps();
+	}, [step]);
+
 	return (
 		<main className="mx-auto p-6 space-y-6">
 			<h2 className="text-2xl font-semibold">{m.questionnaire_title()}</h2>
@@ -264,7 +289,7 @@ function Questionnaire() {
 				onSubmit={currentStepConfig.isLast ? submit : (e) => e.preventDefault()}
 				className="space-y-6"
 			>
-				<AnimatePresence mode="wait">
+				<AnimatePresence mode="wait" initial={false}>
 					<motion.div
 						key={step}
 						initial={{ x: 10, opacity: 0 }}
