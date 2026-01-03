@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
@@ -263,183 +264,195 @@ function Questionnaire() {
 				onSubmit={currentStepConfig.isLast ? submit : (e) => e.preventDefault()}
 				className="space-y-6"
 			>
-				{/* STEP 1: GENERAL / TRUST */}
-				{step === 1 && (
-					<Card>
-						<CardHeader>
-							<CardTitle>{m.questionnaire_section_general()}</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-5">
-							{trustItems.map((item, index) => (
-								<LikertScale
-									key={item.name}
-									name={item.name}
-									control={form.control}
-									options={likert7Options}
-									rowLabel={item.label}
-									required
-									showHeader={index === 0}
-								/>
-							))}
-						</CardContent>
-					</Card>
-				)}
+				<AnimatePresence mode="wait">
+					<motion.div
+						key={step}
+						initial={{ x: 10, opacity: 0 }}
+						animate={{ x: 0, opacity: 1 }}
+						exit={{ x: -10, opacity: 0 }}
+						transition={{ duration: 0.2 }}
+					>
+						{/* STEP 1: GENERAL / TRUST */}
+						{step === 1 && (
+							<Card>
+								<CardHeader>
+									<CardTitle>{m.questionnaire_section_general()}</CardTitle>
+								</CardHeader>
+								<CardContent className="space-y-5">
+									{trustItems.map((item, index) => (
+										<LikertScale
+											key={item.name}
+											name={item.name}
+											control={form.control}
+											options={likert7Options}
+											rowLabel={item.label}
+											required
+											showHeader={index === 0}
+										/>
+									))}
+								</CardContent>
+							</Card>
+						)}
 
-				{/* STEP 2: UEQ */}
-				{step === 2 && (
-					<Card>
-						<CardHeader>
-							<CardTitle>{m.questionnaire_section_impression()}</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-2">
-							<div className="mb-6 p-4 bg-muted/50 rounded-lg text-sm">
-								{m.ueq_instruction()}
-							</div>
-							<div className="max-w-xl mx-auto space-y-7">
-								{ueqItems.map((item) => (
+						{/* STEP 2: UEQ */}
+						{step === 2 && (
+							<Card>
+								<CardHeader>
+									<CardTitle>{m.questionnaire_section_impression()}</CardTitle>
+								</CardHeader>
+								<CardContent className="space-y-2">
+									<div className="mb-6 p-4 bg-muted/50 rounded-lg text-sm">
+										{m.ueq_instruction()}
+									</div>
+									<div className="max-w-xl mx-auto space-y-7">
+										{ueqItems.map((item) => (
+											<LikertScale
+												key={item.name}
+												name={item.name}
+												control={form.control}
+												options={getUeqOptions(item.min, item.max)}
+												required
+												showHeader
+											/>
+										))}
+									</div>
+								</CardContent>
+							</Card>
+						)}
+
+						{/* STEP 3: UNDERSTANDING */}
+						{step === 3 && (
+							<Card>
+								<CardHeader>
+									<CardTitle>
+										{m.questionnaire_section_understanding()}
+									</CardTitle>
+								</CardHeader>
+								<CardContent className="space-y-5">
 									<LikertScale
-										key={item.name}
-										name={item.name}
+										name="understanding_q1"
 										control={form.control}
-										options={getUeqOptions(item.min, item.max)}
+										options={likert7Options}
+										rowLabel={m.understanding_q1()}
 										required
 										showHeader
 									/>
-								))}
-							</div>
-						</CardContent>
-					</Card>
-				)}
+									<LikertScale
+										name="understanding_q2"
+										control={form.control}
+										options={likert7Options}
+										rowLabel={m.understanding_q2()}
+										required
+									/>
+									<MultipleChoiceQuestion
+										name="understanding_q3"
+										control={form.control}
+										question={m.understanding_q3()}
+										required
+										options={[
+											{
+												value: "understanding_q3_option1",
+												label: m.understanding_q3_option1(),
+											},
+											{
+												value: "understanding_q3_option2",
+												label: m.understanding_q3_option2(),
+											},
+											{
+												value: "understanding_q3_option3",
+												label: m.understanding_q3_option3(),
+											},
+											{
+												value: "understanding_q3_option4",
+												label: m.understanding_q3_option4(),
+											},
+										]}
+									/>
+									<MultipleChoiceQuestion
+										name="understanding_q4"
+										control={form.control}
+										question={m.understanding_q4()}
+										required
+										options={[
+											{
+												value: "understanding_q4_option1",
+												label: m.understanding_q4_option1(),
+											},
+											{
+												value: "understanding_q4_option2",
+												label: m.understanding_q4_option2(),
+											},
+											{
+												value: "understanding_q4_option3",
+												label: m.understanding_q4_option3(),
+											},
+											{
+												value: "understanding_q4_option4",
+												label: m.understanding_q4_option4(),
+											},
+										]}
+									/>
+								</CardContent>
+							</Card>
+						)}
 
-				{/* STEP 3: UNDERSTANDING */}
-				{step === 3 && (
-					<Card>
-						<CardHeader>
-							<CardTitle>{m.questionnaire_section_understanding()}</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-5">
-							<LikertScale
-								name="understanding_q1"
-								control={form.control}
-								options={likert7Options}
-								rowLabel={m.understanding_q1()}
-								required
-								showHeader
-							/>
-							<LikertScale
-								name="understanding_q2"
-								control={form.control}
-								options={likert7Options}
-								rowLabel={m.understanding_q2()}
-								required
-							/>
-							<MultipleChoiceQuestion
-								name="understanding_q3"
-								control={form.control}
-								question={m.understanding_q3()}
-								required
-								options={[
-									{
-										value: "understanding_q3_option1",
-										label: m.understanding_q3_option1(),
-									},
-									{
-										value: "understanding_q3_option2",
-										label: m.understanding_q3_option2(),
-									},
-									{
-										value: "understanding_q3_option3",
-										label: m.understanding_q3_option3(),
-									},
-									{
-										value: "understanding_q3_option4",
-										label: m.understanding_q3_option4(),
-									},
-								]}
-							/>
-							<MultipleChoiceQuestion
-								name="understanding_q4"
-								control={form.control}
-								question={m.understanding_q4()}
-								required
-								options={[
-									{
-										value: "understanding_q4_option1",
-										label: m.understanding_q4_option1(),
-									},
-									{
-										value: "understanding_q4_option2",
-										label: m.understanding_q4_option2(),
-									},
-									{
-										value: "understanding_q4_option3",
-										label: m.understanding_q4_option3(),
-									},
-									{
-										value: "understanding_q4_option4",
-										label: m.understanding_q4_option4(),
-									},
-								]}
-							/>
-						</CardContent>
-					</Card>
-				)}
+						{/* STEP 4: INTENTION */}
+						{step === 4 && (
+							<Card>
+								<CardHeader>
+									<CardTitle>{m.questionnaire_section_intention()}</CardTitle>
+								</CardHeader>
+								<CardContent className="space-y-5">
+									<LikertScale
+										name="intention_q1"
+										control={form.control}
+										options={likert7Options}
+										rowLabel={m.intention_q1()}
+										required
+										showHeader
+									/>
+									<LikertScale
+										name="intention_q2"
+										control={form.control}
+										options={likert7Options}
+										rowLabel={m.intention_q2()}
+										required
+									/>
+									<LikertScale
+										name="intention_q3"
+										control={form.control}
+										options={likert7Options}
+										rowLabel={m.intention_q3()}
+										required
+									/>
+								</CardContent>
+							</Card>
+						)}
 
-				{/* STEP 4: INTENTION */}
-				{step === 4 && (
-					<Card>
-						<CardHeader>
-							<CardTitle>{m.questionnaire_section_intention()}</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-5">
-							<LikertScale
-								name="intention_q1"
-								control={form.control}
-								options={likert7Options}
-								rowLabel={m.intention_q1()}
-								required
-								showHeader
-							/>
-							<LikertScale
-								name="intention_q2"
-								control={form.control}
-								options={likert7Options}
-								rowLabel={m.intention_q2()}
-								required
-							/>
-							<LikertScale
-								name="intention_q3"
-								control={form.control}
-								options={likert7Options}
-								rowLabel={m.intention_q3()}
-								required
-							/>
-						</CardContent>
-					</Card>
-				)}
-
-				{/* STEP 5: FEEDBACK */}
-				{step === 5 && (
-					<Card>
-						<CardHeader>
-							<CardTitle>{m.questionnaire_section_feedback()}</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-2">
-							<Label
-								htmlFor="feedback"
-								className="text-muted-foreground font-normal"
-							>
-								{m.questionnaire_feedback_label()}
-							</Label>
-							<Textarea
-								id="feedback"
-								placeholder={m.questionnaire_feedback_placeholder()}
-								{...form.register("feedback")}
-								className="mt-2 resize-none h-24"
-							/>
-						</CardContent>
-					</Card>
-				)}
+						{/* STEP 5: FEEDBACK */}
+						{step === 5 && (
+							<Card>
+								<CardHeader>
+									<CardTitle>{m.questionnaire_section_feedback()}</CardTitle>
+								</CardHeader>
+								<CardContent className="space-y-2">
+									<Label
+										htmlFor="feedback"
+										className="text-muted-foreground font-normal"
+									>
+										{m.questionnaire_feedback_label()}
+									</Label>
+									<Textarea
+										id="feedback"
+										placeholder={m.questionnaire_feedback_placeholder()}
+										{...form.register("feedback")}
+										className="mt-2 resize-none h-24"
+									/>
+								</CardContent>
+							</Card>
+						)}
+					</motion.div>
+				</AnimatePresence>
 
 				{/* NAVIGATION BUTTONS */}
 				<div className="flex justify-between items-center pt-4">
@@ -467,8 +480,12 @@ function Questionnaire() {
 						>
 							{form.formState.isSubmitting ? (
 								<Loader2 className="h-4 w-4 animate-spin mr-2" />
-							) : null}
-							{m.common_submit()}
+							) : (
+								<>
+									{m.common_submit()}
+									<ArrowRight className="ml-2 h-4 w-4" />
+								</>
+							)}
 						</Button>
 					) : (
 						<Button key={`next-btn-${step}`} type="button" onClick={handleNext}>
