@@ -8,17 +8,10 @@ import {
 	useLocation,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import ReactCountryFlag from "react-country-flag";
 import ErrorPage from "@/components/ErrorPage.tsx";
 import NotFoundPage from "@/components/NotFoundPage.tsx";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-} from "@/components/ui/select.tsx";
 import * as m from "@/paraglide/messages";
-import { getLocale, locales, setLocale } from "@/paraglide/runtime";
+import { getLocale } from "@/paraglide/runtime";
 import { seo } from "@/types/utils.ts";
 import stylesCss from "../styles.css?url";
 
@@ -30,7 +23,8 @@ export const Route = createRootRoute({
 			},
 			{
 				name: "viewport",
-				content: "width=device-width, initial-scale=1",
+				content:
+					"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
 			},
 			...seo({ title: m.study_title(), description: m.study_description() }),
 		],
@@ -55,9 +49,6 @@ function RootComponent() {
 		</RootDocument>
 	);
 }
-
-const getCountryCode = (locale: string) =>
-	locale === "en" ? "GB" : locale.toUpperCase();
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	const location = useLocation();
@@ -90,16 +81,19 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body
 				className="
-          min-h-dvh
-          flex flex-col
-          bg-background text-foreground antialiased
-        "
+            min-h-dvh
+            flex flex-col
+            bg-background text-foreground antialiased
+            selection:bg-primary/20
+       "
 				style={{
 					paddingTop: "env(safe-area-inset-top)",
 					paddingBottom: "env(safe-area-inset-bottom)",
+					paddingLeft: "env(safe-area-inset-left)",
+					paddingRight: "env(safe-area-inset-right)",
 				}}
 			>
-				{/* Sticky Progress Bar at the top */}
+				{/* Sticky Progress Bar */}
 				<div className="fixed top-0 left-0 w-full h-1.5 z-50 bg-muted">
 					<div
 						className="h-full bg-primary transition-all duration-700 ease-in-out"
@@ -111,35 +105,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					/>
 				</div>
 
-				<div className="flex-1 flex min-h-0">
-					<div className="container mx-auto px-4 sm:px-6 lg:px-8">
+				<div className="flex-1 flex flex-col min-h-0 relative">
+					<div className="container mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col">
 						{children}
 					</div>
 				</div>
-				<div className="fixed bottom-4 right-4 z-50">
-					<Select value={getLocale()} onValueChange={setLocale}>
-						<SelectTrigger className="bg-background">
-							<ReactCountryFlag
-								style={{ width: 20, height: 20 }}
-								svg
-								countryCode={getCountryCode(getLocale())}
-							/>
-						</SelectTrigger>
 
-						<SelectContent>
-							{locales.map((locale) => (
-								<SelectItem key={locale} value={locale}>
-									<ReactCountryFlag
-										svg
-										style={{ width: 20, height: 20 }}
-										countryCode={getCountryCode(locale)}
-									/>
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
-				<TanStackRouterDevtools position="top-right" />
+				<TanStackRouterDevtools position="bottom-left" />
 				<Scripts />
 			</body>
 		</html>

@@ -143,7 +143,6 @@ function Questionnaire() {
 			trust_ben_2: undefined,
 			trust_comp_3: undefined,
 			trust_ben_3: undefined,
-
 			understanding_q1: undefined,
 			understanding_q2: undefined,
 			understanding_q3: undefined,
@@ -245,13 +244,9 @@ function Questionnaire() {
 
 	const checkPreviousSteps = useEffectEvent(async () => {
 		if (step === 1) return;
-
 		const previousSteps = steps.filter((s) => s.id < step);
-
 		const fieldsToCheck = previousSteps.flatMap((s) => s.fields);
-
 		const isValid = await form.trigger(fieldsToCheck);
-
 		if (!isValid) {
 			form.clearErrors();
 			await nav({
@@ -268,12 +263,14 @@ function Questionnaire() {
 	}, [step]);
 
 	return (
-		<main className="mx-auto p-6 space-y-6">
-			<h2 className="text-2xl font-semibold">{m.questionnaire_title()}</h2>
+		<main className="mx-auto w-full pt-4 md:p-6 max-w-2xl space-y-6 min-h-[80vh] flex flex-col justify-center">
+			<h2 className="text-xl md:text-2xl font-semibold">
+				{m.questionnaire_title()}
+			</h2>
 
 			{step === 1 && (
 				<Card>
-					<CardContent className="flex flex-col py-4 gap-4">
+					<CardContent className="flex flex-col py-3 px-4 md:p-6 gap-4 text-sm md:text-base">
 						<div
 							// biome-ignore lint/security/noDangerouslySetInnerHtml: Have to
 							dangerouslySetInnerHTML={{ __html: m.questionnaire_intro() }}
@@ -284,10 +281,9 @@ function Questionnaire() {
 
 			<Separator />
 
-			{/* Formular-Wrapper */}
 			<form
 				onSubmit={currentStepConfig.isLast ? submit : (e) => e.preventDefault()}
-				className="space-y-6"
+				className="space-y-6 pb-8"
 			>
 				<AnimatePresence mode="wait" initial={false}>
 					<motion.div
@@ -300,10 +296,12 @@ function Questionnaire() {
 						{/* STEP 1: GENERAL / TRUST */}
 						{step === 1 && (
 							<Card>
-								<CardHeader>
-									<CardTitle>{m.questionnaire_section_general()}</CardTitle>
+								<CardHeader className="md:px-6 px-4">
+									<CardTitle className="text-lg md:text-xl">
+										{m.questionnaire_section_general()}
+									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-5">
+								<CardContent className="space-y-6 md:space-y-5 md:px-6 px-4">
 									{trustItems.map((item, index) => (
 										<LikertScale
 											key={item.name}
@@ -322,14 +320,16 @@ function Questionnaire() {
 						{/* STEP 2: UEQ */}
 						{step === 2 && (
 							<Card>
-								<CardHeader>
-									<CardTitle>{m.questionnaire_section_impression()}</CardTitle>
+								<CardHeader className="md:px-6 px-4">
+									<CardTitle className="text-lg md:text-xl">
+										{m.questionnaire_section_impression()}
+									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-2">
-									<div className="mb-6 p-4 bg-muted/50 rounded-lg text-sm">
+								<CardContent className="space-y-4 md:px-6 px-4">
+									<div className="mb-4 p-3 bg-muted/50 rounded-lg text-sm leading-relaxed">
 										{m.ueq_instruction()}
 									</div>
-									<div className="max-w-xl mx-auto space-y-7">
+									<div className="space-y-8 md:space-y-7">
 										{ueqItems.map((item) => (
 											<LikertScale
 												key={item.name}
@@ -348,12 +348,12 @@ function Questionnaire() {
 						{/* STEP 3: UNDERSTANDING */}
 						{step === 3 && (
 							<Card>
-								<CardHeader>
-									<CardTitle>
+								<CardHeader className="md:px-6 px-4">
+									<CardTitle className="text-lg md:text-xl">
 										{m.questionnaire_section_understanding()}
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-5">
+								<CardContent className="space-y-6 md:space-y-5 md:px-6 px-4">
 									<LikertScale
 										name="understanding_q1"
 										control={form.control}
@@ -424,10 +424,12 @@ function Questionnaire() {
 						{/* STEP 4: INTENTION */}
 						{step === 4 && (
 							<Card>
-								<CardHeader>
-									<CardTitle>{m.questionnaire_section_intention()}</CardTitle>
+								<CardHeader className="md:px-6 px-4">
+									<CardTitle className="text-lg md:text-xl">
+										{m.questionnaire_section_intention()}
+									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-5">
+								<CardContent className="space-y-6 md:space-y-5 md:px-6 px-4">
 									<LikertScale
 										name="intention_q1"
 										control={form.control}
@@ -457,10 +459,12 @@ function Questionnaire() {
 						{/* STEP 5: FEEDBACK */}
 						{step === 5 && (
 							<Card>
-								<CardHeader>
-									<CardTitle>{m.questionnaire_section_feedback()}</CardTitle>
+								<CardHeader className="md:px-6 px-4">
+									<CardTitle className="text-lg md:text-xl">
+										{m.questionnaire_section_feedback()}
+									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-2">
+								<CardContent className="space-y-2 md:px-6 px-4">
 									<Label
 										htmlFor="feedback"
 										className="text-muted-foreground font-normal"
@@ -471,7 +475,7 @@ function Questionnaire() {
 										id="feedback"
 										placeholder={m.questionnaire_feedback_placeholder()}
 										{...form.register("feedback")}
-										className="mt-2 resize-none h-24"
+										className="mt-2 resize-none h-24 text-base md:text-sm"
 									/>
 								</CardContent>
 							</Card>
@@ -480,15 +484,15 @@ function Questionnaire() {
 				</AnimatePresence>
 
 				{/* NAVIGATION BUTTONS */}
-				<div className="flex justify-between items-center pt-4">
-					{/* Zurück Button */}
+				<div className="flex justify-between items-center pt-2">
 					{step > 1 ? (
 						<Button
 							type="button"
-							variant="outline"
+							variant="ghost"
 							onClick={() =>
 								nav({ to: "/questionnaire", search: { step: step - 1 } })
 							}
+							className="pl-0 hover:bg-transparent hover:text-primary md:pl-4 md:hover:bg-accent"
 						>
 							{m.common_back()}
 						</Button>
@@ -496,12 +500,12 @@ function Questionnaire() {
 						<div />
 					)}
 
-					{/* Weiter / Senden Button */}
 					{currentStepConfig.isLast ? (
 						<Button
 							key="submit-btn"
 							type="submit"
 							disabled={form.formState.isSubmitting}
+							className="w-auto"
 						>
 							{form.formState.isSubmitting ? (
 								<Loader2 className="h-4 w-4 animate-spin mr-2" />

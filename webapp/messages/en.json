@@ -4,6 +4,8 @@
 	"study_title": "Energy Systems Interaction Study",
 	"study_description": "Academic research study regarding user interaction with energy management systems.",
 
+	"common_language": "Language",
+
 	"common_continue": "Continue",
 	"common_back": "Back",
 	"common_submit": "Submit",
@@ -30,6 +32,7 @@
 
 	"landing_title": "Study on Decision Support in Energy Systems",
 	"landing_intro": "Welcome to this scientific study. The aim is to compare different presentation formats of investment data for operational energy systems.",
+	"landing_duration": "Duration: approx. 10 minutes",
 	"landing_context_title": "Principal Investigator & Contact",
 	"landing_eligibility_title": "Eligibility",
 	"landing_checkbox_label": "I confirm that I match the target profile.",

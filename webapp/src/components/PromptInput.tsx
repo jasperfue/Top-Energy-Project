@@ -39,7 +39,12 @@ const PromptInputComponent = ({
 	};
 
 	return (
-		<PromptInput onSubmit={handleSubmit} className="mt-4" globalDrop multiple>
+		<PromptInput
+			onSubmit={handleSubmit}
+			className="mt-0 border-t bg-background p-2 md:p-4"
+			globalDrop={false}
+			multiple
+		>
 			<PromptInputBody>
 				<PromptInputTextarea
 					ref={textareaRef}
@@ -53,6 +58,7 @@ const PromptInputComponent = ({
 						!(status === "ready" || status === "streaming") || !hydrated
 					}
 					status={status}
+					className="h-10 w-10 md:h-9 md:w-9 rounded-full md:rounded-md"
 				/>
 			</PromptInputFooter>
 		</PromptInput>

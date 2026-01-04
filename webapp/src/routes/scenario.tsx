@@ -124,66 +124,68 @@ function Scenario() {
 	};
 
 	return (
-		<main className="min-h-screen bg-muted/20 flex items-center justify-center p-6">
-			<div className="max-w-4xl w-full space-y-8 bg-background p-8 rounded-xl shadow-sm border">
+		<main className="bg-muted/20 min-h-dvh w-full flex flex-col items-center py-4 px-4 md:py-10 md:px-6">
+			<div className="max-w-4xl w-full space-y-6 md:space-y-8 bg-background p-5 md:p-8 rounded-xl shadow-sm border">
 				{/* HEADLINE & ROLE */}
-				<div className="space-y-4 text-center max-w-2xl mx-auto">
-					<div className="flex justify-center mb-4">
+				<div className="space-y-3 md:space-y-4 text-center max-w-2xl mx-auto">
+					<div className="flex justify-center mb-2 md:mb-4">
 						<div className="p-3 bg-primary/10 rounded-full">
-							<Briefcase className="w-8 h-8 text-primary" />
+							<Briefcase className="w-6 h-6 md:w-8 md:h-8 text-primary" />
 						</div>
 					</div>
-					<h1 className="text-3xl font-bold tracking-tight">
+					<h1 className="text-2xl md:text-3xl font-bold tracking-tight">
 						{m.scenario_title()}
 					</h1>
-					<p className="text-lg text-muted-foreground leading-relaxed">
+
+					<p className="text-base md:text-lg text-muted-foreground leading-relaxed">
 						{m.scenario_role_text()}
 					</p>
 				</div>
 
-				<Separator className="my-6" />
+				<Separator className="my-4 md:my-6" />
 
 				{/* STATUS QUO CARDS (GRID) */}
 				<div>
-					<h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+					<h3 className="text-xs md:text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3 md:mb-4">
 						{m.scenario_problem_intro()}
 					</h3>
-					<div className="grid md:grid-cols-3 gap-6">
+
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
 						{/* Karte 1: Versorgung */}
-						<Card className="bg-muted/30 border-dashed">
-							<CardHeader className="pb-3 flex flex-row items-center gap-2 space-y-0">
-								<Factory className="w-4 h-4 text-orange-500" />
-								<CardTitle className="text-base">
+						<Card className="bg-muted/30 border-dashed shadow-none">
+							<CardHeader className="pb-2 pt-4 px-4 flex flex-row items-center gap-2 space-y-0">
+								<Factory className="w-4 h-4 text-orange-500 shrink-0" />
+								<CardTitle className="text-sm md:text-base">
 									{m.scenario_card_status_title()}
 								</CardTitle>
 							</CardHeader>
-							<CardContent className="text-sm text-muted-foreground">
+							<CardContent className="px-4 pb-4 text-sm text-muted-foreground">
 								{m.scenario_card_status_content()}
 							</CardContent>
 						</Card>
 
 						{/* Karte 2: Schmerzpunkte */}
-						<Card className="bg-muted/30 border-dashed">
-							<CardHeader className="pb-3 flex flex-row items-center gap-2 space-y-0">
-								<TrendingUp className="w-4 h-4 text-red-500" />
-								<CardTitle className="text-base">
+						<Card className="bg-muted/30 border-dashed shadow-none">
+							<CardHeader className="pb-2 pt-4 px-4 flex flex-row items-center gap-2 space-y-0">
+								<TrendingUp className="w-4 h-4 text-red-500 shrink-0" />
+								<CardTitle className="text-sm md:text-base">
 									{m.scenario_card_pain_title()}
 								</CardTitle>
 							</CardHeader>
-							<CardContent className="text-sm text-muted-foreground">
+							<CardContent className="px-4 pb-4 text-sm text-muted-foreground">
 								{m.scenario_card_pain_content()}
 							</CardContent>
 						</Card>
 
 						{/* Karte 3: Das Event */}
-						<Card className="bg-blue-50/50 border-blue-100 dark:bg-blue-900/10 dark:border-blue-900">
-							<CardHeader className="pb-3 flex flex-row items-center gap-2 space-y-0">
-								<FileText className="w-4 h-4 text-blue-600" />
-								<CardTitle className="text-base text-blue-900 dark:text-blue-100">
+						<Card className="bg-blue-50/50 border-blue-100 dark:bg-blue-900/10 dark:border-blue-900 shadow-none">
+							<CardHeader className="pb-2 pt-4 px-4 flex flex-row items-center gap-2 space-y-0">
+								<FileText className="w-4 h-4 text-blue-600 shrink-0" />
+								<CardTitle className="text-sm md:text-base text-blue-900 dark:text-blue-100">
 									{m.scenario_card_event_title()}
 								</CardTitle>
 							</CardHeader>
-							<CardContent className="text-sm text-blue-800/80 dark:text-blue-200/80">
+							<CardContent className="px-4 pb-4 text-sm text-blue-800/80 dark:text-blue-200/80">
 								{m.scenario_card_event_content()}
 							</CardContent>
 						</Card>
@@ -191,31 +193,40 @@ function Scenario() {
 				</div>
 
 				{/* TASK & CTA */}
-				<div className="pt-4">
-					<Alert className="bg-primary/5 border-primary/20">
-						<AlertCircle className="h-4 w-4 text-primary" />
-						<AlertTitle className="text-primary font-semibold">
-							{m.scenario_task_title()}
-						</AlertTitle>
-						<AlertDescription className="text-muted-foreground mt-1">
-							{m.scenario_task_desc()}
-							<br />
-							<strong>{m.scenario_task_question()}</strong>
-						</AlertDescription>
+				<div className="pt-2 md:pt-4">
+					<Alert className="bg-primary/5 border-primary/20 flex items-start gap-2">
+						<AlertCircle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+						<div className="grid gap-1">
+							<AlertTitle className="text-primary font-semibold text-sm md:text-base">
+								{m.scenario_task_title()}
+							</AlertTitle>
+							<AlertDescription className="text-muted-foreground text-xs md:text-sm leading-relaxed">
+								{m.scenario_task_desc()}
+								<br className="block my-1" />
+								<strong className="text-foreground">
+									{m.scenario_task_question()}
+								</strong>
+							</AlertDescription>
+						</div>
 					</Alert>
 
-					<div className="mt-8 flex justify-end">
+					<div className="mt-6 md:mt-8 flex justify-end">
 						<Button
 							onClick={start}
 							disabled={isLoading}
 							size="lg"
-							className="w-full md:w-auto font-semibold shadow-lg hover:shadow-xl transition-all"
+							className="w-full md:w-auto h-12 md:h-11 font-semibold shadow-lg hover:shadow-xl transition-all text-base"
 						>
 							{isLoading ? (
 								<Loader2 className="h-4 w-4 animate-spin" />
 							) : (
 								<>
-									{m.scenario_start_button()}
+									<span className="md:hidden">Start</span>
+
+									<span className="hidden md:inline">
+										{m.scenario_start_button()}
+									</span>
+
 									<ArrowRight className="ml-2 h-4 w-4" />
 								</>
 							)}

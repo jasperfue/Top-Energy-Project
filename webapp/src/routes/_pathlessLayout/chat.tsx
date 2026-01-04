@@ -56,7 +56,7 @@ export const Route = createFileRoute("/_pathlessLayout/chat")({
 function Chat() {
 	const navigate = useNavigate();
 	const [isFinishing, setIsFinishing] = useState(false);
-	usePreloadRoute("/questionnaire");
+	usePreloadRoute("/questionnaire", { step: 1 });
 	const { messages, sendMessage, status, stop } = useChat({
 		transport: new DefaultChatTransport({
 			api: "/api/chat",
@@ -90,7 +90,7 @@ function Chat() {
 				},
 			});
 
-			await navigate({ to: "/questionnaire" });
+			await navigate({ to: "/questionnaire", search: { step: 1 } });
 		} catch (error) {
 			console.error(
 				"Failed to finish task or navigate to questionnaire",
@@ -108,13 +108,13 @@ function Chat() {
 
 	return (
 		// We set h-dvh here to ensure the chat takes the full viewport height
-		<div className="flex flex-col h-dvh overflow-hidden bg-background">
+		<div className="flex flex-col pt-2 md:pt-4 h-dvh w-full overflow-hidden bg-background overscroll-y-none">
 			<StudyHeader onFinish={handleFinish} isLoading={isFinishing} />
 
 			<div className="flex-1 min-h-0 relative">
-				<div className="grid pb-4 h-full grid-rows-[1fr_auto]">
+				<div className="grid pb-0 h-full grid-rows-[1fr_auto]">
 					{/* Scrollable content */}
-					<Conversation>
+					<Conversation className="overflow-x-hidden">
 						<ConversationContent>
 							{messages.map((message, index) => (
 								<Message from={message.role} key={message.id}>
@@ -138,14 +138,16 @@ function Chat() {
 								</Message>
 							))}
 						</ConversationContent>
-						<ConversationScrollButton />
+						<ConversationScrollButton className="bottom-20" />
 					</Conversation>
-					<PromptInputComponent
-						stop={stop}
-						// @ts-expect-error
-						sendMessage={sendMessage}
-						status={status}
-					/>
+					<div className="w-full bg-background pb-[env(safe-area-inset-bottom)]">
+						<PromptInputComponent
+							stop={stop}
+							// @ts-expect-error
+							sendMessage={sendMessage}
+							status={status}
+						/>
+					</div>
 				</div>
 			</div>
 		</div>

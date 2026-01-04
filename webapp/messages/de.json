@@ -4,6 +4,8 @@
 	"study_title": "Studie zu Energiesystemen",
 	"study_description": "Wissenschaftliche Studie zur Benutzerinteraktion mit Energiemanagement-Systemen.",
 
+	"common_language": "Sprache",
+
 	"common_continue": "Weiter",
 	"common_back": "Zurück",
 	"common_submit": "Absenden",
@@ -30,6 +32,7 @@
 
 	"landing_title": "Studie zur Entscheidungsunterstützung in Energiesystemen",
 	"landing_intro": "Willkommen zu dieser wissenschaftlichen Studie. Ziel ist es, verschiedene Darstellungsformen von Investitionsdaten für betriebliche Energiesysteme zu vergleichen.",
+	"landing_duration": "Dauer: ca. 10 Minuten",
 	"landing_context_title": "Studienleitung & Kontakt",
 	"landing_eligibility_title": "Teilnahmevoraussetzung",
 	"landing_checkbox_label": "Ich bestätige, dass ich zur Zielgruppe gehöre.",

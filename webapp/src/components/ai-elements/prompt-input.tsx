@@ -864,19 +864,20 @@ export const PromptInputTextarea = ({
 				onChange,
 			};
 
-	return (
-		<InputGroupTextarea
-			className={cn("field-sizing-content max-h-48 min-h-16", className)}
-			name="message"
-			onCompositionEnd={() => setIsComposing(false)}
-			onCompositionStart={() => setIsComposing(true)}
-			onKeyDown={handleKeyDown}
-			onPaste={handlePaste}
-			placeholder={placeholder}
-			{...props}
-			{...controlledProps}
-		/>
-	);
+    return (
+        <InputGroupTextarea
+            className={cn("field-sizing-content max-h-[30vh] md:max-h-48 min-h-[44px] md:min-h-16 text-base md:text-sm py-3", className)}
+            name="message"
+            enterKeyHint="send"
+            onCompositionEnd={() => setIsComposing(false)}
+            onCompositionStart={() => setIsComposing(true)}
+            onKeyDown={handleKeyDown}
+            onPaste={handlePaste}
+            placeholder={placeholder}
+            {...props}
+            {...controlledProps}
+        />
+    );
 };
 
 export type PromptInputHeaderProps = Omit<

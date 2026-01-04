@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { Loader2 } from "lucide-react";
+import { ArrowRight, Clock, Loader2, Mail } from "lucide-react";
 import { useId, useState } from "react";
+import ReactCountryFlag from "react-country-flag";
 import { z } from "zod";
 import {
 	Accordion,
@@ -12,15 +13,25 @@ import {
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+} from "@/components/ui/select.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { airtable } from "@/lib/airtable.ts";
 import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { m } from "@/paraglide/messages.js";
+import { getLocale, locales, setLocale } from "@/paraglide/runtime";
 
 export const Route = createFileRoute("/")({
 	component: Consent,
 });
+
+const getCountryCode = (locale: string) =>
+	locale === "en" ? "GB" : locale.toUpperCase();
 
 const startStudy = createServerFn({ method: "POST" })
 	.inputValidator(
@@ -40,6 +51,10 @@ const startStudy = createServerFn({ method: "POST" })
 				},
 			]),
 		]);
+
+		if (!records || records.length === 0) {
+			throw new Error("Failed to create Airtable record");
+		}
 
 		const newRecId = records[0].id;
 		await session.update({ recId: newRecId });
@@ -65,13 +80,58 @@ function Consent() {
 	};
 
 	return (
-		<main className="mx-auto max-w-2xl p-6 space-y-6">
+		<main className="mx-auto max-w-2xl w-full p-4 md:p-6 space-y-6 md:space-y-8 min-h-[80vh] flex flex-col justify-center">
 			{/* HEADER SECTION */}
-			<div className="space-y-3">
-				<h1 className="text-3xl font-bold tracking-tight text-primary">
+			<div className="space-y-4 text-center sm:text-left">
+				<h1 className="text-2xl md:text-3xl font-bold tracking-tight text-primary">
 					{m.landing_title()}
 				</h1>
-				<p className="text-lg text-muted-foreground leading-relaxed">
+
+				<div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
+					<Select value={getLocale()} onValueChange={setLocale}>
+						<SelectTrigger className="w-auto h-8 gap-2 rounded-full bg-background border shadow-sm pl-3 pr-3 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors focus:ring-1 focus:ring-primary/20">
+							<span>{m.common_language()}</span>
+
+							<span className="w-px h-3 bg-border" />
+
+							<div className="flex items-center justify-center overflow-hidden w-4 h-3">
+								<ReactCountryFlag
+									style={{ width: "100%", height: "100%", objectFit: "cover" }}
+									svg
+									countryCode={getCountryCode(getLocale())}
+								/>
+							</div>
+						</SelectTrigger>
+
+						<SelectContent align="start">
+							{locales.map((locale) => (
+								<SelectItem
+									key={locale}
+									value={locale}
+									className="text-sm cursor-pointer"
+								>
+									<div className="flex items-center gap-2">
+										<ReactCountryFlag
+											svg
+											style={{ width: 16, height: 16 }}
+											countryCode={getCountryCode(locale)}
+										/>
+										<span className="uppercase text-muted-foreground text-xs font-medium">
+											{locale}
+										</span>
+									</div>
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+
+					<div className="inline-flex h-8 items-center gap-2 px-3 rounded-full bg-muted border border-transparent text-xs font-medium text-muted-foreground">
+						<Clock className="w-3.5 h-3.5" />
+						<span>{m.landing_duration()}</span>
+					</div>
+				</div>
+
+				<p className="text-base md:text-lg text-muted-foreground leading-relaxed pt-2">
 					{m.landing_intro()}
 				</p>
 			</div>
@@ -79,34 +139,35 @@ function Consent() {
 			<Separator />
 
 			{/* RESEARCHER INFO */}
-			<section className="space-y-4">
-				<h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+			<section className="space-y-3">
+				<h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
 					{m.landing_context_title()}
 				</h2>
 
-				<Card className="bg-muted/40 border-none shadow-sm">
-					<CardContent className="flex flex-col gap-1 p-5">
+				<Card className="bg-muted/30 border-none shadow-sm">
+					<CardContent className="flex flex-col gap-1 p-4">
 						<span className="font-semibold text-foreground">Jasper Fülle</span>
 						<span className="text-sm text-muted-foreground">
 							Master Thesis • University of Cologne
 						</span>
 						<a
-							href="mailto:jfuelle@students.uni-koeln.de"
-							className="text-sm text-blue-600 hover:underline w-fit mt-1"
+							href="mailto:jfuelle@smail.uni-koeln.de"
+							className="flex w-fit text-sm items-center gap-2 text-blue-600 hover:underline mt-1 py-1 transition-colors"
 						>
-							jfuelle@students.uni-koeln.de
+							<Mail className="h-3.5 w-3.5" />
+							jfuelle@smail.uni-koeln.de
 						</a>
 					</CardContent>
 				</Card>
 			</section>
 
-			{/* DATENSCHUTZ ACCORDION (WICHTIG!) */}
+			{/* DATENSCHUTZ ACCORDION */}
 			<Accordion type="single" collapsible className="w-full">
-				<AccordionItem value="privacy">
-					<AccordionTrigger className="text-sm text-muted-foreground">
+				<AccordionItem value="privacy" className="border-b-0">
+					<AccordionTrigger className="text-sm text-muted-foreground hover:text-foreground py-3">
 						{m.landing_privacy_trigger()}
 					</AccordionTrigger>
-					<AccordionContent className="text-sm text-muted-foreground space-y-2 leading-relaxed">
+					<AccordionContent className="text-sm text-muted-foreground space-y-3 leading-relaxed p-3 md:p-4 bg-muted/20 rounded-md">
 						<p>{m.landing_privacy_p1()}</p>
 						<p>{m.landing_privacy_p2()}</p>
 						<p>
@@ -118,26 +179,26 @@ function Consent() {
 			</Accordion>
 
 			{/* SCREENING CHECKBOX */}
-			<div className="p-5 border rounded-xl bg-card shadow-sm space-y-4">
-				<h3 className="font-medium text-foreground">
+			<div className="p-4 md:p-6 border rounded-xl bg-card shadow-sm space-y-4 transition-all hover:border-primary/50">
+				<h3 className="font-medium text-foreground flex items-center gap-2">
 					{m.landing_eligibility_title()}
 				</h3>
 
 				<label
 					htmlFor={checkboxId}
-					className="flex items-start gap-3 cursor-pointer group"
+					className="flex items-start gap-4 cursor-pointer group select-none active:scale-[0.99] transition-transform"
 				>
 					<Checkbox
 						id={checkboxId}
 						checked={isTargetAudience}
 						onCheckedChange={(v) => setIsTargetAudience(Boolean(v))}
-						className="mt-1 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+						className="mt-1 shrink-0 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
 					/>
-					<div className="space-y-1">
+					<div className="space-y-1.5">
 						<span className="block text-sm font-medium text-foreground group-hover:text-primary transition-colors">
 							{m.landing_checkbox_label()}
 						</span>
-						<p className="text-xs text-muted-foreground">
+						<p className="text-xs text-muted-foreground leading-normal">
 							{m.landing_checkbox_sublabel()}
 						</p>
 					</div>
@@ -145,17 +206,20 @@ function Consent() {
 			</div>
 
 			{/* ACTION BUTTON */}
-			<div className="flex justify-end pt-4">
+			<div className="flex justify-end pt-2 pb-4 md:pb-0">
 				<Button
 					size="lg"
 					onClick={handleStart}
 					disabled={isLoading}
-					className="w-full sm:w-auto"
+					className="w-full sm:w-auto h-12 shadow-md sm:shadow-none"
 				>
 					{isLoading ? (
 						<Loader2 className="h-4 w-4 animate-spin" />
 					) : (
-						m.common_start_study()
+						<>
+							{m.common_start_study()}
+							<ArrowRight className="ml-2 h-4 w-4" />
+						</>
 					)}
 				</Button>
 			</div>
