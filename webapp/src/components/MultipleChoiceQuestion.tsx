@@ -35,10 +35,13 @@ export function MultipleChoiceQuestion<TFieldValues extends FieldValues>({
 }: MultipleChoiceQuestionProps<TFieldValues>) {
 	return (
 		<div className={cn("w-full", className)}>
-			<div className="mt-7 grid grid-cols-1 items-start gap-4 md:grid-cols-[minmax(12rem,1.5fr)_minmax(0,1fr)]">
-				<Label htmlFor={name} className="leading-snug">
+			<div className="flex flex-col md:grid md:grid-cols-[minmax(12rem,1.5fr)_minmax(0,1fr)] gap-3 md:gap-4 md:items-start mt-4 md:mt-7">
+				<Label
+					htmlFor={name}
+					className="leading-snug text-base md:text-sm font-medium"
+				>
 					{question}
-					{required ? " *" : ""}
+					{/*{required ? " *" : ""}*/}
 				</Label>
 
 				<Controller
@@ -46,31 +49,41 @@ export function MultipleChoiceQuestion<TFieldValues extends FieldValues>({
 					control={control}
 					rules={{ required }}
 					render={({ field, fieldState }) => (
-						<div className="self-start w-full">
+						<div className="w-full">
 							<RadioGroup
 								id={name}
 								value={field.value ?? ""}
 								onValueChange={field.onChange}
-								className="flex flex-col gap-3"
+								className="flex flex-col gap-2"
 							>
 								{options.map((opt) => (
-									<div key={opt.value} className="flex items-start space-x-3">
-										<RadioGroupItem
-											value={opt.value}
-											id={`${name}-${opt.value}`}
-											className={cn(
-												"mt-1",
-												fieldState.error && "border-destructive",
-											)}
-										/>
+									<div key={opt.value}>
 										<Label
 											htmlFor={`${name}-${opt.value}`}
 											className={cn(
-												"font-normal leading-snug cursor-pointer", // cursor-pointer für bessere UX
-												fieldState.error && "text-destructive",
+												"flex items-start space-x-3 p-3 rounded-md border border-transparent bg-muted/40 hover:bg-muted/70 cursor-pointer transition-colors active:scale-[0.99]",
+												field.value === opt.value &&
+													"bg-primary/5 border-primary/20",
+												fieldState.error &&
+													"border-destructive/50 bg-destructive/5",
 											)}
 										>
-											{opt.label}
+											<RadioGroupItem
+												value={opt.value}
+												id={`${name}-${opt.value}`}
+												className={cn(
+													"mt-0.5 shrink-0",
+													fieldState.error && "border-destructive",
+												)}
+											/>
+											<span
+												className={cn(
+													"font-normal leading-snug",
+													fieldState.error && "text-destructive",
+												)}
+											>
+												{opt.label}
+											</span>
 										</Label>
 									</div>
 								))}

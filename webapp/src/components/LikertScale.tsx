@@ -64,7 +64,7 @@ export function LikertScale<TFieldValues extends FieldValues>({
 								{options.map((opt) => (
 									<div
 										key={opt.value}
-										className="flex flex-col items-center justify-end w-15"
+										className="flex flex-col items-center justify-end w-full"
 									>
 										<Label
 											htmlFor={`${name}-${opt.value}`}
