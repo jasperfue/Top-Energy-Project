@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { Loader2 } from "lucide-react";
+import { ArrowRight, Clock, Loader2, Mail } from "lucide-react";
 import { useId, useState } from "react";
 import { z } from "zod";
 import {
@@ -71,6 +71,14 @@ function Consent() {
 				<h1 className="text-3xl font-bold tracking-tight text-primary">
 					{m.landing_title()}
 				</h1>
+
+				<div className="flex justify-center sm:justify-start">
+					<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-sm text-muted-foreground border">
+						<Clock className="w-4 h-4" />
+						<span>{m.landing_duration()}</span>
+					</div>
+				</div>
+
 				<p className="text-lg text-muted-foreground leading-relaxed">
 					{m.landing_intro()}
 				</p>
