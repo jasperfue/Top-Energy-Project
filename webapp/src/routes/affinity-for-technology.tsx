@@ -121,11 +121,11 @@ export function AffinityForTechnologyForm() {
 	});
 
 	return (
-		<main className="mx-auto p-6 space-y-6 min-h-[80vh] flex flex-col justify-center">
-			<h2 className="text-2xl font-semibold">{m.afftech_title()}</h2>
+		<main className="mx-auto w-full max-w-4xl p-4 md:p-6 space-y-6 min-h-[80vh] flex flex-col justify-center">
+			<h2 className="text-xl md:text-2xl font-semibold">{m.afftech_title()}</h2>
 
 			<Card>
-				<CardContent className="flex flex-col py-4 gap-4">
+				<CardContent className="flex flex-col py-4 gap-4 text-sm md:text-base">
 					<div
 						// biome-ignore lint/security/noDangerouslySetInnerHtml: Have to
 						dangerouslySetInnerHTML={{
@@ -143,8 +143,8 @@ export function AffinityForTechnologyForm() {
 
 			<Separator />
 
-			<form onSubmit={submit} className="max-w-fit mx-auto">
-				<div className="space-y-5 mb-8">
+			<form onSubmit={submit} className="w-full mx-auto">
+				<div className="space-y-6 md:space-y-5 mb-8">
 					<LikertScale
 						name="afftech_q1"
 						control={form.control}

@@ -36,11 +36,13 @@ export function LikertScale<TFieldValues extends FieldValues>({
 }: LikertScaleProps<TFieldValues>) {
 	return (
 		<div className={cn("w-full", className)}>
-			<div className="grid grid-cols-[minmax(12rem,1fr)_auto] items-end gap-3">
+			<div className="flex flex-col gap-3 md:grid md:grid-cols-[minmax(12rem,1fr)_auto] md:items-end">
 				{rowLabel && (
-					<Label htmlFor={name} className="leading-snug self-end">
+					<Label
+						htmlFor={name}
+						className="leading-snug md:self-end md:text-right font-medium"
+					>
 						{rowLabel}
-						{/*{required ? " *" : ""}*/}
 					</Label>
 				)}
 
@@ -49,10 +51,10 @@ export function LikertScale<TFieldValues extends FieldValues>({
 					control={control}
 					rules={{ required }}
 					render={({ field, fieldState }) => (
-						<div className="self-center">
+						<div className="w-full md:w-auto self-center">
 							<RadioGroup
 								id={name}
-								className="grid"
+								className="grid w-full"
 								style={{
 									gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))`,
 								}}
@@ -64,19 +66,23 @@ export function LikertScale<TFieldValues extends FieldValues>({
 										key={opt.value}
 										className="flex flex-col items-center justify-end w-15"
 									>
-										{showHeader && (
-											<Label
-												htmlFor={`${name}-${opt.value}`}
-												className={cn(
-													"text-center mb-4",
-													fieldState.error && "text-destructive",
-												)}
-											>
-												{opt.label}
-											</Label>
-										)}
+										<Label
+											htmlFor={`${name}-${opt.value}`}
+											className={cn(
+												"text-center mb-2 text-[10px] sm:text-xs leading-tight break-words hyphens-auto",
+												fieldState.error && "text-destructive",
+												!opt.label && "hidden",
+												showHeader ? "block" : "block md:hidden",
+											)}
+										>
+											{opt.label}
+										</Label>
+
 										<RadioGroupItem
-											className={cn(fieldState.error && "border-destructive")}
+											className={cn(
+												"h-4 w-4 sm:h-5 sm:w-5 transition-all",
+												fieldState.error && "border-destructive",
+											)}
 											value={String(opt.value)}
 											id={`${name}-${opt.value}`}
 										/>
@@ -84,7 +90,7 @@ export function LikertScale<TFieldValues extends FieldValues>({
 								))}
 							</RadioGroup>
 							{fieldState.error && (
-								<div className="mt-1 flex items-center justify-center gap-1 text-xs text-destructive">
+								<div className="mt-2 flex items-center md:justify-center gap-1 text-xs text-destructive">
 									<TriangleAlert className="h-3 w-3" aria-hidden="true" />
 									<span>{m.common_required_error()}</span>
 								</div>
