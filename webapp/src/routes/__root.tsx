@@ -8,17 +8,10 @@ import {
 	useLocation,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import ReactCountryFlag from "react-country-flag";
 import ErrorPage from "@/components/ErrorPage.tsx";
 import NotFoundPage from "@/components/NotFoundPage.tsx";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-} from "@/components/ui/select.tsx";
 import * as m from "@/paraglide/messages";
-import { getLocale, locales, setLocale } from "@/paraglide/runtime";
+import { getLocale } from "@/paraglide/runtime";
 import { seo } from "@/types/utils.ts";
 import stylesCss from "../styles.css?url";
 
@@ -56,9 +49,6 @@ function RootComponent() {
 		</RootDocument>
 	);
 }
-
-const getCountryCode = (locale: string) =>
-	locale === "en" ? "GB" : locale.toUpperCase();
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	const location = useLocation();
@@ -115,37 +105,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					/>
 				</div>
 
-				<div className="absolute top-4 right-4 z-40 md:fixed md:bottom-4 md:right-4 md:top-auto">
-					<Select value={getLocale()} onValueChange={setLocale}>
-						<SelectTrigger className="bg-background/80 backdrop-blur-sm">
-							<ReactCountryFlag
-								style={{ width: 20, height: 20 }}
-								svg
-								countryCode={getCountryCode(getLocale())}
-							/>
-						</SelectTrigger>
-
-						<SelectContent>
-							{locales.map((locale) => (
-								<SelectItem key={locale} value={locale}>
-									<div className="flex items-center gap-2">
-										<ReactCountryFlag
-											svg
-											style={{ width: 16, height: 16 }}
-											countryCode={getCountryCode(locale)}
-										/>
-										<span className="text-xs uppercase text-muted-foreground">
-											{locale}
-										</span>
-									</div>
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
-
 				<div className="flex-1 flex flex-col min-h-0 relative">
-					<div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 flex-1 flex flex-col">
+					<div className="container mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col">
 						{children}
 					</div>
 				</div>

@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { ArrowRight, Clock, Loader2, Mail } from "lucide-react";
 import { useId, useState } from "react";
+import ReactCountryFlag from "react-country-flag";
 import { z } from "zod";
 import {
 	Accordion,
@@ -12,15 +13,25 @@ import {
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+} from "@/components/ui/select.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { airtable } from "@/lib/airtable.ts";
 import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { m } from "@/paraglide/messages.js";
+import { getLocale, locales, setLocale } from "@/paraglide/runtime";
 
 export const Route = createFileRoute("/")({
 	component: Consent,
 });
+
+const getCountryCode = (locale: string) =>
+	locale === "en" ? "GB" : locale.toUpperCase();
 
 const startStudy = createServerFn({ method: "POST" })
 	.inputValidator(
@@ -120,7 +131,7 @@ function Consent() {
 					</div>
 				</div>
 
-				<p className="text-base md:text-lg text-muted-foreground leading-relaxed">
+				<p className="text-base md:text-lg text-muted-foreground leading-relaxed pt-2">
 					{m.landing_intro()}
 				</p>
 			</div>
@@ -200,7 +211,7 @@ function Consent() {
 					size="lg"
 					onClick={handleStart}
 					disabled={isLoading}
-					className="w-full sm:w-auto text-base h-12 shadow-md sm:shadow-none"
+					className="w-full sm:w-auto h-12 shadow-md sm:shadow-none"
 				>
 					{isLoading ? (
 						<Loader2 className="h-4 w-4 animate-spin" />
