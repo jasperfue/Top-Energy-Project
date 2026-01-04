@@ -16,7 +16,7 @@ export const Route = createFileRoute("/thanks")({
 
 function Thanks() {
 	return (
-		<main className="min-h-[80dvh] flex items-center justify-center p-4">
+		<main className="min-h-[80vh] flex flex-col justify-center  items-center p-4">
 			<Card className="max-w-lg w-full text-center shadow-lg border-muted/60">
 				<CardHeader className="flex flex-col items-center space-y-6 pt-10">
 					<div className="relative">

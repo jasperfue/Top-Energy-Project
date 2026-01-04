@@ -121,7 +121,7 @@ export function AffinityForTechnologyForm() {
 	});
 
 	return (
-		<main className="mx-auto p-6 space-y-6">
+		<main className="mx-auto p-6 space-y-6 min-h-[80vh] flex flex-col justify-center">
 			<h2 className="text-2xl font-semibold">{m.afftech_title()}</h2>
 
 			<Card>

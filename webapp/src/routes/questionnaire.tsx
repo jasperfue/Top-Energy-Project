@@ -268,7 +268,7 @@ function Questionnaire() {
 	}, [step]);
 
 	return (
-		<main className="mx-auto p-6 space-y-6">
+		<main className="mx-auto p-6 space-y-6 min-h-[80vh] flex flex-col justify-center">
 			<h2 className="text-2xl font-semibold">{m.questionnaire_title()}</h2>
 
 			{step === 1 && (

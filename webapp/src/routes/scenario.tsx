@@ -124,7 +124,7 @@ function Scenario() {
 	};
 
 	return (
-		<main className="min-h-screen bg-muted/20 flex items-center justify-center p-6">
+		<main className="bg-muted/20 flex items-center justify-center p-6 min-h-[80vh] flex-col">
 			<div className="max-w-4xl w-full space-y-8 bg-background p-8 rounded-xl shadow-sm border">
 				{/* HEADLINE & ROLE */}
 				<div className="space-y-4 text-center max-w-2xl mx-auto">

@@ -41,6 +41,10 @@ const startStudy = createServerFn({ method: "POST" })
 			]),
 		]);
 
+		if (!records || records.length === 0) {
+			throw new Error("Failed to create Airtable record");
+		}
+
 		const newRecId = records[0].id;
 		await session.update({ recId: newRecId });
 		return { recId: newRecId };
@@ -65,9 +69,9 @@ function Consent() {
 	};
 
 	return (
-		<main className="mx-auto max-w-2xl p-6 space-y-6">
+		<main className="mx-auto max-w-2xl p-6 space-y-8 min-h-[80vh] flex flex-col justify-center">
 			{/* HEADER SECTION */}
-			<div className="space-y-3">
+			<div className="space-y-4 text-center sm:text-left">
 				<h1 className="text-3xl font-bold tracking-tight text-primary">
 					{m.landing_title()}
 				</h1>
@@ -87,34 +91,35 @@ function Consent() {
 			<Separator />
 
 			{/* RESEARCHER INFO */}
-			<section className="space-y-4">
-				<h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+			<section className="space-y-3">
+				<h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
 					{m.landing_context_title()}
 				</h2>
 
-				<Card className="bg-muted/40 border-none shadow-sm">
-					<CardContent className="flex flex-col gap-1 p-5">
+				<Card className="bg-muted/30 border-none shadow-sm">
+					<CardContent className="flex flex-col gap-1 p-4">
 						<span className="font-semibold text-foreground">Jasper Fülle</span>
 						<span className="text-sm text-muted-foreground">
 							Master Thesis • University of Cologne
 						</span>
 						<a
-							href="mailto:jfuelle@students.uni-koeln.de"
-							className="text-sm text-blue-600 hover:underline w-fit mt-1"
+							href="mailto:jfuelle@smail.uni-koeln.de"
+							className="flex text-sm items-center gap-2 text-blue-600 hover:underline mt-1 transition-colors"
 						>
-							jfuelle@students.uni-koeln.de
+							<Mail className="h-3.5 w-3.5" />
+							jfuelle@smail.uni-koeln.de
 						</a>
 					</CardContent>
 				</Card>
 			</section>
 
-			{/* DATENSCHUTZ ACCORDION (WICHTIG!) */}
+			{/* DATENSCHUTZ ACCORDION */}
 			<Accordion type="single" collapsible className="w-full">
-				<AccordionItem value="privacy">
-					<AccordionTrigger className="text-sm text-muted-foreground">
+				<AccordionItem value="privacy" className="border-b-0">
+					<AccordionTrigger className="text-sm text-muted-foreground hover:text-foreground py-2">
 						{m.landing_privacy_trigger()}
 					</AccordionTrigger>
-					<AccordionContent className="text-sm text-muted-foreground space-y-2 leading-relaxed">
+					<AccordionContent className="text-sm text-muted-foreground space-y-3 leading-relaxed p-2 bg-muted/20 rounded-md">
 						<p>{m.landing_privacy_p1()}</p>
 						<p>{m.landing_privacy_p2()}</p>
 						<p>
@@ -126,14 +131,14 @@ function Consent() {
 			</Accordion>
 
 			{/* SCREENING CHECKBOX */}
-			<div className="p-5 border rounded-xl bg-card shadow-sm space-y-4">
-				<h3 className="font-medium text-foreground">
+			<div className="p-6 border rounded-xl bg-card shadow-sm space-y-4 transition-all hover:border-primary/50">
+				<h3 className="font-medium text-foreground flex items-center gap-2">
 					{m.landing_eligibility_title()}
 				</h3>
 
 				<label
 					htmlFor={checkboxId}
-					className="flex items-start gap-3 cursor-pointer group"
+					className="flex items-start gap-4 cursor-pointer group select-none"
 				>
 					<Checkbox
 						id={checkboxId}
@@ -141,11 +146,11 @@ function Consent() {
 						onCheckedChange={(v) => setIsTargetAudience(Boolean(v))}
 						className="mt-1 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
 					/>
-					<div className="space-y-1">
+					<div className="space-y-1.5">
 						<span className="block text-sm font-medium text-foreground group-hover:text-primary transition-colors">
 							{m.landing_checkbox_label()}
 						</span>
-						<p className="text-xs text-muted-foreground">
+						<p className="text-xs text-muted-foreground leading-normal">
 							{m.landing_checkbox_sublabel()}
 						</p>
 					</div>
@@ -153,17 +158,20 @@ function Consent() {
 			</div>
 
 			{/* ACTION BUTTON */}
-			<div className="flex justify-end pt-4">
+			<div className="flex justify-end pt-2">
 				<Button
 					size="lg"
 					onClick={handleStart}
 					disabled={isLoading}
-					className="w-full sm:w-auto"
+					className="w-full sm:w-auto text-base"
 				>
 					{isLoading ? (
 						<Loader2 className="h-4 w-4 animate-spin" />
 					) : (
-						m.common_start_study()
+						<>
+							{m.common_start_study()}
+							<ArrowRight className="ml-2 h-4 w-4" />
+						</>
 					)}
 				</Button>
 			</div>
