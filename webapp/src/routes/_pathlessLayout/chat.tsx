@@ -138,7 +138,7 @@ function Chat() {
 								</Message>
 							))}
 						</ConversationContent>
-						<ConversationScrollButton className="bottom-20" />
+						<ConversationScrollButton />
 					</Conversation>
 					<div className="w-full bg-background pb-[env(safe-area-inset-bottom)]">
 						<PromptInputComponent
