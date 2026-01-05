@@ -35,7 +35,8 @@
 	"landing_duration": "Duration: approx. 10 minutes",
 	"landing_context_title": "Principal Investigator & Contact",
 	"landing_eligibility_title": "Eligibility",
-	"landing_checkbox_label": "I confirm that I match the target profile.",
+	"landing_checkbox_label_positive": "Yes, I belong to the target group described above.",
+	"landing_checkbox_label_negative": "No, I do not belong to the target group.",
 	"landing_checkbox_sublabel": "I have a basic understanding of business or technology and am capable of mentally immersing myself in an investment scenario.",
 	"common_start_study": "Start Study",
 

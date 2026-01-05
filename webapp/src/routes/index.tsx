@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { ArrowRight, Clock, Loader2, Mail } from "lucide-react";
-import { useId, useState } from "react";
+import { useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { z } from "zod";
 import {
@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/accordion.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
-import { Checkbox } from "@/components/ui/checkbox.tsx";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
 	Select,
 	SelectContent,
@@ -23,6 +24,7 @@ import { Separator } from "@/components/ui/separator.tsx";
 import { airtable } from "@/lib/airtable.ts";
 import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
+import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
 import { getLocale, locales, setLocale } from "@/paraglide/runtime";
 
@@ -63,15 +65,17 @@ const startStudy = createServerFn({ method: "POST" })
 
 function Consent() {
 	const nav = useNavigate();
-	const [isTargetAudience, setIsTargetAudience] = useState(false);
+	const [selection, setSelection] = useState<"yes" | "no" | undefined>(
+		undefined,
+	);
 	const [isLoading, setIsLoading] = useState(false);
-	const checkboxId = useId();
 	usePreloadRoute("/affinity-for-technology");
 
 	const handleStart = async () => {
+		if (!selection) return;
 		setIsLoading(true);
 		try {
-			await startStudy({ data: { isTargetAudience } });
+			await startStudy({ data: { isTargetAudience: selection === "yes" } });
 			await nav({ to: "/affinity-for-technology" });
 		} catch (error) {
 			console.error("Failed to start study:", error);
@@ -91,9 +95,7 @@ function Consent() {
 					<Select value={getLocale()} onValueChange={setLocale}>
 						<SelectTrigger className="w-auto h-8 gap-2 rounded-full bg-background border shadow-sm pl-3 pr-3 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors focus:ring-1 focus:ring-primary/20">
 							<span>{m.common_language()}</span>
-
 							<span className="w-px h-3 bg-border" />
-
 							<div className="flex items-center justify-center overflow-hidden w-4 h-3">
 								<ReactCountryFlag
 									style={{ width: "100%", height: "100%", objectFit: "cover" }}
@@ -178,31 +180,52 @@ function Consent() {
 				</AccordionItem>
 			</Accordion>
 
-			{/* SCREENING CHECKBOX */}
-			<div className="p-4 md:p-6 border rounded-xl bg-card shadow-sm space-y-4 transition-all hover:border-primary/50">
-				<h3 className="font-medium text-foreground flex items-center gap-2">
-					{m.landing_eligibility_title()}
-				</h3>
+			<div className="p-4 md:p-6 border rounded-xl bg-card shadow-sm space-y-4 transition-all">
+				<div className="space-y-1">
+					<h3 className="font-medium text-foreground flex items-center gap-2">
+						{m.landing_eligibility_title()}
+					</h3>
+					<p className="text-sm text-muted-foreground leading-normal">
+						{m.landing_checkbox_sublabel()}
+					</p>
+				</div>
 
-				<label
-					htmlFor={checkboxId}
-					className="flex items-start gap-4 cursor-pointer group select-none active:scale-[0.99] transition-transform"
+				<RadioGroup
+					value={selection}
+					onValueChange={(val: "yes" | "no") => setSelection(val)}
+					className="flex flex-col gap-3 pt-2"
 				>
-					<Checkbox
-						id={checkboxId}
-						checked={isTargetAudience}
-						onCheckedChange={(v) => setIsTargetAudience(Boolean(v))}
-						className="mt-1 shrink-0 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
-					/>
-					<div className="space-y-1.5">
-						<span className="block text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-							{m.landing_checkbox_label()}
+					<Label
+						htmlFor="option-yes"
+						className={cn(
+							"flex items-center space-x-3 space-y-0 rounded-md border p-4 cursor-pointer hover:bg-muted/50 transition-colors active:scale-[0.99]",
+							selection === "yes"
+								? "border-primary bg-primary/5"
+								: "border-border",
+						)}
+					>
+						<RadioGroupItem value="yes" id="option-yes" className="shrink-0" />
+						<span className="font-normal text-sm">
+							{m.landing_checkbox_label_positive()}
 						</span>
-						<p className="text-xs text-muted-foreground leading-normal">
-							{m.landing_checkbox_sublabel()}
-						</p>
-					</div>
-				</label>
+					</Label>
+
+					{/* OPTION 2: NEIN */}
+					<Label
+						htmlFor="option-no"
+						className={cn(
+							"flex items-center space-x-3 space-y-0 rounded-md border p-4 cursor-pointer hover:bg-muted/50 transition-colors active:scale-[0.99]",
+							selection === "no"
+								? "border-primary bg-primary/5"
+								: "border-border",
+						)}
+					>
+						<RadioGroupItem value="no" id="option-no" className="shrink-0" />
+						<span className="font-normal text-sm">
+							{m.landing_checkbox_label_negative()}
+						</span>
+					</Label>
+				</RadioGroup>
 			</div>
 
 			{/* ACTION BUTTON */}
@@ -210,7 +233,7 @@ function Consent() {
 				<Button
 					size="lg"
 					onClick={handleStart}
-					disabled={isLoading}
+					disabled={isLoading || !selection}
 					className="w-full sm:w-auto h-12 shadow-md sm:shadow-none"
 				>
 					{isLoading ? (
