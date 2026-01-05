@@ -35,7 +35,8 @@
 	"landing_duration": "Dauer: ca. 10 Minuten",
 	"landing_context_title": "Studienleitung & Kontakt",
 	"landing_eligibility_title": "Teilnahmevoraussetzung",
-	"landing_checkbox_label": "Ich bestätige, dass ich zur Zielgruppe gehöre.",
+	"landing_checkbox_label_positive": "Ja, ich gehöre zur beschriebenen Zielgruppe.",
+	"landing_checkbox_label_negative": "Nein, ich gehöre nicht dazu.",
 	"landing_checkbox_sublabel": "Ich verfüge über grundlegendes wirtschaftliches oder technisches Verständnis und bin in der Lage, mich gedanklich in ein Investitionsszenario hineinzuversetzen.",
 	"common_start_study": "Studie starten",
 

@@ -24,7 +24,6 @@ export type LikertScaleProps<TFieldValues extends FieldValues> = {
 	className?: string;
 	showHeader?: boolean;
 };
-
 export function LikertScale<TFieldValues extends FieldValues>({
 	name,
 	control,
@@ -36,11 +35,11 @@ export function LikertScale<TFieldValues extends FieldValues>({
 }: LikertScaleProps<TFieldValues>) {
 	return (
 		<div className={cn("w-full", className)}>
-			<div className="flex flex-col gap-3 md:grid md:grid-cols-[minmax(12rem,1fr)_auto] md:items-end">
+			<div className="flex flex-col gap-3 md:grid md:grid-cols-[1fr_auto] md:items-end md:gap-4">
 				{rowLabel && (
 					<Label
 						htmlFor={name}
-						className="leading-snug md:self-end md:text-right font-medium"
+						className="leading-snug font-medium pb-2 md:pb-0"
 					>
 						{rowLabel}
 					</Label>
@@ -51,7 +50,7 @@ export function LikertScale<TFieldValues extends FieldValues>({
 					control={control}
 					rules={{ required }}
 					render={({ field, fieldState }) => (
-						<div className="w-full md:w-auto self-center">
+						<div className="w-full md:w-[26rem] self-center">
 							<RadioGroup
 								id={name}
 								className="grid w-full"
@@ -69,9 +68,9 @@ export function LikertScale<TFieldValues extends FieldValues>({
 										<Label
 											htmlFor={`${name}-${opt.value}`}
 											className={cn(
-												"text-center mb-2 text-[10px] sm:text-xs leading-tight break-words hyphens-auto",
+												"text-center mb-2 text-[10px] sm:text-xs leading-tight break-words hyphens-auto w-full px-0.5",
 												fieldState.error && "text-destructive",
-												!opt.label && "hidden",
+												!opt.label && "invisible",
 												showHeader ? "block" : "block md:hidden",
 											)}
 										>
