@@ -34,7 +34,12 @@ export function MultipleChoiceQuestion<TFieldValues extends FieldValues>({
 	className,
 }: MultipleChoiceQuestionProps<TFieldValues>) {
 	return (
-		<div className={cn("w-full", className)}>
+		<div
+			className={cn(
+				"w-full border-b pb-4 border-border/40 last:border-0",
+				className,
+			)}
+		>
 			<div className="flex flex-col md:grid md:grid-cols-[minmax(12rem,1.5fr)_minmax(0,1fr)] gap-3 md:gap-4 md:items-start mt-4 md:mt-7">
 				<Label
 					htmlFor={name}

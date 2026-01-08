@@ -34,7 +34,12 @@ export function LikertScale<TFieldValues extends FieldValues>({
 	showHeader = false,
 }: LikertScaleProps<TFieldValues>) {
 	return (
-		<div className={cn("w-full", className)}>
+		<div
+			className={cn(
+				"w-full border-b pb-4 border-border/40 last:border-0",
+				className,
+			)}
+		>
 			<div className="flex flex-col gap-3 md:grid md:grid-cols-[1fr_auto] md:items-end md:gap-4">
 				{rowLabel && (
 					<Label
@@ -79,7 +84,7 @@ export function LikertScale<TFieldValues extends FieldValues>({
 
 										<RadioGroupItem
 											className={cn(
-												"h-4 w-4 sm:h-5 sm:w-5 transition-all",
+												"h-5 w-5 md:h-6 md:w-6 border-muted-foreground/40 text-primary data-[state=checked]:border-primary transition-all",
 												fieldState.error && "border-destructive",
 											)}
 											value={String(opt.value)}
