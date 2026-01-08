@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
 import { MultipleChoiceQuestion } from "@/components/MultipleChoiceQuestion.tsx";
+import { SemanticDifferential } from "@/components/SemanticDifferential.tsx";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label.tsx";
@@ -88,18 +89,6 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
-
-function getUeqOptions(minLabel: string, maxLabel: string) {
-	return [
-		{ value: 1, label: minLabel },
-		{ value: 2, label: "" },
-		{ value: 3, label: "" },
-		{ value: 4, label: "" },
-		{ value: 5, label: "" },
-		{ value: 6, label: "" },
-		{ value: 7, label: maxLabel },
-	];
-}
 
 const submitQuestionnaire = createServerFn({ method: "POST" })
 	.inputValidator(formSchema)
@@ -263,7 +252,7 @@ function Questionnaire() {
 	}, [step]);
 
 	return (
-		<main className="mx-auto w-full pt-4 md:p-6 max-w-2xl space-y-6 min-h-[80vh] flex flex-col justify-center">
+		<main className="mx-auto w-full pt-4 md:p-6 max-w-4xl space-y-6 min-h-[80vh] flex flex-col justify-center">
 			<h2 className="text-xl md:text-2xl font-semibold">
 				{m.questionnaire_title()}
 			</h2>
@@ -329,15 +318,15 @@ function Questionnaire() {
 									<div className="mb-4 p-3 bg-muted/50 rounded-lg text-sm leading-relaxed">
 										{m.ueq_instruction()}
 									</div>
-									<div className="space-y-8 md:space-y-7">
+									<div className="space-y-1">
 										{ueqItems.map((item) => (
-											<LikertScale
+											<SemanticDifferential
 												key={item.name}
 												name={item.name}
 												control={form.control}
-												options={getUeqOptions(item.min, item.max)}
+												minLabel={item.min}
+												maxLabel={item.max}
 												required
-												showHeader
 											/>
 										))}
 									</div>
