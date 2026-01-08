@@ -18,7 +18,12 @@ import { airtable } from "@/lib/airtable.ts";
 import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { m } from "@/paraglide/messages.js";
-import { Likert7, likert7Options } from "@/routes/affinity-for-technology.tsx";
+import {
+	LIKERT_CENTER,
+	LIKERT_LEFT,
+	LIKERT_RIGHT,
+	Likert7,
+} from "@/routes/affinity-for-technology.tsx";
 
 export const Route = createFileRoute("/questionnaire")({
 	validateSearch: (search) => {
@@ -291,15 +296,16 @@ function Questionnaire() {
 									</CardTitle>
 								</CardHeader>
 								<CardContent className="space-y-6 md:space-y-5 md:px-6 px-4">
-									{trustItems.map((item, index) => (
+									{trustItems.map((item) => (
 										<LikertScale
 											key={item.name}
 											name={item.name}
 											control={form.control}
-											options={likert7Options}
 											rowLabel={item.label}
 											required
-											showHeader={index === 0}
+											leftLabel={LIKERT_LEFT}
+											centerLabel={LIKERT_CENTER}
+											rightLabel={LIKERT_RIGHT}
 										/>
 									))}
 								</CardContent>
@@ -346,17 +352,20 @@ function Questionnaire() {
 									<LikertScale
 										name="understanding_q1"
 										control={form.control}
-										options={likert7Options}
 										rowLabel={m.understanding_q1()}
 										required
-										showHeader
+										leftLabel={LIKERT_LEFT}
+										centerLabel={LIKERT_CENTER}
+										rightLabel={LIKERT_RIGHT}
 									/>
 									<LikertScale
 										name="understanding_q2"
 										control={form.control}
-										options={likert7Options}
 										rowLabel={m.understanding_q2()}
 										required
+										leftLabel={LIKERT_LEFT}
+										centerLabel={LIKERT_CENTER}
+										rightLabel={LIKERT_RIGHT}
 									/>
 									<MultipleChoiceQuestion
 										name="understanding_q3"
@@ -422,24 +431,29 @@ function Questionnaire() {
 									<LikertScale
 										name="intention_q1"
 										control={form.control}
-										options={likert7Options}
 										rowLabel={m.intention_q1()}
 										required
-										showHeader
+										leftLabel={LIKERT_LEFT}
+										centerLabel={LIKERT_CENTER}
+										rightLabel={LIKERT_RIGHT}
 									/>
 									<LikertScale
 										name="intention_q2"
 										control={form.control}
-										options={likert7Options}
 										rowLabel={m.intention_q2()}
 										required
+										leftLabel={LIKERT_LEFT}
+										centerLabel={LIKERT_CENTER}
+										rightLabel={LIKERT_RIGHT}
 									/>
 									<LikertScale
 										name="intention_q3"
 										control={form.control}
-										options={likert7Options}
 										rowLabel={m.intention_q3()}
 										required
+										leftLabel={LIKERT_LEFT}
+										centerLabel={LIKERT_CENTER}
+										rightLabel={LIKERT_RIGHT}
 									/>
 								</CardContent>
 							</Card>

@@ -84,7 +84,7 @@ export function SemanticDifferential<TFieldValues extends FieldValues>({
 											value={val.toString()}
 											id={`${name}-${val}`}
 											className={cn(
-												"h-5 w-5 md:h-6 md:w-6 border-muted-foreground/40 text-primary data-[state=checked]:border-primary transition-all",
+												"h-6 w-6 md:h-7 md:w-7 border-muted-foreground/30 text-primary data-[state=checked]:border-primary data-[state=checked]:bg-primary/10 transition-all z-10",
 												fieldState.error && "border-destructive",
 											)}
 										/>

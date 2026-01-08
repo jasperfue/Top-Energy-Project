@@ -10,29 +10,33 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
 
-type LikertOption = {
-	value: number;
-	label: string;
-};
-
 export type LikertScaleProps<TFieldValues extends FieldValues> = {
 	name: FieldPath<TFieldValues>;
 	control: Control<TFieldValues>;
-	options: LikertOption[];
 	rowLabel?: string;
+	leftLabel?: string;
+	centerLabel?: string;
+	rightLabel?: string;
+	hideLabelsOnDesktop?: boolean;
 	required?: boolean;
 	className?: string;
-	showHeader?: boolean;
 };
+
 export function LikertScale<TFieldValues extends FieldValues>({
 	name,
 	control,
-	options,
 	rowLabel,
-	required,
+	leftLabel,
+	centerLabel,
+	rightLabel,
+	hideLabelsOnDesktop = false,
+	required = true,
 	className,
-	showHeader = false,
 }: LikertScaleProps<TFieldValues>) {
+	const values = [1, 2, 3, 4, 5, 6, 7];
+
+	const hasLabels = leftLabel || centerLabel || rightLabel;
+
 	return (
 		<div
 			className={cn(
@@ -40,11 +44,11 @@ export function LikertScale<TFieldValues extends FieldValues>({
 				className,
 			)}
 		>
-			<div className="flex flex-col gap-3 md:grid md:grid-cols-[1fr_auto] md:items-end md:gap-4">
+			<div className="flex flex-col gap-3 md:grid md:grid-cols-[1fr_28rem] md:gap-8 md:items-center">
 				{rowLabel && (
 					<Label
 						htmlFor={name}
-						className="leading-snug font-medium pb-2 md:pb-0"
+						className="text-base font-medium leading-snug md:text-right"
 					>
 						{rowLabel}
 					</Label>
@@ -55,47 +59,81 @@ export function LikertScale<TFieldValues extends FieldValues>({
 					control={control}
 					rules={{ required }}
 					render={({ field, fieldState }) => (
-						<div className="w-full md:w-[26rem] self-center">
+						<div className="w-full">
+							{hasLabels && (
+								<div
+									className={cn(
+										"grid grid-cols-7 mb-2 px-1",
+										hideLabelsOnDesktop && "md:hidden",
+									)}
+								>
+									<div
+										className={cn(
+											"col-start-1 col-span-1 flex justify-center items-end",
+											fieldState.error && "text-destructive",
+										)}
+									>
+										<span className="text-xs md:text-sm leading-none font-medium text-muted-foreground w-max text-center ">
+											{leftLabel}
+										</span>
+									</div>
+
+									{/* MITTE: Bleibt über Spalte 3,4,5 (Zentriert über 4) */}
+									<div
+										className={cn(
+											"col-start-3 col-span-3 flex justify-center items-end",
+											fieldState.error && "text-destructive",
+										)}
+									>
+										<span className="text-xs md:text-sm leading-none font-medium text-muted-foreground text-center">
+											{centerLabel}
+										</span>
+									</div>
+
+									<div
+										className={cn(
+											"col-start-7 col-span-1 flex justify-center items-end",
+											fieldState.error && "text-destructive",
+										)}
+									>
+										<span className="text-xs md:text-sm leading-none font-medium text-muted-foreground w-max text-center">
+											{rightLabel}
+										</span>
+									</div>
+								</div>
+							)}
+
 							<RadioGroup
 								id={name}
-								className="grid w-full"
-								style={{
-									gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))`,
-								}}
+								className="grid grid-cols-7 gap-0 w-full"
 								value={field.value?.toString() ?? ""}
 								onValueChange={(v) => field.onChange(Number(v))}
 							>
-								{options.map((opt) => (
+								{values.map((val) => (
 									<div
-										key={opt.value}
-										className="flex flex-col items-center justify-end w-full"
+										key={val}
+										className="flex items-center justify-center relative group"
 									>
-										<Label
-											htmlFor={`${name}-${opt.value}`}
-											className={cn(
-												"text-center mb-2 text-[10px] sm:text-xs leading-tight break-words hyphens-auto w-full px-0.5",
-												fieldState.error && "text-destructive",
-												!opt.label && "invisible",
-												showHeader ? "block" : "block md:hidden",
-											)}
-										>
-											{opt.label}
-										</Label>
-
 										<RadioGroupItem
+											value={String(val)}
+											id={`${name}-${val}`}
 											className={cn(
-												"h-5 w-5 md:h-6 md:w-6 border-muted-foreground/40 text-primary data-[state=checked]:border-primary transition-all",
+												"h-6 w-6 md:h-7 md:w-7 border-muted-foreground/30 text-primary data-[state=checked]:border-primary data-[state=checked]:bg-primary/10 transition-all z-10",
 												fieldState.error && "border-destructive",
 											)}
-											value={String(opt.value)}
-											id={`${name}-${opt.value}`}
 										/>
+										<Label
+											htmlFor={`${name}-${val}`}
+											className="absolute inset-0 cursor-pointer"
+										>
+											<span className="sr-only">{val}</span>
+										</Label>
 									</div>
 								))}
 							</RadioGroup>
 							{fieldState.error && (
-								<div className="mt-2 flex items-center md:justify-center gap-1 text-xs text-destructive">
-									<TriangleAlert className="h-3 w-3" aria-hidden="true" />
+								<div className="mt-3 flex items-center justify-center gap-2 text-xs text-destructive font-medium animate-in fade-in-0 slide-in-from-top-1">
+									<TriangleAlert className="h-4 w-4" />
 									<span>{m.common_required_error()}</span>
 								</div>
 							)}
