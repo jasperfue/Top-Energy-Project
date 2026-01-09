@@ -17,6 +17,10 @@ export const Route = createFileRoute("/affinity-for-technology")({
 	component: AffinityForTechnologyForm,
 });
 
+export const LIKERT_LEFT = m.common_likert7_1();
+export const LIKERT_CENTER = m.common_likert7_4();
+export const LIKERT_RIGHT = m.common_likert7_7();
+
 export const likert7Options = [
 	{
 		value: 1 as const,
@@ -145,70 +149,28 @@ export function AffinityForTechnologyForm() {
 
 			<form onSubmit={submit} className="w-full mx-auto">
 				<div className="space-y-6 md:space-y-5 mb-8">
-					<LikertScale
-						name="afftech_q1"
-						control={form.control}
-						options={likert7Options}
-						rowLabel={m.afftech_q1()}
-						required
-						showHeader
-					/>
-					<LikertScale
-						name="afftech_q2"
-						control={form.control}
-						options={likert7Options}
-						rowLabel={m.afftech_q2()}
-						required
-					/>
-					<LikertScale
-						name="afftech_q3"
-						control={form.control}
-						options={likert7Options}
-						rowLabel={m.afftech_q3()}
-						required
-					/>
-					<LikertScale
-						name="afftech_q4"
-						control={form.control}
-						options={likert7Options}
-						rowLabel={m.afftech_q4()}
-						required
-					/>
-					<LikertScale
-						name="afftech_q5"
-						control={form.control}
-						options={likert7Options}
-						rowLabel={m.afftech_q5()}
-						required
-					/>
-					<LikertScale
-						name="afftech_q6"
-						control={form.control}
-						options={likert7Options}
-						rowLabel={m.afftech_q6()}
-						required
-					/>
-					<LikertScale
-						name="afftech_q7"
-						control={form.control}
-						options={likert7Options}
-						rowLabel={m.afftech_q7()}
-						required
-					/>
-					<LikertScale
-						name="afftech_q8"
-						control={form.control}
-						options={likert7Options}
-						rowLabel={m.afftech_q8()}
-						required
-					/>
-					<LikertScale
-						name="afftech_q9"
-						control={form.control}
-						options={likert7Options}
-						rowLabel={m.afftech_q9()}
-						required
-					/>
+					{[
+						{ name: "afftech_q1" as const, label: m.afftech_q1() },
+						{ name: "afftech_q2" as const, label: m.afftech_q2() },
+						{ name: "afftech_q3" as const, label: m.afftech_q3() },
+						{ name: "afftech_q4" as const, label: m.afftech_q4() },
+						{ name: "afftech_q5" as const, label: m.afftech_q5() },
+						{ name: "afftech_q6" as const, label: m.afftech_q6() },
+						{ name: "afftech_q7" as const, label: m.afftech_q7() },
+						{ name: "afftech_q8" as const, label: m.afftech_q8() },
+						{ name: "afftech_q9" as const, label: m.afftech_q9() },
+					].map((item) => (
+						<LikertScale
+							key={item.name}
+							name={item.name}
+							control={form.control}
+							rowLabel={item.label}
+							required
+							leftLabel={LIKERT_LEFT}
+							centerLabel={LIKERT_CENTER}
+							rightLabel={LIKERT_RIGHT}
+						/>
+					))}
 				</div>
 				<div className="flex justify-end">
 					<Button type="submit" disabled={form.formState.isSubmitting}>

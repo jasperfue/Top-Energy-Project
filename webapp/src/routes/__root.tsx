@@ -61,7 +61,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 		if (pathname.includes("dashboard") || pathname.includes("chat")) return 60;
 		if (pathname.includes("questionnaire")) {
 			const currentStep = location.search.step || 1;
-			const totalSteps = 5;
+			const totalSteps = 6;
 			const baseProgress = 60;
 			const remainingScope = 35;
 

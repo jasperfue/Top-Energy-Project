@@ -1,29 +1,38 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2, TriangleAlert } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useEffectEvent } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
 import { MultipleChoiceQuestion } from "@/components/MultipleChoiceQuestion.tsx";
+import { SemanticDifferential } from "@/components/SemanticDifferential.tsx";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { airtable } from "@/lib/airtable.ts";
 import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
+import { cn } from "@/lib/utils.ts";
 import { m } from "@/paraglide/messages.js";
-import { Likert7, likert7Options } from "@/routes/affinity-for-technology.tsx";
+import {
+	LIKERT_CENTER,
+	LIKERT_LEFT,
+	LIKERT_RIGHT,
+	Likert7,
+} from "@/routes/affinity-for-technology.tsx";
 
 export const Route = createFileRoute("/questionnaire")({
-	validateSearch: (search) => {
+	validateSearch: (search?) => {
 		const rawStep = Number(search?.step ?? 1);
 		const safeStep = Number.isFinite(rawStep)
-			? Math.min(5, Math.max(1, rawStep))
+			? Math.min(6, Math.max(1, rawStep))
 			: 1;
 		return {
 			step: safeStep,
@@ -75,6 +84,27 @@ const intentionAnswers = z.object({
 	intention_q3: Likert7,
 });
 
+const demographicsAnswers = z.object({
+	age: z
+		.number({ error: () => m.common_required_error() })
+		.min(18, { message: m.demographics_age_error_min() })
+		.max(99, { message: m.demographics_age_error_max() }),
+	gender: z.enum(["female", "male", "diverse"]),
+	occupation_role: z.enum([
+		"student",
+		"employee_no_lead",
+		"employee_lead",
+		"entrepreneur",
+	]),
+	domain_background: z.enum(["business", "stem", "other"]),
+	investment_experience: z.enum([
+		"none",
+		"theoretical",
+		"practical_basic",
+		"practical_professional",
+	]),
+});
+
 const feedbackAnswer = z.object({
 	feedback: z.string().optional(),
 });
@@ -84,22 +114,11 @@ const formSchema = z.object({
 	...trustAnswers.shape,
 	...ueqAnswers.shape,
 	...intentionAnswers.shape,
+	...demographicsAnswers.shape,
 	...feedbackAnswer.shape,
 });
 
 type FormValues = z.infer<typeof formSchema>;
-
-function getUeqOptions(minLabel: string, maxLabel: string) {
-	return [
-		{ value: 1, label: minLabel },
-		{ value: 2, label: "" },
-		{ value: 3, label: "" },
-		{ value: 4, label: "" },
-		{ value: 5, label: "" },
-		{ value: 6, label: "" },
-		{ value: 7, label: maxLabel },
-	];
-}
 
 const submitQuestionnaire = createServerFn({ method: "POST" })
 	.inputValidator(formSchema)
@@ -130,8 +149,8 @@ function Questionnaire() {
 	const { step } = Route.useSearch();
 	const nav = useNavigate();
 	usePreloadRoute(
-		step < 5 ? "/questionnaire" : "/thanks",
-		step < 5 ? { step: step + 1 } : undefined,
+		step < 6 ? "/questionnaire" : "/thanks",
+		step < 6 ? { step: step + 1 } : undefined,
 	);
 
 	const form = useForm<FormValues>({
@@ -158,6 +177,11 @@ function Questionnaire() {
 			intention_q1: undefined,
 			intention_q2: undefined,
 			intention_q3: undefined,
+			age: undefined,
+			gender: undefined,
+			occupation_role: undefined,
+			domain_background: undefined,
+			investment_experience: undefined,
 			feedback: "",
 		},
 		mode: "onChange",
@@ -190,6 +214,12 @@ function Questionnaire() {
 		},
 		{
 			id: 5,
+			title: m.questionnaire_section_demographics(),
+			fields: Object.keys(demographicsAnswers.shape) as (keyof FormValues)[],
+			isLast: false,
+		},
+		{
+			id: 6,
 			title: m.questionnaire_section_feedback(),
 			fields: Object.keys(feedbackAnswer.shape) as (keyof FormValues)[],
 			isLast: true,
@@ -248,7 +278,7 @@ function Questionnaire() {
 		const fieldsToCheck = previousSteps.flatMap((s) => s.fields);
 		const isValid = await form.trigger(fieldsToCheck);
 		if (!isValid) {
-			form.clearErrors();
+			form.clearErrors(fieldsToCheck);
 			await nav({
 				to: "/questionnaire",
 				search: { step: 1 },
@@ -263,7 +293,7 @@ function Questionnaire() {
 	}, [step]);
 
 	return (
-		<main className="mx-auto w-full pt-4 md:p-6 max-w-2xl space-y-6 min-h-[80vh] flex flex-col justify-center">
+		<main className="mx-auto w-full pt-4 md:p-6 max-w-4xl space-y-6 min-h-[80vh] flex flex-col justify-center">
 			<h2 className="text-xl md:text-2xl font-semibold">
 				{m.questionnaire_title()}
 			</h2>
@@ -302,15 +332,16 @@ function Questionnaire() {
 									</CardTitle>
 								</CardHeader>
 								<CardContent className="space-y-6 md:space-y-5 md:px-6 px-4">
-									{trustItems.map((item, index) => (
+									{trustItems.map((item) => (
 										<LikertScale
 											key={item.name}
 											name={item.name}
 											control={form.control}
-											options={likert7Options}
 											rowLabel={item.label}
 											required
-											showHeader={index === 0}
+											leftLabel={LIKERT_LEFT}
+											centerLabel={LIKERT_CENTER}
+											rightLabel={LIKERT_RIGHT}
 										/>
 									))}
 								</CardContent>
@@ -329,15 +360,15 @@ function Questionnaire() {
 									<div className="mb-4 p-3 bg-muted/50 rounded-lg text-sm leading-relaxed">
 										{m.ueq_instruction()}
 									</div>
-									<div className="space-y-8 md:space-y-7">
+									<div className="space-y-1">
 										{ueqItems.map((item) => (
-											<LikertScale
+											<SemanticDifferential
 												key={item.name}
 												name={item.name}
 												control={form.control}
-												options={getUeqOptions(item.min, item.max)}
+												minLabel={item.min}
+												maxLabel={item.max}
 												required
-												showHeader
 											/>
 										))}
 									</div>
@@ -357,17 +388,20 @@ function Questionnaire() {
 									<LikertScale
 										name="understanding_q1"
 										control={form.control}
-										options={likert7Options}
 										rowLabel={m.understanding_q1()}
 										required
-										showHeader
+										leftLabel={LIKERT_LEFT}
+										centerLabel={LIKERT_CENTER}
+										rightLabel={LIKERT_RIGHT}
 									/>
 									<LikertScale
 										name="understanding_q2"
 										control={form.control}
-										options={likert7Options}
 										rowLabel={m.understanding_q2()}
 										required
+										leftLabel={LIKERT_LEFT}
+										centerLabel={LIKERT_CENTER}
+										rightLabel={LIKERT_RIGHT}
 									/>
 									<MultipleChoiceQuestion
 										name="understanding_q3"
@@ -433,31 +467,240 @@ function Questionnaire() {
 									<LikertScale
 										name="intention_q1"
 										control={form.control}
-										options={likert7Options}
 										rowLabel={m.intention_q1()}
 										required
-										showHeader
+										leftLabel={LIKERT_LEFT}
+										centerLabel={LIKERT_CENTER}
+										rightLabel={LIKERT_RIGHT}
 									/>
 									<LikertScale
 										name="intention_q2"
 										control={form.control}
-										options={likert7Options}
 										rowLabel={m.intention_q2()}
 										required
+										leftLabel={LIKERT_LEFT}
+										centerLabel={LIKERT_CENTER}
+										rightLabel={LIKERT_RIGHT}
 									/>
 									<LikertScale
 										name="intention_q3"
 										control={form.control}
-										options={likert7Options}
 										rowLabel={m.intention_q3()}
 										required
+										leftLabel={LIKERT_LEFT}
+										centerLabel={LIKERT_CENTER}
+										rightLabel={LIKERT_RIGHT}
 									/>
 								</CardContent>
 							</Card>
 						)}
 
-						{/* STEP 5: FEEDBACK */}
+						{/* STEP 5: DEMOGRAPHICS */}
 						{step === 5 && (
+							<Card>
+								<CardHeader className="md:px-6 px-4">
+									<CardTitle className="text-lg md:text-xl">
+										{m.questionnaire_section_demographics()}
+									</CardTitle>
+								</CardHeader>
+								<CardContent className="space-y-8 md:px-6 px-4">
+									<div className="flex flex-col md:flex-row gap-8">
+										<div className="space-y-3">
+											<Label htmlFor="age" className="text-base font-medium">
+												{m.demographics_age()}
+											</Label>
+
+											<Controller
+												control={form.control}
+												name="age"
+												render={({ field, fieldState }) => (
+													<>
+														<div className="flex items-center gap-2">
+															<Input
+																{...field}
+																id="age"
+																type="number"
+																value={field.value ?? ""}
+																onChange={(e) => {
+																	const val = e.target.value;
+																	field.onChange(
+																		val === "" ? undefined : Number(val),
+																	);
+																}}
+																className={cn(
+																	"w-24 text-lg",
+																	fieldState.error &&
+																		"border-destructive focus-visible:ring-destructive",
+																)}
+															/>
+														</div>
+														{fieldState.error && (
+															<div className="mt-3 flex items-center justify-start gap-2 text-xs text-destructive font-medium animate-in fade-in-0 slide-in-from-top-1">
+																<TriangleAlert className="h-4 w-4" />
+																<span>{fieldState.error.message}</span>
+															</div>
+														)}
+													</>
+												)}
+											/>
+										</div>
+
+										<div className="space-y-3">
+											<Label className="text-base font-medium">
+												{m.demographics_gender()}
+											</Label>
+											<Controller
+												control={form.control}
+												name="gender"
+												render={({ field, fieldState }) => (
+													<>
+														<RadioGroup
+															onValueChange={field.onChange}
+															defaultValue={field.value}
+															className="flex gap-4 md:gap-6 flex-wrap"
+														>
+															<div className="flex items-center space-x-2">
+																<RadioGroupItem
+																	value="male"
+																	id="g_male"
+																	className={cn(
+																		"h-6 w-6 md:h-7 md:w-7 border-muted-foreground/30 text-primary data-[state=checked]:border-primary data-[state=checked]:bg-primary/10 transition-all z-10",
+																		fieldState.error && "border-destructive",
+																	)}
+																/>
+																<Label
+																	htmlFor="g_male"
+																	className={cn(
+																		"font-normal cursor-pointer",
+																		fieldState.error && "text-destructive",
+																	)}
+																>
+																	{m.demographics_gender_male()}
+																</Label>
+															</div>
+															<div className="flex items-center space-x-2">
+																<RadioGroupItem
+																	value="female"
+																	id="g_fem"
+																	className={cn(
+																		"h-6 w-6 md:h-7 md:w-7 border-muted-foreground/30 text-primary data-[state=checked]:border-primary data-[state=checked]:bg-primary/10 transition-all z-10",
+																		fieldState.error && "border-destructive",
+																	)}
+																/>
+																<Label
+																	htmlFor="g_fem"
+																	className={cn(
+																		"font-normal cursor-pointer",
+																		fieldState.error && "text-destructive",
+																	)}
+																>
+																	{m.demographics_gender_female()}
+																</Label>
+															</div>
+															<div className="flex items-center space-x-2">
+																<RadioGroupItem
+																	value="diverse"
+																	id="g_div"
+																	className={cn(
+																		"h-6 w-6 md:h-7 md:w-7 border-muted-foreground/30 text-primary data-[state=checked]:border-primary data-[state=checked]:bg-primary/10 transition-all z-10",
+																		fieldState.error && "border-destructive",
+																	)}
+																/>
+																<Label
+																	htmlFor="g_div"
+																	className={cn(
+																		"font-normal cursor-pointer",
+																		fieldState.error && "text-destructive",
+																	)}
+																>
+																	{m.demographics_gender_diverse()}
+																</Label>
+															</div>
+														</RadioGroup>
+														{fieldState.error && (
+															<div className="mt-3 flex items-center justify-center gap-2 text-xs text-destructive font-medium animate-in fade-in-0 slide-in-from-top-1">
+																<TriangleAlert className="h-4 w-4" />
+																<span>{m.common_required_error()}</span>
+															</div>
+														)}
+													</>
+												)}
+											/>
+										</div>
+									</div>
+
+									<Separator className="bg-border/60" />
+
+									{/* OCCUPATION ROLE (Student vs Entrepreneur) */}
+									<MultipleChoiceQuestion
+										name="occupation_role"
+										control={form.control}
+										question={m.demographics_occupation_question()}
+										required
+										options={[
+											{
+												value: "student",
+												label: m.demographics_occupation_student(),
+											},
+											{
+												value: "employee_no_lead",
+												label: m.demographics_occupation_employee(),
+											},
+											{
+												value: "employee_lead",
+												label: m.demographics_occupation_manager(),
+											},
+											{
+												value: "entrepreneur",
+												label: m.demographics_occupation_entrepreneur(),
+											},
+										]}
+									/>
+
+									{/* DOMAIN (Business vs STEM) */}
+									<MultipleChoiceQuestion
+										name="domain_background"
+										control={form.control}
+										question={m.demographics_domain_question()}
+										required
+										options={[
+											{
+												value: "business",
+												label: m.demographics_domain_business(),
+											},
+											{ value: "stem", label: m.demographics_domain_stem() }, // MINT
+											{ value: "other", label: m.demographics_domain_other() },
+										]}
+									/>
+
+									{/* INVESTMENT EXPERIENCE (Critical!) */}
+									<MultipleChoiceQuestion
+										name="investment_experience"
+										control={form.control}
+										question={m.demographics_investexp_question()}
+										required
+										options={[
+											{ value: "none", label: m.demographics_investexp_none() },
+											{
+												value: "theoretical",
+												label: m.demographics_investexp_theory(),
+											},
+											{
+												value: "practical_basic",
+												label: m.demographics_investexp_basic(),
+											},
+											{
+												value: "practical_professional",
+												label: m.demographics_investexp_pro(),
+											},
+										]}
+									/>
+								</CardContent>
+							</Card>
+						)}
+
+						{/* STEP 6: FEEDBACK */}
+						{step === 6 && (
 							<Card>
 								<CardHeader className="md:px-6 px-4">
 									<CardTitle className="text-lg md:text-xl">

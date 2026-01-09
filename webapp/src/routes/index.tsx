@@ -233,7 +233,7 @@ function Consent() {
 				<Button
 					size="lg"
 					onClick={handleStart}
-					disabled={isLoading || !selection}
+					disabled={isLoading || selection !== "yes"}
 					className="w-full sm:w-auto h-12 shadow-md sm:shadow-none"
 				>
 					{isLoading ? (
