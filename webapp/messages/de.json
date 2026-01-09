@@ -198,7 +198,7 @@
 	"understanding_q3_option3": "Windkraftanlage, Biomasseheizung & Solarthermie",
 	"understanding_q3_option4": "Ich weiß es nicht",
 
-	"understanding_q4": "Wie verändern sich die jährlichen Gesamtkosten durch die Maßnahmen ca.?",
+	"understanding_q4": "Wie verändern sich die jährlichen Gesamtkosten durch die Maßnahmen?",
 	"understanding_q4_option1": "Sie sinken um ca. 30%, was eine Einsparung von ca. 61.000 € pro Jahr bedeutet",
 	"understanding_q4_option2": "Sie sinken um ca. 60%, was eine Einsparung von ca. 114k€ pro Jahr bedeutet",
 	"understanding_q4_option3": "Sie bleiben gleich, bei voller CO2-Neutralität",
@@ -208,6 +208,34 @@
 	"intention_q1": "Ich beabsichtige, die vom System empfohlenen Energiemaßnahmen tatsächlich umzusetzen.",
 	"intention_q2": "Ich würde mich bei Investitionsentscheidungen auf die Analyse dieses Systems verlassen.",
 	"intention_q3": "Angenommen ich hätte Zugang zu diesem System, würde ich es für zukünftige Planungen nutzen.",
+
+	"questionnaire_section_demographics": "Angaben zur Person",
+	"demographics_age": "Alter",
+
+	"demographics_age_error_min": "Mindestens 18 Jahre",
+	"demographics_age_error_max": "Ungültiges Alter",
+
+	"demographics_gender": "Geschlecht",
+	"demographics_gender_male": "Männlich",
+	"demographics_gender_female": "Weiblich",
+	"demographics_gender_diverse": "Divers",
+
+	"demographics_occupation_question": "Welche Beschreibung trifft am besten auf Ihre aktuelle Tätigkeit zu?",
+	"demographics_occupation_student": "Studierend",
+	"demographics_occupation_employee": "Angestellt (ohne Personalverantwortung)",
+	"demographics_occupation_manager": "Führungskraft / Management",
+	"demographics_occupation_entrepreneur": "Unternehmer / Inhaber / Selbstständig",
+
+	"demographics_domain_question": "In welchem Bereich sind Sie tätig (oder studieren)?",
+	"demographics_domain_business": "Wirtschaftswissenschaften / Management",
+	"demographics_domain_stem": "MINT (Mathematik, Informatik, Naturwiss., Technik)",
+	"demographics_domain_other": "Anderer Bereich",
+
+	"demographics_investexp_question": "Wie viel Erfahrung haben Sie mit unternehmerischen Investitionsentscheidungen?",
+	"demographics_investexp_none": "Keine Erfahrung",
+	"demographics_investexp_theory": "Theoretisches Wissen (z. B. aus dem Studium)",
+	"demographics_investexp_basic": "Erste praktische Erfahrung (z. B. Praktika, Assistenz)",
+	"demographics_investexp_pro": "Regelmäßige berufliche Erfahrung / Entscheidungsträger",
 
 	"questionnaire_section_feedback": "Anmerkungen",
 	"questionnaire_feedback_label": "Haben Sie noch Anmerkungen zur Studie oder zum System? (Optional)",

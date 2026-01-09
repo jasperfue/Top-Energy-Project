@@ -46,10 +46,7 @@ export function LikertScale<TFieldValues extends FieldValues>({
 		>
 			<div className="flex flex-col gap-3 md:grid md:grid-cols-[1fr_28rem] md:gap-8 md:items-center">
 				{rowLabel && (
-					<Label
-						htmlFor={name}
-						className="text-base font-medium leading-snug md:text-right"
-					>
+					<Label htmlFor={name} className="text-base font-medium leading-snug">
 						{rowLabel}
 					</Label>
 				)}
