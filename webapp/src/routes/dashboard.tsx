@@ -58,9 +58,9 @@ import {
 import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import * as m from "@/paraglide/messages";
 import { getLocale } from "@/paraglide/runtime";
-import { finishTask } from "@/routes/_pathlessLayout/chat.tsx";
+import { finishTask } from "@/routes/chat.tsx";
 
-export const Route = createFileRoute("/_pathlessLayout/dashboard")({
+export const Route = createFileRoute("/dashboard")({
 	component: Dashboard,
 });
 

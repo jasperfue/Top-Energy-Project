@@ -49,7 +49,7 @@ export const finishTask = createServerFn({ method: "POST" })
 			});
 	});
 
-export const Route = createFileRoute("/_pathlessLayout/chat")({
+export const Route = createFileRoute("/chat")({
 	component: Chat,
 });
 
