@@ -23,7 +23,9 @@ export default defineConfig({
 		tanstackStart({
 			prerender: {
 				enabled: true,
-				autoStaticPathsDiscovery: true,
+				filter: ({ path }) => {
+					return !path.startsWith("/scenario");
+				},
 				onSuccess: ({ page }) => {
 					console.log(`Prerendered ${page.path}`);
 				},
