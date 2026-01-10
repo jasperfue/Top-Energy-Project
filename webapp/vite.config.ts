@@ -20,7 +20,15 @@ export default defineConfig({
 	},
 	plugins: [
 		tsConfigPaths(),
-		tanstackStart(),
+		tanstackStart({
+			prerender: {
+				enabled: true,
+				autoStaticPathsDiscovery: true,
+				onSuccess: ({ page }) => {
+					console.log(`Prerendered ${page.path}`);
+				},
+			},
+		}),
 		viteReact({
 			babel: {
 				plugins: ["babel-plugin-react-compiler"],
