@@ -154,12 +154,19 @@
 	"questionnaire_intro": "<p>Thank you for completing the task.</p><p>Please answer the following questions <strong>honestly and spontaneously</strong>. Our goal is to improve the system, so critical feedback is highly appreciated.</p><p><strong>Note:</strong> There are no right or wrong answers regarding your personal impression. In the 'Comprehension' section, we are not testing your memory, but rather how well the system was able to convey the information.</p>",
 
 	"questionnaire_section_general": "General Assessment",
-	"trust_comp_q1": "The system is capable and proficient.",
-	"trust_comp_q2": "The system possesses the necessary expertise for this task.",
-	"trust_comp_q3": "I am confident in the system's analytical skills.",
+	"trust_comp_q1": "The system is competent and effective in providing energy analysis.",
+	"trust_comp_q2": "The system performs its role of analyzing energy data very well.",
+	"trust_comp_q3": "Overall, the system is a capable and proficient energy audit tool.",
+	"trust_comp_q4": "The system displays a high level of expertise regarding energy efficiency.",
+
 	"trust_ben_q1": "I believe that the system acts in my best interest.",
-	"trust_ben_q2": "The system does its best to help me find a solution.",
-	"trust_ben_q3": "The system prioritizes my goals in its analysis.",
+	"trust_ben_q2": "If I required assistance, the system would do its best to help me improve my energy efficiency.",
+	"trust_ben_q3": "The system prioritizes my energy saving goals in its analysis.",
+
+	"trust_int_q1": "The system is truthful in its presentation of the energy data.",
+	"trust_int_q2": "I would characterize the system's analysis as honest.",
+	"trust_int_q3": "The system provides reliable and sincere information.",
+	"trust_int_q4": "The system appears sincere and genuine in its recommendations.",
 
 	"questionnaire_section_impression": "Your Impression",
 	"ueq_instruction": "Please assess the system using the following pairs of contrasting attributes.",
