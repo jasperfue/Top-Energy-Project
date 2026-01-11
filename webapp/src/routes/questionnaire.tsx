@@ -43,11 +43,16 @@ export const Route = createFileRoute("/questionnaire")({
 
 const trustAnswers = z.object({
 	trust_comp_1: Likert7,
-	trust_ben_1: Likert7,
 	trust_comp_2: Likert7,
-	trust_ben_2: Likert7,
 	trust_comp_3: Likert7,
+	trust_comp_4: Likert7,
+	trust_ben_1: Likert7,
+	trust_ben_2: Likert7,
 	trust_ben_3: Likert7,
+	trust_int_1: Likert7,
+	trust_int_2: Likert7,
+	trust_int_3: Likert7,
+	trust_int_4: Likert7,
 });
 
 const understandingAnswers = z.object({
@@ -162,6 +167,11 @@ function Questionnaire() {
 			trust_ben_2: undefined,
 			trust_comp_3: undefined,
 			trust_ben_3: undefined,
+			trust_comp_4: undefined,
+			trust_int_1: undefined,
+			trust_int_2: undefined,
+			trust_int_3: undefined,
+			trust_int_4: undefined,
 			understanding_q1: undefined,
 			understanding_q2: undefined,
 			understanding_q3: undefined,
@@ -255,10 +265,18 @@ function Questionnaire() {
 	const trustItems = [
 		{ name: "trust_comp_1", label: m.trust_comp_q1() },
 		{ name: "trust_ben_1", label: m.trust_ben_q1() },
+		{ name: "trust_int_1", label: m.trust_int_q1() },
+
 		{ name: "trust_comp_2", label: m.trust_comp_q2() },
 		{ name: "trust_ben_2", label: m.trust_ben_q2() },
+		{ name: "trust_int_2", label: m.trust_int_q2() },
+
 		{ name: "trust_comp_3", label: m.trust_comp_q3() },
 		{ name: "trust_ben_3", label: m.trust_ben_q3() },
+		{ name: "trust_int_3", label: m.trust_int_q3() },
+
+		{ name: "trust_comp_4", label: m.trust_comp_q4() },
+		{ name: "trust_int_4", label: m.trust_int_q4() },
 	] as const;
 
 	const ueqItems = [
