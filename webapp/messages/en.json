@@ -211,6 +211,7 @@
 	"understanding_q4_option4": "I don't know",
 
 	"questionnaire_section_intention": "Final Assessment",
+	"intention_disclaimer": "⚠️ <strong>Please consider before answering:</strong><br>Put yourself in the role of the CEO who is personally liable for the company's success. The total investment is <strong>€498,524</strong>. A wrong decision could endanger the company's liquidity. Please answer as realistically as if it were <strong>your own capital</strong> at risk.",
 	"intention_q1": "I intend to implement the energy measures recommended by the system.",
 	"intention_q2": "I would base my investment decisions on this system's analysis.",
 	"intention_q3": "Assuming I had access to this system, I would use it for future planning.",

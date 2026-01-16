@@ -211,6 +211,7 @@
 	"understanding_q4_option4": "Ich weiß es nicht",
 
 	"questionnaire_section_intention": "Abschlussbewertung",
+	"intention_disclaimer": "⚠️ <strong>Bitte beachten Sie vor Ihrer Antwort:</strong><br>Versetzen Sie sich in die Rolle des Geschäftsführers, der persönlich für den Erfolg haftet. Die Investitionssumme beträgt <strong>498.524 €</strong>. Eine Fehlentscheidung könnte die Liquidität des Unternehmens gefährden. Bitte antworten Sie so realistisch, als wäre es <strong>Ihr eigenes Kapital</strong>.",
 	"intention_q1": "Ich beabsichtige, die vom System empfohlenen Energiemaßnahmen tatsächlich umzusetzen.",
 	"intention_q2": "Ich würde meine Investitionsentscheidungen auf die Analyse dieses Systems stützen.",
 	"intention_q3": "Angenommen ich hätte Zugang zu diesem System, würde ich es für zukünftige Planungen nutzen.",

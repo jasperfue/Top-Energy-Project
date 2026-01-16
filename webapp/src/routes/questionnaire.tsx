@@ -482,6 +482,16 @@ function Questionnaire() {
 									</CardTitle>
 								</CardHeader>
 								<CardContent className="space-y-6 md:space-y-5 md:px-6 px-4">
+									{/* --- NEUER DISCLAIMER START --- */}
+									<div
+										className="rounded-md bg-muted/60 p-4 text-sm text-foreground border border-border"
+										// biome-ignore lint/security/noDangerouslySetInnerHtml: Trusted content
+										dangerouslySetInnerHTML={{
+											__html: m.intention_disclaimer(),
+										}}
+									/>
+									{/* --- NEUER DISCLAIMER ENDE --- */}
+
 									<LikertScale
 										name="intention_q1"
 										control={form.control}
