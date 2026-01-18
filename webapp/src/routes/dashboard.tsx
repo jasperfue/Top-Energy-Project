@@ -623,8 +623,9 @@ function Dashboard() {
 											}}
 										/>
 										<RechartsTooltip
-											content={<CustomBalanceTooltip />} // fmt weitergeben falls nötig
+											content={<CustomBalanceTooltip />}
 											cursor={{ fill: "rgba(0,0,0,0.05)" }}
+											wrapperStyle={{ zIndex: 100 }}
 										/>
 
 										<Legend content={<CustomGroupedLegend />} />
@@ -1142,7 +1143,7 @@ const CustomBalanceTooltip = ({
 	);
 
 	return (
-		<div className="bg-popover border text-popover-foreground shadow-md rounded-lg p-3 text-sm min-w-[220px] z-50">
+		<div className="bg-popover border text-popover-foreground shadow-md rounded-lg p-3 text-sm min-w-[220px]">
 			<p className="font-semibold mb-2 border-b pb-1">{label}</p>
 
 			{/* Section 1: Herkunft */}
