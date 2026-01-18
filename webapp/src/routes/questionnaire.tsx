@@ -667,10 +667,6 @@ function Questionnaire() {
 										required
 										options={[
 											{
-												value: "student",
-												label: m.demographics_occupation_student(),
-											},
-											{
 												value: "employee_no_lead",
 												label: m.demographics_occupation_employee(),
 											},
@@ -681,6 +677,10 @@ function Questionnaire() {
 											{
 												value: "entrepreneur",
 												label: m.demographics_occupation_entrepreneur(),
+											},
+											{
+												value: "student",
+												label: m.demographics_occupation_student(),
 											},
 										]}
 									/>
@@ -708,19 +708,19 @@ function Questionnaire() {
 										question={m.demographics_investexp_question()}
 										required
 										options={[
-											{ value: "none", label: m.demographics_investexp_none() },
 											{
-												value: "theoretical",
-												label: m.demographics_investexp_theory(),
+												value: "practical_professional",
+												label: m.demographics_investexp_pro(),
 											},
 											{
 												value: "practical_basic",
 												label: m.demographics_investexp_basic(),
 											},
 											{
-												value: "practical_professional",
-												label: m.demographics_investexp_pro(),
+												value: "theoretical",
+												label: m.demographics_investexp_theory(),
 											},
+											{ value: "none", label: m.demographics_investexp_none() },
 										]}
 									/>
 								</CardContent>
