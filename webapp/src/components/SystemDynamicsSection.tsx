@@ -358,7 +358,7 @@ const getMonthName = (
 	type: "short" | "long",
 	currentLocale: ReturnType<typeof getLocale>,
 ) => {
-	return new Date(2025, index, 1).toLocaleString(currentLocale, {
+	return new Date(2025, index - 1, 1).toLocaleString(currentLocale, {
 		month: type,
 	});
 };
