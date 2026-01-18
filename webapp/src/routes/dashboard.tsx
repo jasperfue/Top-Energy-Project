@@ -445,6 +445,7 @@ function Dashboard() {
 											tickLine={false}
 											axisLine={false}
 											unit=" kWh"
+											domain={[0, 120000]}
 											// Nutzung der lokalen Formatierung für die Achsenbeschriftung
 											tickFormatter={(v) => {
 												const val = v >= 1000 ? v / 1000 : v;
