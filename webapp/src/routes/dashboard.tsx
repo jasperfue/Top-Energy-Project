@@ -15,6 +15,7 @@ import {
 	Area,
 	Bar,
 	BarChart,
+	BarStack,
 	CartesianGrid,
 	Cell,
 	ComposedChart,
@@ -84,6 +85,7 @@ interface MonthlyDataPoint {
 	load_base: number; // Produktionsanlagen
 	load_hp: number; // Wärmepumpe (Winter peak)
 	load_cooling: number; // Kühltürme (Summer peak)
+	surplus?: number;
 }
 
 const RAW_DATA = {
@@ -96,8 +98,16 @@ const RAW_DATA = {
 	selfUse: 38.6,
 };
 
+const calcSurplus = (data: MonthlyDataPoint) => {
+	const input = data.pv + data.grid;
+	const output = data.load_base + data.load_hp + data.load_cooling;
+	const diff = input - output;
+	// If diff is positive, it's feed-in/storage. If negative (shouldn't happen in balance), it's 0.
+	return diff > 0 ? diff : 0;
+};
+
 // IMPORTANT: Values here must be in kWh (Sum of kW values divided by 4)
-const MONTHLY_DATA: MonthlyDataPoint[] = [
+const MONTHLY_SOLL_RAW: MonthlyDataPoint[] = [
 	{
 		name: "Jan",
 		pv: 20728.51,
@@ -196,6 +206,19 @@ const MONTHLY_DATA: MonthlyDataPoint[] = [
 	},
 ];
 
+const MONTHLY_SOLL = MONTHLY_SOLL_RAW.map((d) => ({
+	...d,
+	surplus: calcSurplus(d),
+}));
+
+const MONTHLY_IST: MonthlyDataPoint[] = MONTHLY_SOLL.map((d) => ({
+	...d,
+	pv: 0, // Keine PV
+	load_hp: 0, // Keine WP
+	grid: d.load_base + d.load_cooling, // Alles kommt aus dem Netz
+	surplus: 0,
+}));
+
 // IMPORTANT: Values here are in kW (Power) and % (SoC)
 const DAILY_SUMMER: DailyDataPoint[] = [
 	{ time: "00:00", pv: 0, load: 14.0, grid: 0, soc: 81.6, bat_kwh: 262.2 },
@@ -219,12 +242,17 @@ function Dashboard() {
 	const nav = useNavigate();
 	const [isFinishing, setIsFinishing] = useState(false);
 	const [viewMode, setViewMode] = useState<"summer" | "winter">("summer");
+	const [seasonalViewMode, setSeasonalViewMode] = useState<"ist" | "soll">(
+		"soll",
+	);
 	usePreloadRoute("/questionnaire");
 
 	const currentLocale = getLocale();
 	const fmt = (num: number) => num.toLocaleString(currentLocale);
 
 	const currentDailyData = viewMode === "summer" ? DAILY_SUMMER : DAILY_WINTER;
+	const currentMonthlyData =
+		seasonalViewMode === "ist" ? MONTHLY_IST : MONTHLY_SOLL;
 
 	const handleFinish = async () => {
 		if (isFinishing) return;
@@ -362,23 +390,43 @@ function Dashboard() {
 						</section>
 					</TooltipProvider>
 
-					{/* 2. SECTION: SYSTEM DYNAMICS (NEW - EXCEL DATA) */}
+					{/* 2. SECTION: SYSTEM DYNAMICS */}
 					<section className="grid gap-4 md:grid-cols-7">
-						{/* GRAPH 1: SEASONAL BALANCE (Stacked) */}
+						{/* GRAPH 1: SEASONAL BALANCE (Fully Stacked Comparison) */}
 						<Card className="md:col-span-4 shadow-sm">
-							<CardHeader className="pb-2">
-								<CardTitle className="text-lg">
-									Saisonale Energiebilanz
-								</CardTitle>
-								<CardDescription className="text-xs md:text-sm">
-									Zusammensetzung von Verbrauch (gestapelt) vs. PV & Netz
-								</CardDescription>
+							<CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
+								<div className="space-y-1">
+									<CardTitle className="text-lg">
+										Saisonale Energiebilanz
+									</CardTitle>
+									<CardDescription className="text-xs md:text-sm">
+										Deckung (links) vs. Nutzung (rechts) im Monatsvergleich
+									</CardDescription>
+								</div>
+								<div className="flex bg-muted rounded-lg p-1 shrink-0">
+									<button
+										type="button"
+										onClick={() => setSeasonalViewMode("ist")}
+										className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${seasonalViewMode === "ist" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+									>
+										{m.dashboard_status_ist()}
+									</button>
+									<button
+										type="button"
+										onClick={() => setSeasonalViewMode("soll")}
+										className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${seasonalViewMode === "soll" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+									>
+										{m.dashboard_status_soll()}
+									</button>
+								</div>
 							</CardHeader>
 							<CardContent className="h-[300px] md:h-[350px]">
 								<ResponsiveContainer width="100%" height="100%">
 									<BarChart
-										data={MONTHLY_DATA}
+										data={currentMonthlyData}
 										margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
+										barGap={2}
+										barCategoryGap="20%"
 									>
 										<CartesianGrid
 											strokeDasharray="3 3"
@@ -403,52 +451,43 @@ function Dashboard() {
 											width={35}
 										/>
 										<RechartsTooltip
+											content={<CustomBalanceTooltip />}
 											cursor={{ fill: "rgba(0,0,0,0.05)" }}
-											contentStyle={{
-												borderRadius: "8px",
-												border: "none",
-												boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-											}}
 										/>
 										<Legend
 											wrapperStyle={{ paddingTop: "20px", fontSize: "12px" }}
 										/>
 
-										{/* STACKED CONSUMPTION BARS */}
-										<Bar
-											dataKey="load_base"
-											stackId="consumption"
-											name="Basis-Last"
-											fill="#94a3b8"
-										/>
-										<Bar
-											dataKey="load_hp"
-											stackId="consumption"
-											name="Wärmepumpe"
-											fill="#f97316"
-											radius={[4, 4, 0, 0]}
-										/>
-										<Bar
-											dataKey="load_cooling"
-											stackId="consumption"
-											name="Kälte"
-											fill="#3b82f6"
-											radius={[4, 4, 0, 0]}
-										/>
-
-										{/* SEPARATE SUPPLY BARS */}
+										{/* LINKS: HERKUNFT (Stacked Supply) */}
 										<Bar
 											dataKey="pv"
+											stackId="supply"
 											name="PV-Erzeugung"
 											fill="#16a34a"
-											radius={[4, 4, 0, 0]}
 										/>
 										<Bar
 											dataKey="grid"
+											stackId="supply"
 											name="Netzbezug"
 											fill="#ef4444"
 											radius={[4, 4, 0, 0]}
 										/>
+
+										{/* RECHTS: VERWENDUNG (Stacked Consumption) */}
+										<BarStack radius={[4, 4, 0, 0]} stackId="consumption">
+											<Bar
+												dataKey="load_base"
+												name="Basis-Last"
+												fill="#94a3b8"
+											/>
+											<Bar dataKey="load_hp" name="Wärmepumpe" fill="#f97316" />
+											<Bar dataKey="load_cooling" name="Kälte" fill="#3b82f6" />
+											<Bar
+												dataKey="surplus"
+												name="Einspeisung / Speicher"
+												fill="#cbd5e1"
+											/>
+										</BarStack>
 									</BarChart>
 								</ResponsiveContainer>
 							</CardContent>
@@ -778,6 +817,92 @@ function Dashboard() {
 }
 
 // --- SUB-COMPONENTS ---
+const CustomBalanceTooltip = ({
+	active,
+	payload,
+	label,
+}: CustomTooltipProps) => {
+	const currentLocale = getLocale();
+	if (!active || !payload || !payload.length) return null;
+
+	// Separate Supply (Herkunft) vs Usage (Verwendung)
+	const supplyKeys = ["pv", "grid"];
+	const usageKeys = ["load_base", "load_hp", "load_cooling", "surplus"];
+
+	const supplyItems = payload.filter((p) => supplyKeys.includes(p.dataKey));
+	const usageItems = payload.filter((p) => usageKeys.includes(p.dataKey));
+
+	// Sort logic (optional): ensure consistent order
+	supplyItems.sort((a) => (a.dataKey === "pv" ? -1 : 1));
+
+	return (
+		<div className="bg-popover border text-popover-foreground shadow-md rounded-lg p-3 text-sm min-w-[220px] z-50">
+			<p className="font-semibold mb-2 border-b pb-1">{label}</p>
+
+			{/* Section 1: Herkunft */}
+			<div className="mb-3">
+				<p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+					Herkunft
+				</p>
+				<div className="space-y-1">
+					{supplyItems.map((entry) => (
+						<div
+							key={entry.name}
+							className="flex items-center justify-between gap-4"
+						>
+							<div className="flex items-center gap-2">
+								<div
+									className="w-2 h-2 rounded-full"
+									style={{ backgroundColor: entry.color }}
+								/>
+								<span className="text-muted-foreground text-xs">
+									{entry.name}
+								</span>
+							</div>
+							<span className="font-mono font-medium">
+								{entry.value?.toLocaleString(currentLocale, {
+									maximumFractionDigits: 0,
+								})}{" "}
+								kWh
+							</span>
+						</div>
+					))}
+				</div>
+			</div>
+
+			{/* Section 2: Verwendung */}
+			<div>
+				<p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+					Verwendung
+				</p>
+				<div className="space-y-1">
+					{usageItems.map((entry) => (
+						<div
+							key={entry.name}
+							className="flex items-center justify-between gap-4"
+						>
+							<div className="flex items-center gap-2">
+								<div
+									className="w-2 h-2 rounded-full"
+									style={{ backgroundColor: entry.color }}
+								/>
+								<span className="text-muted-foreground text-xs">
+									{entry.name}
+								</span>
+							</div>
+							<span className="font-mono font-medium">
+								{entry.value?.toLocaleString(currentLocale, {
+									maximumFractionDigits: 0,
+								})}{" "}
+								kWh
+							</span>
+						</div>
+					))}
+				</div>
+			</div>
+		</div>
+	);
+};
 
 interface CustomTooltipProps {
 	active?: boolean;
