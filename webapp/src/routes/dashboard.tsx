@@ -615,58 +615,56 @@ function Dashboard() {
 											axisLine={false}
 											unit=" kWh"
 											domain={[0, 120000]}
-											// Nutzung der lokalen Formatierung für die Achsenbeschriftung
+											width={40}
 											tickFormatter={(v) => {
-												const val = v >= 1000 ? v / 1000 : v;
-												const suffix = v >= 1000 ? "k" : "";
-												return `${val.toLocaleString(currentLocale)}${suffix}`;
+												// Formatierung: 1000 -> 1k (Lokalisiert)
+												if (v >= 1000) return `${fmt(v / 1000)}k`;
+												return fmt(v);
 											}}
-											width={35}
 										/>
 										<RechartsTooltip
-											content={<CustomBalanceTooltip />}
+											content={<CustomBalanceTooltip />} // fmt weitergeben falls nötig
 											cursor={{ fill: "rgba(0,0,0,0.05)" }}
 										/>
 
-										{/* Neue gruppierte Legende */}
 										<Legend content={<CustomGroupedLegend />} />
 
-										{/* LINKS: HERKUNFT (Stacked Supply) */}
+										{/* LINKS: HERKUNFT */}
 										<BarStack radius={[4, 4, 0, 0]} stackId="supply">
 											<Bar
 												dataKey="pv"
 												name={m.dashboard_legend_pv_generation()}
-												fill="#16a34a"
+												fill="#16a34a" // Grün
 											/>
 											<Bar
 												dataKey="grid"
 												name={m.dashboard_legend_grid()}
-												fill="#ef4444"
+												fill="#ef4444" // Rot
 											/>
 										</BarStack>
 
-										{/* RECHTS: VERWENDUNG (Stacked Consumption) */}
+										{/* RECHTS: VERWENDUNG */}
 										<BarStack radius={[4, 4, 0, 0]} stackId="consumption">
 											<Bar
 												dataKey="load_base"
 												name={m.dashboard_legend_load_base()}
-												fill="#94a3b8"
+												fill="#94a3b8" // Grau
 											/>
 											<Bar
 												dataKey="load_hp"
 												name={m.dashboard_legend_load_hp()}
-												fill="#f97316"
+												fill="#f97316" // Orange
 											/>
 											<Bar
 												dataKey="load_cooling"
 												name={m.dashboard_legend_load_cooling()}
-												fill="#3b82f6"
+												fill="#3b82f6" // Blau
 											/>
-											{/* Neue Farbe (Emerald-400) und neues Label (Einspeisung) */}
+											{/* Konsistente Farbe: Lila für Einspeisung (wie in Graph 2) */}
 											<Bar
 												dataKey="surplus"
 												name={m.dashboard_legend_feedin()}
-												fill="#34d399"
+												fill="#8b5cf6"
 											/>
 										</BarStack>
 									</BarChart>
@@ -678,9 +676,14 @@ function Dashboard() {
 						<Card className="md:col-span-3 shadow-sm">
 							<CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
 								<div className="space-y-1">
-									<CardTitle className="text-lg">System-Verhalten</CardTitle>
+									<CardTitle className="text-lg">
+										{m.dashboard_chart_daily_title()}
+									</CardTitle>
+									{/* Dynamische Beschreibung basierend auf Jahreszeit */}
 									<CardDescription className="text-xs md:text-sm hidden md:block">
-										Exemplarischer Tagesverlauf
+										{viewMode === "summer"
+											? m.dashboard_chart_daily_desc_summer()
+											: m.dashboard_chart_daily_desc_winter()}
 									</CardDescription>
 								</div>
 								<div className="flex bg-muted rounded-lg p-1 shrink-0">
@@ -689,14 +692,14 @@ function Dashboard() {
 										onClick={() => setViewMode("summer")}
 										className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${viewMode === "summer" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
 									>
-										Sommer
+										{m.dashboard_season_summer()}
 									</button>
 									<button
 										type="button"
 										onClick={() => setViewMode("winter")}
 										className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${viewMode === "winter" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
 									>
-										Winter
+										{m.dashboard_season_winter()}
 									</button>
 								</div>
 							</CardHeader>
@@ -706,32 +709,35 @@ function Dashboard() {
 										data={currentDailyData}
 										margin={{ top: 20, right: 0, left: -20, bottom: 5 }}
 									>
+										{/* Gitter etwas dunkler (Slate-400 opacity) für bessere Sichtbarkeit */}
 										<CartesianGrid
 											strokeDasharray="3 3"
 											vertical={false}
-											stroke="#e5e7eb"
+											stroke="#94a3b8"
+											strokeOpacity={0.4}
 										/>
 										<XAxis
 											dataKey="time"
 											fontSize={12}
 											tickLine={false}
 											axisLine={false}
-											interval={2}
+											interval={3}
 											dy={10}
 										/>
 
-										{/* Linke Y-Achse: Leistung (kW) */}
+										{/* Linke Y-Achse (kW) */}
 										<YAxis
 											yAxisId="left"
 											fontSize={11}
 											tickLine={false}
 											axisLine={false}
-											tickCount={6}
 											domain={[0, 500]}
+											ticks={[0, 100, 200, 300, 400, 500]}
 											unit=" kW"
 											width={45}
+											tickFormatter={(val) => fmt(val)}
 										/>
-										{/* Rechte Y-Achse: Batterie (%) */}
+										{/* Rechte Y-Achse (%) */}
 										<YAxis
 											yAxisId="right"
 											orientation="right"
@@ -739,8 +745,10 @@ function Dashboard() {
 											fontSize={11}
 											tickLine={false}
 											axisLine={false}
+											ticks={[0, 25, 50, 75, 100]}
 											unit=" %"
 											width={35}
+											tickFormatter={(val) => fmt(val)}
 										/>
 
 										<RechartsTooltip content={<CustomInterplayTooltip />} />
@@ -750,60 +758,60 @@ function Dashboard() {
 											iconType="circle"
 										/>
 
-										{/* 1. NETZBEZUG (Rot): Ganz unten im Hintergrund, wenn aktiv */}
+										{/* 1. NETZBEZUG (Rot) - Konsistent mit Graph 1 */}
 										<Area
 											yAxisId="left"
 											type="step"
 											dataKey="grid"
-											name="Netzbezug"
-											fill="#fecaca" // Helles Rot
-											stroke="#ef4444" // Dunkles Rot
+											name={m.dashboard_legend_grid()}
+											fill="#fecaca"
+											stroke="#ef4444"
 											fillOpacity={0.6}
 											strokeWidth={1}
 										/>
 
-										{/* 2. PV-Erzeugung (Grün): Hauptfläche */}
+										{/* 2. PV (Grün) - Konsistent mit Graph 1 */}
 										<Area
 											yAxisId="left"
 											type="monotone"
 											dataKey="pv"
-											name="PV-Erzeugung"
+											name={m.dashboard_legend_pv_generation()}
 											fill="url(#colorPv)"
 											stroke="#16a34a"
 											strokeWidth={2}
 											fillOpacity={0.4}
 										/>
 
-										{/* 3. EINSPEISUNG (Lila): Liegt visuell über PV oder Last */}
+										{/* 3. EINSPEISUNG (Lila) - Konsistent mit Graph 1 */}
 										<Area
 											yAxisId="left"
 											type="monotone"
 											dataKey="feedin"
-											name="Einspeisung"
-											fill="#d8b4fe" // Helles Lila
-											stroke="#8b5cf6" // Dunkles Lila
+											name={m.dashboard_legend_feedin()}
+											fill="#d8b4fe"
+											stroke="#8b5cf6"
 											fillOpacity={0.6}
 											strokeWidth={1}
 										/>
 
-										{/* 4. VERBRAUCH (Blau): Die harte Grenze */}
+										{/* 4. VERBRAUCH (Dunkelblau) */}
 										<Line
 											yAxisId="left"
 											type="monotone"
 											dataKey="total_load"
-											name="Gesamtverbrauch"
-											stroke="#1e40af" // Dunkelblau
+											name={m.dashboard_legend_total_load()}
+											stroke="#1e40af"
 											strokeWidth={2}
 											dot={false}
 											activeDot={{ r: 6 }}
 										/>
 
-										{/* 5. SPEICHER (Gelb): Rechte Achse */}
+										{/* 5. SPEICHER (Gelb) */}
 										<Line
 											yAxisId="right"
 											type="monotone"
 											dataKey="soc"
-											name="Speicher %"
+											name={m.dashboard_legend_battery_soc()}
 											stroke="#f59e0b"
 											strokeWidth={3}
 											dot={false}
@@ -1031,7 +1039,7 @@ const CustomGroupedLegend = (props: any) => {
 	const { payload } = props;
 	if (!payload) return null;
 
-	// Definition der Gruppen anhand der dataKeys
+	// 1. Gruppen definieren
 	const supplyKeys = ["pv", "grid"];
 	const usageKeys = ["load_base", "load_hp", "load_cooling", "surplus"];
 
@@ -1043,44 +1051,60 @@ const CustomGroupedLegend = (props: any) => {
 	);
 
 	return (
-		<div className="flex flex-wrap justify-center gap-x-8 gap-y-2 pt-6 text-xs">
-			{/* Gruppe Supply */}
-			<div className="flex items-center gap-3">
+		// CONTAINER: Mobil 1 Spalte (untereinander), ab Tablet (md) 2 Spalten
+		<div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6 text-xs w-full">
+			{/* GRUPPE 1: SUPPLY (HERKUNFT) */}
+			<div className="flex flex-col gap-1.5">
+				{/* Gruppen-Titel */}
 				<span className="font-semibold text-muted-foreground uppercase tracking-wider text-[10px]">
-					{m.dashboard_tooltip_supply()}:
+					{m.dashboard_tooltip_supply()}
 				</span>
-				{supplyItems.map((entry: any, index: number) => (
-					<div key={`item-${index}`} className="flex items-center gap-1.5">
-						<div
-							className="w-2.5 h-2.5 rounded-[2px]"
-							style={{ backgroundColor: entry.color }}
-						/>
-						<span style={{ color: entry.color }}>{entry.value}</span>
-					</div>
-				))}
+				{/* Items-Wrapper: Erlaubt Umbruch (wrap) innerhalb der Gruppe */}
+				<div className="flex flex-wrap gap-x-4 gap-y-2">
+					{supplyItems.map((entry: any, index: number) => (
+						<div key={`supply-${index}`} className="flex items-center gap-1.5">
+							<div
+								className="w-2.5 h-2.5 rounded-full shrink-0"
+								style={{ backgroundColor: entry.color }}
+							/>
+							<span
+								className="whitespace-nowrap"
+								style={{ color: entry.color }}
+							>
+								{entry.value}
+							</span>
+						</div>
+					))}
+				</div>
 			</div>
 
-			{/* Separator für visuelle Trennung */}
-			<div className="w-px h-4 bg-border hidden sm:block" />
-
-			{/* Gruppe Consumption */}
-			<div className="flex items-center gap-3">
+			{/* GRUPPE 2: CONSUMPTION (VERWENDUNG) */}
+			{/* Auf Desktop rechtsbündig ausgerichtet für schöne Symmetrie, mobil links */}
+			<div className="flex flex-col gap-1.5 md:items-end">
 				<span className="font-semibold text-muted-foreground uppercase tracking-wider text-[10px]">
-					{m.dashboard_tooltip_usage()}:
+					{m.dashboard_tooltip_usage()}
 				</span>
-				{usageItems.map((entry: any, index: number) => (
-					<div key={`item-${index}`} className="flex items-center gap-1.5">
-						<div
-							className="w-2.5 h-2.5 rounded-[2px]"
-							style={{ backgroundColor: entry.color }}
-						/>
-						<span style={{ color: entry.color }}>{entry.value}</span>
-					</div>
-				))}
+				<div className="flex flex-wrap gap-x-4 gap-y-2 md:justify-end">
+					{usageItems.map((entry: any, index: number) => (
+						<div key={`usage-${index}`} className="flex items-center gap-1.5">
+							<div
+								className="w-2.5 h-2.5 rounded-full shrink-0"
+								style={{ backgroundColor: entry.color }}
+							/>
+							<span
+								className="whitespace-nowrap"
+								style={{ color: entry.color }}
+							>
+								{entry.value}
+							</span>
+						</div>
+					))}
+				</div>
 			</div>
 		</div>
 	);
 };
+
 const CustomBalanceTooltip = ({
 	active,
 	payload,
@@ -1097,7 +1121,6 @@ const CustomBalanceTooltip = ({
 
 	supplyItems.sort((a) => (a.dataKey === "pv" ? -1 : 1));
 
-	// Einheitliche Formatierungs-Funktion für Tooltips
 	const fmtTooltip = (val: number) =>
 		val.toLocaleString(currentLocale, {
 			maximumFractionDigits: 0,
@@ -1107,7 +1130,7 @@ const CustomBalanceTooltip = ({
 		<div className="flex items-center justify-between gap-4">
 			<div className="flex items-center gap-2">
 				<div
-					className="w-2 h-2 rounded-full"
+					className="w-3 h-3 rounded-full"
 					style={{ backgroundColor: entry.color }}
 				/>
 				<span className="text-muted-foreground text-xs">{entry.name}</span>
@@ -1160,11 +1183,13 @@ const CustomInterplayTooltip = ({
 	payload,
 	label,
 }: CustomTooltipProps) => {
+	const currentLocale = getLocale();
+
 	if (active && payload && payload.length) {
 		return (
 			<div className="bg-popover border text-popover-foreground shadow-md rounded-lg p-3 text-sm z-50">
 				<p className="font-semibold mb-2 text-xs text-muted-foreground">
-					{label} Uhr
+					{label}
 				</p>
 				{payload.map((entry: any) => {
 					return (
@@ -1180,7 +1205,8 @@ const CustomInterplayTooltip = ({
 								{entry.name}:
 							</span>
 							<span className="font-mono font-medium">
-								{entry.value} {entry.dataKey === "soc" ? "%" : "kW"}
+								{entry.value?.toLocaleString(currentLocale)}{" "}
+								{entry.dataKey === "soc" ? "%" : "kW"}
 							</span>
 						</div>
 					);

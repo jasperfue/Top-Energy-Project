@@ -109,6 +109,15 @@
 	"dashboard_tooltip_usage": "Consumption",
 	"dashboard_tooltip_composition": "Composition",
 	"dashboard_tooltip_total": "Total:",
+
+	"dashboard_chart_daily_title": "Daily Dynamics",
+	"dashboard_chart_daily_desc_summer": "Simulated profile of a summer day (July)",
+	"dashboard_chart_daily_desc_winter": "Simulated profile of a winter day (December)",
+	"dashboard_season_summer": "Summer",
+	"dashboard_season_winter": "Winter",
+	"dashboard_legend_total_load": "Total Load",
+	"dashboard_legend_battery_soc": "Battery Level",
+
 	"dashboard_chart_cost_title": "Annual Cost Comparison",
 	"dashboard_chart_cost_desc": "Total OpEx Status Quo vs. Target State",
 	"dashboard_status_ist": "Status Quo",
