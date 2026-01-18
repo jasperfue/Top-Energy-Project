@@ -397,10 +397,10 @@ function Dashboard() {
 							<CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
 								<div className="space-y-1">
 									<CardTitle className="text-lg">
-										Saisonale Energiebilanz
+										{m.dashboard_chart_seasonal_title()}
 									</CardTitle>
 									<CardDescription className="text-xs md:text-sm">
-										Deckung (links) vs. Nutzung (rechts) im Monatsvergleich
+										{m.dashboard_chart_seasonal_desc()}
 									</CardDescription>
 								</div>
 								<div className="flex bg-muted rounded-lg p-1 shrink-0">
@@ -445,30 +445,33 @@ function Dashboard() {
 											tickLine={false}
 											axisLine={false}
 											unit=" kWh"
-											tickFormatter={(v) =>
-												v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v.toString()
-											}
+											// Nutzung der lokalen Formatierung für die Achsenbeschriftung
+											tickFormatter={(v) => {
+												const val = v >= 1000 ? v / 1000 : v;
+												const suffix = v >= 1000 ? "k" : "";
+												return `${val.toLocaleString(currentLocale)}${suffix}`;
+											}}
 											width={35}
 										/>
 										<RechartsTooltip
 											content={<CustomBalanceTooltip />}
 											cursor={{ fill: "rgba(0,0,0,0.05)" }}
 										/>
-										<Legend
-											wrapperStyle={{ paddingTop: "20px", fontSize: "12px" }}
-										/>
+
+										{/* Neue gruppierte Legende */}
+										<Legend content={<CustomGroupedLegend />} />
 
 										{/* LINKS: HERKUNFT (Stacked Supply) */}
 										<Bar
 											dataKey="pv"
 											stackId="supply"
-											name="PV-Erzeugung"
+											name={m.dashboard_legend_pv_generation()}
 											fill="#16a34a"
 										/>
 										<Bar
 											dataKey="grid"
 											stackId="supply"
-											name="Netzbezug"
+											name={m.dashboard_legend_grid()}
 											fill="#ef4444"
 											radius={[4, 4, 0, 0]}
 										/>
@@ -477,15 +480,24 @@ function Dashboard() {
 										<BarStack radius={[4, 4, 0, 0]} stackId="consumption">
 											<Bar
 												dataKey="load_base"
-												name="Basis-Last"
+												name={m.dashboard_legend_load_base()}
 												fill="#94a3b8"
 											/>
-											<Bar dataKey="load_hp" name="Wärmepumpe" fill="#f97316" />
-											<Bar dataKey="load_cooling" name="Kälte" fill="#3b82f6" />
+											<Bar
+												dataKey="load_hp"
+												name={m.dashboard_legend_load_hp()}
+												fill="#f97316"
+											/>
+											<Bar
+												dataKey="load_cooling"
+												name={m.dashboard_legend_load_cooling()}
+												fill="#3b82f6"
+											/>
+											{/* Neue Farbe (Emerald-400) und neues Label (Einspeisung) */}
 											<Bar
 												dataKey="surplus"
-												name="Einspeisung / Speicher"
-												fill="#cbd5e1"
+												name={m.dashboard_legend_feedin()}
+												fill="#34d399"
 											/>
 										</BarStack>
 									</BarChart>
@@ -817,6 +829,61 @@ function Dashboard() {
 }
 
 // --- SUB-COMPONENTS ---
+
+const CustomGroupedLegend = (props: any) => {
+	const { payload } = props;
+	if (!payload) return null;
+
+	// Definition der Gruppen anhand der dataKeys
+	const supplyKeys = ["pv", "grid"];
+	const usageKeys = ["load_base", "load_hp", "load_cooling", "surplus"];
+
+	const supplyItems = payload.filter((entry: any) =>
+		supplyKeys.includes(entry.dataKey),
+	);
+	const usageItems = payload.filter((entry: any) =>
+		usageKeys.includes(entry.dataKey),
+	);
+
+	return (
+		<div className="flex flex-wrap justify-center gap-x-8 gap-y-2 pt-6 text-xs">
+			{/* Gruppe Supply */}
+			<div className="flex items-center gap-3">
+				<span className="font-semibold text-muted-foreground uppercase tracking-wider text-[10px]">
+					{m.dashboard_tooltip_supply()}:
+				</span>
+				{supplyItems.map((entry: any, index: number) => (
+					<div key={`item-${index}`} className="flex items-center gap-1.5">
+						<div
+							className="w-2.5 h-2.5 rounded-[2px]"
+							style={{ backgroundColor: entry.color }}
+						/>
+						<span style={{ color: entry.color }}>{entry.value}</span>
+					</div>
+				))}
+			</div>
+
+			{/* Separator für visuelle Trennung */}
+			<div className="w-px h-4 bg-border hidden sm:block" />
+
+			{/* Gruppe Consumption */}
+			<div className="flex items-center gap-3">
+				<span className="font-semibold text-muted-foreground uppercase tracking-wider text-[10px]">
+					{m.dashboard_tooltip_usage()}:
+				</span>
+				{usageItems.map((entry: any, index: number) => (
+					<div key={`item-${index}`} className="flex items-center gap-1.5">
+						<div
+							className="w-2.5 h-2.5 rounded-[2px]"
+							style={{ backgroundColor: entry.color }}
+						/>
+						<span style={{ color: entry.color }}>{entry.value}</span>
+					</div>
+				))}
+			</div>
+		</div>
+	);
+};
 const CustomBalanceTooltip = ({
 	active,
 	payload,
@@ -825,15 +892,34 @@ const CustomBalanceTooltip = ({
 	const currentLocale = getLocale();
 	if (!active || !payload || !payload.length) return null;
 
-	// Separate Supply (Herkunft) vs Usage (Verwendung)
 	const supplyKeys = ["pv", "grid"];
 	const usageKeys = ["load_base", "load_hp", "load_cooling", "surplus"];
 
 	const supplyItems = payload.filter((p) => supplyKeys.includes(p.dataKey));
 	const usageItems = payload.filter((p) => usageKeys.includes(p.dataKey));
 
-	// Sort logic (optional): ensure consistent order
 	supplyItems.sort((a) => (a.dataKey === "pv" ? -1 : 1));
+
+	// Einheitliche Formatierungs-Funktion für Tooltips
+	const fmtTooltip = (val: number) =>
+		val.toLocaleString(currentLocale, {
+			maximumFractionDigits: 0,
+		});
+
+	const RowItem = ({ entry }: { entry: any }) => (
+		<div className="flex items-center justify-between gap-4">
+			<div className="flex items-center gap-2">
+				<div
+					className="w-2 h-2 rounded-full"
+					style={{ backgroundColor: entry.color }}
+				/>
+				<span className="text-muted-foreground text-xs">{entry.name}</span>
+			</div>
+			<span className="font-mono font-medium">
+				{fmtTooltip(entry.value)} kWh
+			</span>
+		</div>
+	);
 
 	return (
 		<div className="bg-popover border text-popover-foreground shadow-md rounded-lg p-3 text-sm min-w-[220px] z-50">
@@ -842,30 +928,11 @@ const CustomBalanceTooltip = ({
 			{/* Section 1: Herkunft */}
 			<div className="mb-3">
 				<p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-					Herkunft
+					{m.dashboard_tooltip_supply()}
 				</p>
 				<div className="space-y-1">
 					{supplyItems.map((entry) => (
-						<div
-							key={entry.name}
-							className="flex items-center justify-between gap-4"
-						>
-							<div className="flex items-center gap-2">
-								<div
-									className="w-2 h-2 rounded-full"
-									style={{ backgroundColor: entry.color }}
-								/>
-								<span className="text-muted-foreground text-xs">
-									{entry.name}
-								</span>
-							</div>
-							<span className="font-mono font-medium">
-								{entry.value?.toLocaleString(currentLocale, {
-									maximumFractionDigits: 0,
-								})}{" "}
-								kWh
-							</span>
-						</div>
+						<RowItem key={entry.name} entry={entry} />
 					))}
 				</div>
 			</div>
@@ -873,30 +940,11 @@ const CustomBalanceTooltip = ({
 			{/* Section 2: Verwendung */}
 			<div>
 				<p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-					Verwendung
+					{m.dashboard_tooltip_usage()}
 				</p>
 				<div className="space-y-1">
 					{usageItems.map((entry) => (
-						<div
-							key={entry.name}
-							className="flex items-center justify-between gap-4"
-						>
-							<div className="flex items-center gap-2">
-								<div
-									className="w-2 h-2 rounded-full"
-									style={{ backgroundColor: entry.color }}
-								/>
-								<span className="text-muted-foreground text-xs">
-									{entry.name}
-								</span>
-							</div>
-							<span className="font-mono font-medium">
-								{entry.value?.toLocaleString(currentLocale, {
-									maximumFractionDigits: 0,
-								})}{" "}
-								kWh
-							</span>
-						</div>
+						<RowItem key={entry.name} entry={entry} />
 					))}
 				</div>
 			</div>
