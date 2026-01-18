@@ -12,11 +12,14 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import {
+	Area,
 	Bar,
 	BarChart,
 	CartesianGrid,
 	Cell,
+	ComposedChart,
 	Legend,
+	Line,
 	Pie,
 	PieChart,
 	Tooltip as RechartsTooltip,
@@ -64,6 +67,25 @@ export const Route = createFileRoute("/dashboard")({
 	component: Dashboard,
 });
 
+interface DailyDataPoint {
+	time: string;
+	pv: number;
+	load: number;
+	grid: number;
+	soc: number;
+	bat_kwh: number;
+}
+
+interface MonthlyDataPoint {
+	name: string;
+	pv: number;
+	grid: number;
+	// Split consumption into components for better explanation
+	load_base: number; // Produktionsanlagen
+	load_hp: number; // Wärmepumpe (Winter peak)
+	load_cooling: number; // Kühltürme (Summer peak)
+}
+
 const RAW_DATA = {
 	invest: 498524,
 	savingsYearly: 114540.77,
@@ -74,13 +96,135 @@ const RAW_DATA = {
 	selfUse: 38.6,
 };
 
+// IMPORTANT: Values here must be in kWh (Sum of kW values divided by 4)
+const MONTHLY_DATA: MonthlyDataPoint[] = [
+	{
+		name: "Jan",
+		pv: 20728.51,
+		grid: 31122.27,
+		load_base: 39843.3,
+		load_hp: 4995.33,
+		load_cooling: 0,
+	},
+	{
+		name: "Feb",
+		pv: 27587.04,
+		grid: 22824.5,
+		load_base: 39843.3,
+		load_hp: 4343.72,
+		load_cooling: 0,
+	},
+	{
+		name: "Mär",
+		pv: 44613.19,
+		grid: 19647.85,
+		load_base: 39843.3,
+		load_hp: 3798.18,
+		load_cooling: 0,
+	},
+	{
+		name: "Apr",
+		pv: 64210.25,
+		grid: 6707.45,
+		load_base: 39843.3,
+		load_hp: 2253.19,
+		load_cooling: 0,
+	},
+	{
+		name: "Mai",
+		pv: 100459.56,
+		grid: 1320.19,
+		load_base: 39843.3,
+		load_hp: 131.97,
+		load_cooling: 6153.65,
+	},
+	{
+		name: "Jun",
+		pv: 92661.37,
+		grid: 1274.86,
+		load_base: 39843.3,
+		load_hp: 0,
+		load_cooling: 8817.33,
+	},
+	{
+		name: "Jul",
+		pv: 89349.26,
+		grid: 3349.3,
+		load_base: 39843.3,
+		load_hp: 0,
+		load_cooling: 20998.44,
+	},
+	{
+		name: "Aug",
+		pv: 90251.85,
+		grid: 4429.6,
+		load_base: 39843.3,
+		load_hp: 0,
+		load_cooling: 22470.24,
+	},
+	{
+		name: "Sep",
+		pv: 74863.66,
+		grid: 1313.76,
+		load_base: 39843.3,
+		load_hp: 0,
+		load_cooling: 3427.24,
+	},
+	{
+		name: "Okt",
+		pv: 46348.47,
+		grid: 10855.12,
+		load_base: 39843.3,
+		load_hp: 1168.35,
+		load_cooling: 0,
+	},
+	{
+		name: "Nov",
+		pv: 23375.57,
+		grid: 24891.3,
+		load_base: 39843.3,
+		load_hp: 3587.7,
+		load_cooling: 0,
+	},
+	{
+		name: "Dez",
+		pv: 14611.72,
+		grid: 29566.95,
+		load_base: 39843.3,
+		load_hp: 5365.08,
+		load_cooling: 0,
+	},
+];
+
+// IMPORTANT: Values here are in kW (Power) and % (SoC)
+const DAILY_SUMMER: DailyDataPoint[] = [
+	{ time: "00:00", pv: 0, load: 14.0, grid: 0, soc: 81.6, bat_kwh: 262.2 },
+	{ time: "04:00", pv: 0, load: 14.0, grid: 0, soc: 57.8, bat_kwh: 185.9 },
+	{ time: "08:00", pv: 78.8, load: 14.0, grid: 0, soc: 2.7, bat_kwh: 8.8 },
+	{ time: "12:00", pv: 286.2, load: 14.0, grid: 0, soc: 60.5, bat_kwh: 194.5 },
+	{ time: "16:00", pv: 193.9, load: 11.2, grid: 0, soc: 98.0, bat_kwh: 315.0 },
+	{ time: "20:00", pv: 17.8, load: 11.2, grid: 0, soc: 90.0, bat_kwh: 289.0 },
+];
+
+const DAILY_WINTER: DailyDataPoint[] = [
+	{ time: "00:00", pv: 0, load: 30.8, grid: 30.8, soc: 0, bat_kwh: 0 },
+	{ time: "04:00", pv: 0, load: 30.8, grid: 30.8, soc: 0, bat_kwh: 0 },
+	{ time: "08:00", pv: 1.8, load: 36.4, grid: 34.6, soc: 0, bat_kwh: 0 },
+	{ time: "12:00", pv: 17.8, load: 28.0, grid: 10.2, soc: 0, bat_kwh: 0 },
+	{ time: "16:00", pv: 0, load: 30.8, grid: 30.8, soc: 0, bat_kwh: 0 },
+	{ time: "20:00", pv: 0, load: 30.8, grid: 30.8, soc: 0, bat_kwh: 0 },
+];
+
 function Dashboard() {
 	const nav = useNavigate();
 	const [isFinishing, setIsFinishing] = useState(false);
+	const [viewMode, setViewMode] = useState<"summer" | "winter">("summer");
 	usePreloadRoute("/questionnaire");
 
 	const currentLocale = getLocale();
 	const fmt = (num: number) => num.toLocaleString(currentLocale);
+
+	const currentDailyData = viewMode === "summer" ? DAILY_SUMMER : DAILY_WINTER;
 
 	const handleFinish = async () => {
 		if (isFinishing) return;
@@ -218,9 +362,228 @@ function Dashboard() {
 						</section>
 					</TooltipProvider>
 
-					{/* 2. SECTION: VISUALIZATION & CHARTS */}
+					{/* 2. SECTION: SYSTEM DYNAMICS (NEW - EXCEL DATA) */}
 					<section className="grid gap-4 md:grid-cols-7">
-						{/* KOSTENVERGLEICH */}
+						{/* GRAPH 1: SEASONAL BALANCE (Stacked) */}
+						<Card className="md:col-span-4 shadow-sm">
+							<CardHeader className="pb-2">
+								<CardTitle className="text-lg">
+									Saisonale Energiebilanz
+								</CardTitle>
+								<CardDescription className="text-xs md:text-sm">
+									Zusammensetzung von Verbrauch (gestapelt) vs. PV & Netz
+								</CardDescription>
+							</CardHeader>
+							<CardContent className="h-[300px] md:h-[350px]">
+								<ResponsiveContainer width="100%" height="100%">
+									<BarChart
+										data={MONTHLY_DATA}
+										margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
+									>
+										<CartesianGrid
+											strokeDasharray="3 3"
+											vertical={false}
+											stroke="#e5e7eb"
+										/>
+										<XAxis
+											dataKey="name"
+											fontSize={12}
+											tickLine={false}
+											axisLine={false}
+											dy={10}
+										/>
+										<YAxis
+											fontSize={11}
+											tickLine={false}
+											axisLine={false}
+											unit=" kWh"
+											tickFormatter={(v) =>
+												v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v.toString()
+											}
+											width={35}
+										/>
+										<RechartsTooltip
+											cursor={{ fill: "rgba(0,0,0,0.05)" }}
+											contentStyle={{
+												borderRadius: "8px",
+												border: "none",
+												boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+											}}
+										/>
+										<Legend
+											wrapperStyle={{ paddingTop: "20px", fontSize: "12px" }}
+										/>
+
+										{/* STACKED CONSUMPTION BARS */}
+										<Bar
+											dataKey="load_base"
+											stackId="consumption"
+											name="Basis-Last"
+											fill="#94a3b8"
+										/>
+										<Bar
+											dataKey="load_hp"
+											stackId="consumption"
+											name="Wärmepumpe"
+											fill="#f97316"
+											radius={[4, 4, 0, 0]}
+										/>
+										<Bar
+											dataKey="load_cooling"
+											stackId="consumption"
+											name="Kälte"
+											fill="#3b82f6"
+											radius={[4, 4, 0, 0]}
+										/>
+
+										{/* SEPARATE SUPPLY BARS */}
+										<Bar
+											dataKey="pv"
+											name="PV-Erzeugung"
+											fill="#16a34a"
+											radius={[4, 4, 0, 0]}
+										/>
+										<Bar
+											dataKey="grid"
+											name="Netzbezug"
+											fill="#ef4444"
+											radius={[4, 4, 0, 0]}
+										/>
+									</BarChart>
+								</ResponsiveContainer>
+							</CardContent>
+						</Card>
+
+						{/* GRAPH 2: DAILY DYNAMICS */}
+						<Card className="md:col-span-3 shadow-sm">
+							<CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
+								<div className="space-y-1">
+									<CardTitle className="text-lg">System-Verhalten</CardTitle>
+									<CardDescription className="text-xs md:text-sm hidden md:block">
+										Exemplarischer Tagesverlauf
+									</CardDescription>
+								</div>
+								<div className="flex bg-muted rounded-lg p-1 shrink-0">
+									<button
+										type="button"
+										onClick={() => setViewMode("summer")}
+										className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${viewMode === "summer" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+									>
+										Sommer
+									</button>
+									<button
+										type="button"
+										onClick={() => setViewMode("winter")}
+										className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${viewMode === "winter" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+									>
+										Winter
+									</button>
+								</div>
+							</CardHeader>
+							<CardContent className="h-[300px] md:h-[350px] px-0 md:px-6">
+								<ResponsiveContainer width="100%" height="100%">
+									<ComposedChart
+										data={currentDailyData}
+										margin={{ top: 20, right: 0, left: -20, bottom: 5 }}
+									>
+										<CartesianGrid
+											strokeDasharray="3 3"
+											vertical={false}
+											stroke="#e5e7eb"
+										/>
+										<XAxis
+											dataKey="time"
+											fontSize={12}
+											tickLine={false}
+											axisLine={false}
+											interval={11}
+											dy={10}
+										/>
+
+										<YAxis
+											yAxisId="left"
+											fontSize={11}
+											tickLine={false}
+											axisLine={false}
+											unit=" kW"
+											width={45}
+										/>
+										<YAxis
+											yAxisId="right"
+											orientation="right"
+											domain={[0, 100]}
+											fontSize={11}
+											tickLine={false}
+											axisLine={false}
+											unit=" %"
+											width={35}
+										/>
+
+										<RechartsTooltip content={<CustomInterplayTooltip />} />
+										<Legend
+											wrapperStyle={{ paddingTop: "20px", fontSize: "12px" }}
+										/>
+
+										<Area
+											yAxisId="left"
+											type="monotone"
+											dataKey="pv"
+											name="PV"
+											fill="url(#colorPv)"
+											stroke="#16a34a"
+											fillOpacity={0.4}
+										/>
+										<Line
+											yAxisId="left"
+											type="step"
+											dataKey="load"
+											name="Last"
+											stroke="#94a3b8"
+											strokeWidth={2}
+											dot={false}
+										/>
+										<Line
+											yAxisId="left"
+											type="step"
+											dataKey="grid"
+											name="Netz"
+											stroke="#ef4444"
+											strokeWidth={2}
+											dot={false}
+											strokeDasharray="2 2"
+										/>
+										<Line
+											yAxisId="right"
+											type="monotone"
+											dataKey="soc"
+											name="Akku %"
+											stroke="#f59e0b"
+											strokeWidth={2}
+											dot={false}
+										/>
+
+										<defs>
+											<linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+												<stop
+													offset="5%"
+													stopColor="#16a34a"
+													stopOpacity={0.3}
+												/>
+												<stop
+													offset="95%"
+													stopColor="#16a34a"
+													stopOpacity={0}
+												/>
+											</linearGradient>
+										</defs>
+									</ComposedChart>
+								</ResponsiveContainer>
+							</CardContent>
+						</Card>
+					</section>
+
+					{/* 3. SECTION: COST & AUTARKY CHARTS */}
+					<section className="grid gap-4 md:grid-cols-7">
 						<Card className="md:col-span-4 shadow-sm">
 							<CardHeader className="pb-2">
 								<CardTitle className="text-lg">
@@ -243,7 +606,6 @@ function Dashboard() {
 											stroke="#e5e7eb"
 										/>
 										<ReferenceLine y={0} stroke="#64748b" strokeWidth={1} />
-
 										<XAxis
 											dataKey="name"
 											fontSize={12}
@@ -257,19 +619,16 @@ function Dashboard() {
 											tickLine={false}
 											axisLine={false}
 											tickFormatter={(value) => `${value / 1000}k`}
-											width={40} // Fixe Breite verhindert Springen
+											width={40}
 										/>
-
 										<RechartsTooltip
-											content={<CustomTooltip />}
+											content={<CustomCostTooltip />}
 											cursor={{ fill: "rgba(0,0,0,0.05)" }}
 											wrapperStyle={{ zIndex: 100 }}
 										/>
-
 										<Legend
 											wrapperStyle={{ paddingTop: "10px", fontSize: "12px" }}
 										/>
-
 										<Bar
 											dataKey="Strom"
 											stackId="a"
@@ -302,7 +661,6 @@ function Dashboard() {
 							</CardContent>
 						</Card>
 
-						{/* AUTARKIE */}
 						<Card className="md:col-span-3 shadow-sm">
 							<CardHeader className="pb-2">
 								<CardTitle className="text-lg">
@@ -340,7 +698,6 @@ function Dashboard() {
 										</span>
 									</div>
 								</div>
-
 								<div className="mt-4 w-full space-y-3 px-2">
 									<div className="flex justify-between text-sm items-center">
 										<span className="flex items-center gap-2">
@@ -367,7 +724,7 @@ function Dashboard() {
 						</Card>
 					</section>
 
-					{/* 3. SECTION: TECHNISCHE DETAILS */}
+					{/* 4. SECTION: TECH DETAILS */}
 					<div>
 						<h3 className="text-lg font-semibold mt-4 mb-4 px-1">
 							{m.dashboard_tech_section_title()}
@@ -385,7 +742,6 @@ function Dashboard() {
 								]}
 								description={m.dashboard_tech_pv_desc()}
 							/>
-
 							<TechCard
 								icon={Battery}
 								title={m.dashboard_tech_battery_title()}
@@ -400,7 +756,6 @@ function Dashboard() {
 								]}
 								description={m.dashboard_tech_battery_desc()}
 							/>
-
 							<TechCard
 								icon={ThermometerSun}
 								title={m.dashboard_tech_hp_title()}
@@ -423,6 +778,105 @@ function Dashboard() {
 }
 
 // --- SUB-COMPONENTS ---
+
+interface CustomTooltipProps {
+	active?: boolean;
+	payload?: any[];
+	label?: string;
+}
+
+const CustomInterplayTooltip = ({
+	active,
+	payload,
+	label,
+}: CustomTooltipProps) => {
+	if (active && payload && payload.length) {
+		return (
+			<div className="bg-popover border text-popover-foreground shadow-md rounded-lg p-3 text-sm z-50">
+				<p className="font-semibold mb-2 text-xs text-muted-foreground">
+					{label} Uhr
+				</p>
+				{payload.map((entry: any) => {
+					if (entry.dataKey === "soc") {
+						return (
+							<div
+								key={entry.name}
+								className="flex items-center justify-between gap-4 mb-1"
+							>
+								<span className="flex items-center gap-2 text-muted-foreground">
+									<div
+										className="w-2 h-2 rounded-full"
+										style={{ backgroundColor: entry.color }}
+									/>
+									Speicher:
+								</span>
+								<span className="font-mono font-medium">
+									{entry.payload.bat_kwh} kWh ({entry.value}%)
+								</span>
+							</div>
+						);
+					}
+					return (
+						<div
+							key={entry.name}
+							className="flex items-center justify-between gap-4 mb-1"
+						>
+							<span className="flex items-center gap-2 text-muted-foreground">
+								<div
+									className="w-2 h-2 rounded-full"
+									style={{ backgroundColor: entry.color }}
+								/>
+								{entry.name}:
+							</span>
+							<span className="font-mono font-medium">{entry.value} kW</span>
+						</div>
+					);
+				})}
+			</div>
+		);
+	}
+	return null;
+};
+
+const CustomCostTooltip = ({ active, payload, label }: CustomTooltipProps) => {
+	const currentLocale = getLocale();
+
+	if (active && payload && payload.length > 0) {
+		const data = payload[0].payload;
+		return (
+			<div className="bg-popover border text-popover-foreground shadow-md rounded-lg p-3 text-sm min-w-[180px] z-50">
+				<p className="font-semibold mb-2 border-b pb-1">{label}</p>
+				<div className="space-y-1">
+					{payload.map((entry) => (
+						<div
+							key={entry.name}
+							className="flex items-center justify-between gap-4"
+						>
+							<div className="flex items-center gap-2">
+								<div
+									className="w-2 h-2 rounded-full"
+									style={{ backgroundColor: entry.color }}
+								/>
+								<span className="text-muted-foreground">{entry.name}:</span>
+							</div>
+							<span className="font-mono font-medium">
+								{entry.value?.toLocaleString(currentLocale)} €
+							</span>
+						</div>
+					))}
+				</div>
+				<div className="my-2 h-[1px] bg-border" />
+				<div className="flex items-center justify-between gap-4 pt-1">
+					<span className="font-bold">{m.dashboard_tooltip_total()}</span>
+					<span className="font-mono font-bold text-primary">
+						{data.total.toLocaleString(currentLocale)} €
+					</span>
+				</div>
+			</div>
+		);
+	}
+	return null;
+};
 
 interface KpiCardProps {
 	title: string;
@@ -552,68 +1006,6 @@ function TechCard({ icon: Icon, title, specs, description }: TechCardProps) {
 		</Card>
 	);
 }
-
-interface CustomTooltipProps {
-	active?: boolean;
-	payload?: Array<{
-		value: number;
-		name: string;
-		color: string;
-		payload: {
-			name: string;
-			Strom: number;
-			Brennstoff: number;
-			Wartung: number;
-			Erlöse: number;
-			total: number;
-		};
-	}>;
-	label?: string;
-}
-
-const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
-	const currentLocale = getLocale();
-
-	if (active && payload && payload.length > 0) {
-		const data = payload[0].payload;
-
-		return (
-			<div className="bg-popover border text-popover-foreground shadow-md rounded-lg p-3 text-sm min-w-[180px] z-50">
-				<p className="font-semibold mb-2 border-b pb-1">{label}</p>
-
-				<div className="space-y-1">
-					{payload.map((entry) => (
-						<div
-							key={entry.name}
-							className="flex items-center justify-between gap-4"
-						>
-							<div className="flex items-center gap-2">
-								<div
-									className="w-2 h-2 rounded-full"
-									style={{ backgroundColor: entry.color }}
-								/>
-								<span className="text-muted-foreground">{entry.name}:</span>
-							</div>
-							<span className="font-mono font-medium">
-								{entry.value?.toLocaleString(currentLocale)} €
-							</span>
-						</div>
-					))}
-				</div>
-
-				<div className="my-2 h-[1px] bg-border" />
-
-				<div className="flex items-center justify-between gap-4 pt-1">
-					<span className="font-bold">{m.dashboard_tooltip_total()}</span>
-					<span className="font-mono font-bold text-primary">
-						{data.total.toLocaleString(currentLocale)} €
-					</span>
-				</div>
-			</div>
-		);
-	}
-	return null;
-};
 
 function AssumptionsSection() {
 	return (
