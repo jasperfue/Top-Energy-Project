@@ -69,7 +69,7 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 interface MonthlyDataPoint {
-	name: string;
+	monthIndex: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 	pv: number;
 	grid: number;
 	// Split consumption into components for better explanation
@@ -100,7 +100,7 @@ const calcSurplus = (data: MonthlyDataPoint) => {
 // IMPORTANT: Values here must be in kWh (Sum of kW values divided by 4)
 const MONTHLY_SOLL_RAW: MonthlyDataPoint[] = [
 	{
-		name: "Jan",
+		monthIndex: 1,
 		pv: 20728.51,
 		grid: 31122.27,
 		load_base: 39843.3,
@@ -108,7 +108,7 @@ const MONTHLY_SOLL_RAW: MonthlyDataPoint[] = [
 		load_cooling: 0,
 	},
 	{
-		name: "Feb",
+		monthIndex: 2,
 		pv: 27587.04,
 		grid: 22824.5,
 		load_base: 39843.3,
@@ -116,7 +116,7 @@ const MONTHLY_SOLL_RAW: MonthlyDataPoint[] = [
 		load_cooling: 0,
 	},
 	{
-		name: "Mär",
+		monthIndex: 3,
 		pv: 44613.19,
 		grid: 19647.85,
 		load_base: 39843.3,
@@ -124,7 +124,7 @@ const MONTHLY_SOLL_RAW: MonthlyDataPoint[] = [
 		load_cooling: 0,
 	},
 	{
-		name: "Apr",
+		monthIndex: 4,
 		pv: 64210.25,
 		grid: 6707.45,
 		load_base: 39843.3,
@@ -132,7 +132,7 @@ const MONTHLY_SOLL_RAW: MonthlyDataPoint[] = [
 		load_cooling: 0,
 	},
 	{
-		name: "Mai",
+		monthIndex: 5,
 		pv: 100459.56,
 		grid: 1320.19,
 		load_base: 39843.3,
@@ -140,7 +140,7 @@ const MONTHLY_SOLL_RAW: MonthlyDataPoint[] = [
 		load_cooling: 6153.65,
 	},
 	{
-		name: "Jun",
+		monthIndex: 6,
 		pv: 92661.37,
 		grid: 1274.86,
 		load_base: 39843.3,
@@ -148,7 +148,7 @@ const MONTHLY_SOLL_RAW: MonthlyDataPoint[] = [
 		load_cooling: 8817.33,
 	},
 	{
-		name: "Jul",
+		monthIndex: 7,
 		pv: 89349.26,
 		grid: 3349.3,
 		load_base: 39843.3,
@@ -156,7 +156,7 @@ const MONTHLY_SOLL_RAW: MonthlyDataPoint[] = [
 		load_cooling: 20998.44,
 	},
 	{
-		name: "Aug",
+		monthIndex: 8,
 		pv: 90251.85,
 		grid: 4429.6,
 		load_base: 39843.3,
@@ -164,7 +164,7 @@ const MONTHLY_SOLL_RAW: MonthlyDataPoint[] = [
 		load_cooling: 22470.24,
 	},
 	{
-		name: "Sep",
+		monthIndex: 9,
 		pv: 74863.66,
 		grid: 1313.76,
 		load_base: 39843.3,
@@ -172,7 +172,7 @@ const MONTHLY_SOLL_RAW: MonthlyDataPoint[] = [
 		load_cooling: 3427.24,
 	},
 	{
-		name: "Okt",
+		monthIndex: 10,
 		pv: 46348.47,
 		grid: 10855.12,
 		load_base: 39843.3,
@@ -180,7 +180,7 @@ const MONTHLY_SOLL_RAW: MonthlyDataPoint[] = [
 		load_cooling: 0,
 	},
 	{
-		name: "Nov",
+		monthIndex: 11,
 		pv: 23375.57,
 		grid: 24891.3,
 		load_base: 39843.3,
@@ -188,7 +188,7 @@ const MONTHLY_SOLL_RAW: MonthlyDataPoint[] = [
 		load_cooling: 0,
 	},
 	{
-		name: "Dez",
+		monthIndex: 12,
 		pv: 14611.72,
 		grid: 29566.95,
 		load_base: 39843.3,
@@ -407,6 +407,16 @@ const DAILY_WINTER: DailyDataPoint[] = [
 	{ time: "23:00", pv: 0, total_load: 32.3, grid: 32.3, feedin: 0, soc: 0 },
 ];
 
+const getMonthName = (
+	index: number,
+	type: "short" | "long",
+	currentLocale: ReturnType<typeof getLocale>,
+) => {
+	return new Date(2025, index, 1).toLocaleString(currentLocale, {
+		month: type,
+	});
+};
+
 function Dashboard() {
 	const nav = useNavigate();
 	const [isFinishing, setIsFinishing] = useState(false);
@@ -603,11 +613,14 @@ function Dashboard() {
 											stroke="#e5e7eb"
 										/>
 										<XAxis
-											dataKey="name"
+											dataKey="monthIndex"
 											fontSize={12}
 											tickLine={false}
 											axisLine={false}
 											dy={10}
+											tickFormatter={(val) =>
+												getMonthName(val, "short", currentLocale)
+											}
 										/>
 										<YAxis
 											fontSize={11}
@@ -1122,6 +1135,8 @@ const CustomBalanceTooltip = ({
 
 	supplyItems.sort((a) => (a.dataKey === "pv" ? -1 : 1));
 
+	const monthFullName = getMonthName(Number(label), "long", currentLocale);
+
 	const fmtTooltip = (val: number) =>
 		val.toLocaleString(currentLocale, {
 			maximumFractionDigits: 0,
@@ -1144,7 +1159,7 @@ const CustomBalanceTooltip = ({
 
 	return (
 		<div className="bg-popover border text-popover-foreground shadow-md rounded-lg p-3 text-sm min-w-[220px]">
-			<p className="font-semibold mb-2 border-b pb-1">{label}</p>
+			<p className="font-semibold mb-2 border-b pb-1">{monthFullName}</p>
 
 			{/* Section 1: Herkunft */}
 			<div className="mb-3">
