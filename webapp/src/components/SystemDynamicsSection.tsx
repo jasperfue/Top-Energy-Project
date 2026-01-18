@@ -376,122 +376,7 @@ export function SystemDynamicsSection() {
 		seasonalViewMode === "ist" ? MONTHLY_IST : MONTHLY_SOLL;
 	return (
 		<section className="grid gap-4 md:grid-cols-7">
-			{/* GRAPH 1: SEASONAL BALANCE (Fully Stacked Comparison) */}
-			<Card className="md:col-span-4 shadow-sm">
-				<CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
-					<div className="space-y-1">
-						<CardTitle className="text-lg">
-							{m.dashboard_chart_seasonal_title()}
-						</CardTitle>
-						<CardDescription className="text-xs md:text-sm">
-							{m.dashboard_chart_seasonal_desc()}
-						</CardDescription>
-					</div>
-					<div className="flex bg-muted rounded-lg p-1 shrink-0">
-						<button
-							type="button"
-							onClick={() => setSeasonalViewMode("ist")}
-							className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${seasonalViewMode === "ist" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-						>
-							{m.dashboard_status_ist()}
-						</button>
-						<button
-							type="button"
-							onClick={() => setSeasonalViewMode("soll")}
-							className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${seasonalViewMode === "soll" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-						>
-							{m.dashboard_status_soll()}
-						</button>
-					</div>
-				</CardHeader>
-				<CardContent className="h-[300px] md:h-[350px]">
-					<ResponsiveContainer width="100%" height="100%">
-						<BarChart
-							data={currentMonthlyData}
-							margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
-							barGap={2}
-							barCategoryGap="20%"
-						>
-							<CartesianGrid
-								strokeDasharray="3 3"
-								vertical={false}
-								stroke="#e5e7eb"
-							/>
-							<XAxis
-								dataKey="monthIndex"
-								fontSize={12}
-								tickLine={false}
-								axisLine={false}
-								dy={10}
-								tickFormatter={(val) =>
-									getMonthName(val, "short", currentLocale)
-								}
-							/>
-							<YAxis
-								fontSize={11}
-								tickLine={false}
-								axisLine={false}
-								unit=" kWh"
-								domain={[0, 120000]}
-								width={40}
-								tickFormatter={(v) => {
-									// Formatierung: 1000 -> 1k (Lokalisiert)
-									if (v >= 1000) return `${fmt(v / 1000, currentLocale)}k`;
-									return fmt(v, currentLocale);
-								}}
-							/>
-							<Tooltip
-								content={<CustomBalanceTooltip />}
-								cursor={{ fill: "rgba(0,0,0,0.05)" }}
-								wrapperStyle={{ zIndex: 100 }}
-							/>
-
-							<Legend content={<CustomGroupedLegend />} />
-
-							{/* LINKS: HERKUNFT */}
-							<BarStack radius={[4, 4, 0, 0]} stackId="supply">
-								<Bar
-									dataKey="pv"
-									name={m.dashboard_legend_pv_generation()}
-									fill="#16a34a" // Grün
-								/>
-								<Bar
-									dataKey="grid"
-									name={m.dashboard_legend_grid()}
-									fill="#ef4444" // Rot
-								/>
-							</BarStack>
-
-							{/* RECHTS: VERWENDUNG */}
-							<BarStack radius={[4, 4, 0, 0]} stackId="consumption">
-								<Bar
-									dataKey="load_base"
-									name={m.dashboard_legend_load_base()}
-									fill="#94a3b8" // Grau
-								/>
-								<Bar
-									dataKey="load_hp"
-									name={m.dashboard_legend_load_hp()}
-									fill="#f97316" // Orange
-								/>
-								<Bar
-									dataKey="load_cooling"
-									name={m.dashboard_legend_load_cooling()}
-									fill="#3b82f6" // Blau
-								/>
-								{/* Konsistente Farbe: Lila für Einspeisung (wie in Graph 2) */}
-								<Bar
-									dataKey="surplus"
-									name={m.dashboard_legend_feedin()}
-									fill="#8b5cf6"
-								/>
-							</BarStack>
-						</BarChart>
-					</ResponsiveContainer>
-				</CardContent>
-			</Card>
-
-			{/* GRAPH 2: DAILY DYNAMICS */}
+			{/* GRAPH 1: DAILY DYNAMICS */}
 			<Card className="md:col-span-3 shadow-sm">
 				<CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
 					<div className="space-y-1">
@@ -644,6 +529,120 @@ export function SystemDynamicsSection() {
 								</linearGradient>
 							</defs>
 						</ComposedChart>
+					</ResponsiveContainer>
+				</CardContent>
+			</Card>
+			{/* GRAPH 2: SEASONAL BALANCE (Fully Stacked Comparison) */}
+			<Card className="md:col-span-4 shadow-sm">
+				<CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
+					<div className="space-y-1">
+						<CardTitle className="text-lg">
+							{m.dashboard_chart_seasonal_title()}
+						</CardTitle>
+						<CardDescription className="text-xs md:text-sm">
+							{m.dashboard_chart_seasonal_desc()}
+						</CardDescription>
+					</div>
+					<div className="flex bg-muted rounded-lg p-1 shrink-0">
+						<button
+							type="button"
+							onClick={() => setSeasonalViewMode("ist")}
+							className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${seasonalViewMode === "ist" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+						>
+							{m.dashboard_status_ist()}
+						</button>
+						<button
+							type="button"
+							onClick={() => setSeasonalViewMode("soll")}
+							className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${seasonalViewMode === "soll" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+						>
+							{m.dashboard_status_soll()}
+						</button>
+					</div>
+				</CardHeader>
+				<CardContent className="h-[300px] md:h-[350px]">
+					<ResponsiveContainer width="100%" height="100%">
+						<BarChart
+							data={currentMonthlyData}
+							margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
+							barGap={2}
+							barCategoryGap="20%"
+						>
+							<CartesianGrid
+								strokeDasharray="3 3"
+								vertical={false}
+								stroke="#e5e7eb"
+							/>
+							<XAxis
+								dataKey="monthIndex"
+								fontSize={12}
+								tickLine={false}
+								axisLine={false}
+								dy={10}
+								tickFormatter={(val) =>
+									getMonthName(val, "short", currentLocale)
+								}
+							/>
+							<YAxis
+								fontSize={11}
+								tickLine={false}
+								axisLine={false}
+								unit=" kWh"
+								domain={[0, 120000]}
+								width={40}
+								tickFormatter={(v) => {
+									// Formatierung: 1000 -> 1k (Lokalisiert)
+									if (v >= 1000) return `${fmt(v / 1000, currentLocale)}k`;
+									return fmt(v, currentLocale);
+								}}
+							/>
+							<Tooltip
+								content={<CustomBalanceTooltip />}
+								cursor={{ fill: "rgba(0,0,0,0.05)" }}
+								wrapperStyle={{ zIndex: 100 }}
+							/>
+
+							<Legend content={<CustomGroupedLegend />} />
+
+							{/* LINKS: HERKUNFT */}
+							<BarStack radius={[4, 4, 0, 0]} stackId="supply">
+								<Bar
+									dataKey="pv"
+									name={m.dashboard_legend_pv_generation()}
+									fill="#16a34a" // Grün
+								/>
+								<Bar
+									dataKey="grid"
+									name={m.dashboard_legend_grid()}
+									fill="#ef4444" // Rot
+								/>
+							</BarStack>
+
+							{/* RECHTS: VERWENDUNG */}
+							<BarStack radius={[4, 4, 0, 0]} stackId="consumption">
+								<Bar
+									dataKey="load_base"
+									name={m.dashboard_legend_load_base()}
+									fill="#94a3b8" // Grau
+								/>
+								<Bar
+									dataKey="load_hp"
+									name={m.dashboard_legend_load_hp()}
+									fill="#f97316" // Orange
+								/>
+								<Bar
+									dataKey="load_cooling"
+									name={m.dashboard_legend_load_cooling()}
+									fill="#3b82f6" // Blau
+								/>
+								{/* Konsistente Farbe: Lila für Einspeisung (wie in Graph 2) */}
+								<Bar
+									dataKey="surplus"
+									name={m.dashboard_legend_feedin()}
+									fill="#8b5cf6"
+								/>
+							</BarStack>
+						</BarChart>
 					</ResponsiveContainer>
 				</CardContent>
 			</Card>

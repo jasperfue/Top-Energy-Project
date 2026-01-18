@@ -12,10 +12,11 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
+import type { CustomTooltipProps } from "@/components/SystemDynamicsSection.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import * as m from "@/paraglide/messages";
 import { getLocale } from "@/paraglide/runtime";
-import { type CustomTooltipProps, fmt } from "@/routes/dashboard.tsx";
+import { fmt } from "@/routes/dashboard.tsx";
 import {
 	Card,
 	CardContent,
@@ -70,67 +71,6 @@ export function CostAutarkySection() {
 	const currentLocale = getLocale();
 	return (
 		<section className="grid gap-4 md:grid-cols-7">
-			<Card className="md:col-span-3 shadow-sm">
-				<CardHeader className="pb-2">
-					<CardTitle className="text-lg">
-						{m.dashboard_chart_autarky_title()}
-					</CardTitle>
-					<CardDescription className="text-xs md:text-sm">
-						{m.dashboard_chart_autarky_desc()}
-					</CardDescription>
-				</CardHeader>
-				<CardContent className="flex flex-col items-center justify-center h-[280px] md:h-[300px]">
-					<div className="relative w-full h-[180px]">
-						<ResponsiveContainer width="100%" height="100%">
-							<PieChart>
-								<Pie
-									data={PIE_DATA_AUTARKIE}
-									cx="50%"
-									cy="50%"
-									innerRadius={60}
-									outerRadius={80}
-									paddingAngle={5}
-									dataKey="value"
-								>
-									{PIE_DATA_AUTARKIE.map((entry) => (
-										<Cell key={`cell-${entry.name}`} fill={entry.color} />
-									))}
-								</Pie>
-							</PieChart>
-						</ResponsiveContainer>
-						<div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-							<span className="text-3xl font-bold">
-								{fmt(RAW_DATA.autarky, currentLocale)}%
-							</span>
-							<span className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider">
-								{m.dashboard_label_autarky()}
-							</span>
-						</div>
-					</div>
-					<div className="mt-4 w-full space-y-3 px-2">
-						<div className="flex justify-between text-sm items-center">
-							<span className="flex items-center gap-2">
-								<div className="w-3 h-3 rounded-full bg-green-600 shrink-0" />
-								<span className="truncate">
-									{m.dashboard_label_own_generation()}
-								</span>
-							</span>
-							<span className="font-medium whitespace-nowrap">
-								{fmt(RAW_DATA.autarky, currentLocale)}%
-							</span>
-						</div>
-						<Separator />
-						<div className="flex justify-between text-sm items-center">
-							<span className="text-muted-foreground truncate pr-2">
-								{m.dashboard_label_self_consumption()}
-							</span>
-							<span className="font-medium whitespace-nowrap">
-								{fmt(RAW_DATA.selfUse, currentLocale)}%
-							</span>
-						</div>
-					</div>
-				</CardContent>
-			</Card>
 			<Card className="md:col-span-4 shadow-sm">
 				<CardHeader className="pb-2">
 					<CardTitle className="text-lg">
@@ -205,6 +145,67 @@ export function CostAutarkySection() {
 					</ResponsiveContainer>
 				</CardContent>
 			</Card>
+			<Card className="md:col-span-3 shadow-sm">
+				<CardHeader className="pb-2">
+					<CardTitle className="text-lg">
+						{m.dashboard_chart_autarky_title()}
+					</CardTitle>
+					<CardDescription className="text-xs md:text-sm">
+						{m.dashboard_chart_autarky_desc()}
+					</CardDescription>
+				</CardHeader>
+				<CardContent className="flex flex-col items-center justify-center h-[280px] md:h-[300px]">
+					<div className="relative w-full h-[180px]">
+						<ResponsiveContainer width="100%" height="100%">
+							<PieChart>
+								<Pie
+									data={PIE_DATA_AUTARKIE}
+									cx="50%"
+									cy="50%"
+									innerRadius={60}
+									outerRadius={80}
+									paddingAngle={5}
+									dataKey="value"
+								>
+									{PIE_DATA_AUTARKIE.map((entry) => (
+										<Cell key={`cell-${entry.name}`} fill={entry.color} />
+									))}
+								</Pie>
+							</PieChart>
+						</ResponsiveContainer>
+						<div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+							<span className="text-3xl font-bold">
+								{fmt(RAW_DATA.autarky, currentLocale)}%
+							</span>
+							<span className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider">
+								{m.dashboard_label_autarky()}
+							</span>
+						</div>
+					</div>
+					<div className="mt-4 w-full space-y-3 px-2">
+						<div className="flex justify-between text-sm items-center">
+							<span className="flex items-center gap-2">
+								<div className="w-3 h-3 rounded-full bg-green-600 shrink-0" />
+								<span className="truncate">
+									{m.dashboard_label_own_generation()}
+								</span>
+							</span>
+							<span className="font-medium whitespace-nowrap">
+								{fmt(RAW_DATA.autarky, currentLocale)}%
+							</span>
+						</div>
+						<Separator />
+						<div className="flex justify-between text-sm items-center">
+							<span className="text-muted-foreground truncate pr-2">
+								{m.dashboard_label_self_consumption()}
+							</span>
+							<span className="font-medium whitespace-nowrap">
+								{fmt(RAW_DATA.selfUse, currentLocale)}%
+							</span>
+						</div>
+					</div>
+				</CardContent>
+			</Card>
 		</section>
 	);
 }
@@ -218,7 +219,8 @@ const CustomCostTooltip = ({ active, payload, label }: CustomTooltipProps) => {
 			<div className="bg-popover border text-popover-foreground shadow-md rounded-lg p-3 text-sm min-w-[180px] z-50">
 				<p className="font-semibold mb-2 border-b pb-1">{label}</p>
 				<div className="space-y-1">
-					{payload.map((entry) => (
+					{/** biome-ignore lint/suspicious/noExplicitAny: Is okay*/}
+					{payload.map((entry: any) => (
 						<div
 							key={entry.name}
 							className="flex items-center justify-between gap-4"
