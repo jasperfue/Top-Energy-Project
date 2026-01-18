@@ -1,5 +1,4 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Battery, type LucideIcon, ThermometerSun, Zap } from "lucide-react";
 import { useState } from "react";
 import {
 	Area,
@@ -21,6 +20,7 @@ import {
 } from "recharts";
 import { KpiSection } from "@/components/KpiSection.tsx";
 import { StudyHeader } from "@/components/StudyHeader.tsx";
+import { SystemConfigurationBar } from "@/components/SystemConfigurationBar.tsx";
 import {
 	Accordion,
 	AccordionContent,
@@ -485,6 +485,8 @@ function Dashboard() {
 						<KpiSection />
 					</TooltipProvider>
 
+					<SystemConfigurationBar />
+
 					{/* 2. SECTION: SYSTEM DYNAMICS */}
 					<section className="grid gap-4 md:grid-cols-7">
 						{/* GRAPH 1: SEASONAL BALANCE (Fully Stacked Comparison) */}
@@ -908,53 +910,6 @@ function Dashboard() {
 							</CardContent>
 						</Card>
 					</section>
-
-					{/* 4. SECTION: TECH DETAILS */}
-					<div>
-						<h3 className="text-lg font-semibold mt-4 mb-4 px-1">
-							{m.dashboard_tech_section_title()}
-						</h3>
-						<section className="grid gap-4 md:grid-cols-3">
-							<TechCard
-								icon={Zap}
-								title={m.dashboard_tech_pv_title()}
-								specs={[
-									{ label: m.dashboard_spec_power(), value: "684 kWp" },
-									{ label: m.dashboard_spec_area(), value: "3.041 m²" },
-									{ label: m.dashboard_spec_yield(), value: "673 MWh/a" },
-									{ label: m.dashboard_spec_opex(), value: "6.000 €/a" },
-									{ label: m.dashboard_spec_invest(), value: "400.000 €" },
-								]}
-								description={m.dashboard_tech_pv_desc()}
-							/>
-							<TechCard
-								icon={Battery}
-								title={m.dashboard_tech_battery_title()}
-								specs={[
-									{ label: m.dashboard_spec_capacity(), value: "321 kWh" },
-									{
-										label: m.dashboard_spec_cycles(),
-										value: `268 / ${m.dashboard_unit_year()}`,
-									},
-									{ label: m.dashboard_spec_opex(), value: "1.470,5 €/a" },
-									{ label: m.dashboard_spec_invest(), value: "73.524 €" },
-								]}
-								description={m.dashboard_tech_battery_desc()}
-							/>
-							<TechCard
-								icon={ThermometerSun}
-								title={m.dashboard_tech_hp_title()}
-								specs={[
-									{ label: m.dashboard_spec_thermal_power(), value: "50 kW" },
-									{ label: m.dashboard_spec_heat(), value: "126,49 MWh/a" },
-									{ label: m.dashboard_spec_opex(), value: "375 €/a" },
-									{ label: m.dashboard_spec_invest(), value: "25.000 €" },
-								]}
-								description={m.dashboard_tech_hp_desc()}
-							/>
-						</section>
-					</div>
-
 					<AssumptionsSection />
 				</main>
 			</div>
@@ -1187,46 +1142,6 @@ const CustomCostTooltip = ({ active, payload, label }: CustomTooltipProps) => {
 	}
 	return null;
 };
-
-interface TechCardProps {
-	icon: LucideIcon;
-	title: string;
-	specs: { label: string; value: string }[];
-	description: string;
-}
-
-function TechCard({ icon: Icon, title, specs, description }: TechCardProps) {
-	return (
-		<Card className="shadow-sm">
-			<CardHeader className="flex flex-row items-center gap-4 pb-2">
-				<div className="p-2 bg-primary/10 rounded-lg shrink-0">
-					<Icon className="h-6 w-6 text-primary" />
-				</div>
-				<CardTitle className="text-base">{title}</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<p className="text-sm text-muted-foreground mb-4 h-auto md:h-10 line-clamp-3 md:line-clamp-2">
-					{description}
-				</p>
-				<div className="space-y-2">
-					{specs.map((spec) => (
-						<div
-							key={spec.label}
-							className="grid grid-cols-[1fr_auto] gap-4 text-sm border-b pb-1 last:border-0"
-						>
-							<span className="text-muted-foreground truncate">
-								{spec.label}
-							</span>
-							<span className="font-medium whitespace-nowrap">
-								{spec.value}
-							</span>
-						</div>
-					))}
-				</div>
-			</CardContent>
-		</Card>
-	);
-}
 
 function AssumptionsSection() {
 	return (
