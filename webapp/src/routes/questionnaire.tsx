@@ -482,6 +482,16 @@ function Questionnaire() {
 									</CardTitle>
 								</CardHeader>
 								<CardContent className="space-y-6 md:space-y-5 md:px-6 px-4">
+									{/* --- NEUER DISCLAIMER START --- */}
+									<div
+										className="rounded-md bg-muted/60 p-4 text-sm text-foreground border border-border"
+										// biome-ignore lint/security/noDangerouslySetInnerHtml: Trusted content
+										dangerouslySetInnerHTML={{
+											__html: m.intention_disclaimer(),
+										}}
+									/>
+									{/* --- NEUER DISCLAIMER ENDE --- */}
+
 									<LikertScale
 										name="intention_q1"
 										control={form.control}
@@ -657,10 +667,6 @@ function Questionnaire() {
 										required
 										options={[
 											{
-												value: "student",
-												label: m.demographics_occupation_student(),
-											},
-											{
 												value: "employee_no_lead",
 												label: m.demographics_occupation_employee(),
 											},
@@ -671,6 +677,10 @@ function Questionnaire() {
 											{
 												value: "entrepreneur",
 												label: m.demographics_occupation_entrepreneur(),
+											},
+											{
+												value: "student",
+												label: m.demographics_occupation_student(),
 											},
 										]}
 									/>
@@ -698,19 +708,19 @@ function Questionnaire() {
 										question={m.demographics_investexp_question()}
 										required
 										options={[
-											{ value: "none", label: m.demographics_investexp_none() },
 											{
-												value: "theoretical",
-												label: m.demographics_investexp_theory(),
+												value: "practical_professional",
+												label: m.demographics_investexp_pro(),
 											},
 											{
 												value: "practical_basic",
 												label: m.demographics_investexp_basic(),
 											},
 											{
-												value: "practical_professional",
-												label: m.demographics_investexp_pro(),
+												value: "theoretical",
+												label: m.demographics_investexp_theory(),
 											},
+											{ value: "none", label: m.demographics_investexp_none() },
 										]}
 									/>
 								</CardContent>
