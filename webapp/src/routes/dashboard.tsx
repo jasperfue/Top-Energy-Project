@@ -716,7 +716,7 @@ function Dashboard() {
 											fontSize={12}
 											tickLine={false}
 											axisLine={false}
-											interval={3}
+											interval={2}
 											dy={10}
 										/>
 
@@ -726,6 +726,8 @@ function Dashboard() {
 											fontSize={11}
 											tickLine={false}
 											axisLine={false}
+											tickCount={6}
+											domain={[0, 500]}
 											unit=" kW"
 											width={45}
 										/>
@@ -1165,25 +1167,6 @@ const CustomInterplayTooltip = ({
 					{label} Uhr
 				</p>
 				{payload.map((entry: any) => {
-					if (entry.dataKey === "soc") {
-						return (
-							<div
-								key={entry.name}
-								className="flex items-center justify-between gap-4 mb-1"
-							>
-								<span className="flex items-center gap-2 text-muted-foreground">
-									<div
-										className="w-2 h-2 rounded-full"
-										style={{ backgroundColor: entry.color }}
-									/>
-									Speicher:
-								</span>
-								<span className="font-mono font-medium">
-									{entry.payload.bat_kwh} kWh ({entry.value}%)
-								</span>
-							</div>
-						);
-					}
 					return (
 						<div
 							key={entry.name}
@@ -1196,7 +1179,9 @@ const CustomInterplayTooltip = ({
 								/>
 								{entry.name}:
 							</span>
-							<span className="font-mono font-medium">{entry.value} kW</span>
+							<span className="font-mono font-medium">
+								{entry.value} {entry.dataKey === "soc" ? "%" : "kW"}
+							</span>
 						</div>
 					);
 				})}
