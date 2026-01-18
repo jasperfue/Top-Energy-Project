@@ -68,15 +68,6 @@ export const Route = createFileRoute("/dashboard")({
 	component: Dashboard,
 });
 
-interface DailyDataPoint {
-	time: string;
-	pv: number;
-	load: number;
-	grid: number;
-	soc: number;
-	bat_kwh: number;
-}
-
 interface MonthlyDataPoint {
 	name: string;
 	pv: number;
@@ -218,24 +209,202 @@ const MONTHLY_IST: MonthlyDataPoint[] = MONTHLY_SOLL.map((d) => ({
 	grid: d.load_base + d.load_cooling, // Alles kommt aus dem Netz
 	surplus: 0,
 }));
+// Typ anpassen
+type DailyDataPoint = {
+	time: string;
+	pv: number;
+	total_load: number; // Summe aller Verbraucher
+	grid: number;
+	feedin: number;
+	soc: number;
+};
 
-// IMPORTANT: Values here are in kW (Power) and % (SoC)
+// SOMMER (25.07.) - Total Load ist hoch wegen Kühlung
 const DAILY_SUMMER: DailyDataPoint[] = [
-	{ time: "00:00", pv: 0, load: 14.0, grid: 0, soc: 81.6, bat_kwh: 262.2 },
-	{ time: "04:00", pv: 0, load: 14.0, grid: 0, soc: 57.8, bat_kwh: 185.9 },
-	{ time: "08:00", pv: 78.8, load: 14.0, grid: 0, soc: 2.7, bat_kwh: 8.8 },
-	{ time: "12:00", pv: 286.2, load: 14.0, grid: 0, soc: 60.5, bat_kwh: 194.5 },
-	{ time: "16:00", pv: 193.9, load: 11.2, grid: 0, soc: 98.0, bat_kwh: 315.0 },
-	{ time: "20:00", pv: 17.8, load: 11.2, grid: 0, soc: 90.0, bat_kwh: 289.0 },
+	{ time: "00:00", pv: 0, total_load: 16.3, grid: 0, feedin: 0, soc: 51.3 },
+	{ time: "01:00", pv: 0, total_load: 17, grid: 0, feedin: 0, soc: 45.86 },
+	{ time: "02:00", pv: 0, total_load: 16.3, grid: 0, feedin: 0, soc: 40.49 },
+	{ time: "03:00", pv: 0, total_load: 17, grid: 0, feedin: 0, soc: 35.07 },
+	{ time: "04:00", pv: 0, total_load: 47.1, grid: 0, feedin: 0, soc: 29.71 },
+	{ time: "05:00", pv: 5.5, total_load: 65.3, grid: 0, feedin: 0, soc: 22 },
+	{ time: "06:00", pv: 27.5, total_load: 75.1, grid: 0, feedin: 0, soc: 7.79 },
+	{
+		time: "07:00",
+		pv: 90,
+		total_load: 88.4,
+		grid: 0,
+		feedin: 18.13,
+		soc: 0.25,
+	},
+	{
+		time: "08:00",
+		pv: 202.47,
+		total_load: 88.4,
+		grid: 0,
+		feedin: 114.07,
+		soc: 0,
+	},
+	{
+		time: "09:00",
+		pv: 320.93,
+		total_load: 87,
+		grid: 0,
+		feedin: 233.93,
+		soc: 0,
+	},
+	{
+		time: "10:00",
+		pv: 399.92,
+		total_load: 77.2,
+		grid: 0,
+		feedin: 322.72,
+		soc: 0,
+	},
+	{
+		time: "11:00",
+		pv: 428.85,
+		total_load: 183.8,
+		grid: 0,
+		feedin: 245.02,
+		soc: 0,
+	},
+	{
+		time: "12:00",
+		pv: 422.33,
+		total_load: 217.8,
+		grid: 0,
+		feedin: 204.5,
+		soc: 0,
+	},
+	{
+		time: "13:00",
+		pv: 427.19,
+		total_load: 226.22,
+		grid: 0,
+		feedin: 191.02,
+		soc: 0,
+	},
+	{
+		time: "14:00",
+		pv: 402.86,
+		total_load: 226,
+		grid: 0,
+		feedin: 0,
+		soc: 24.72,
+	},
+	{
+		time: "15:00",
+		pv: 320.72,
+		total_load: 203.4,
+		grid: 0,
+		feedin: 0,
+		soc: 72.33,
+	},
+	{
+		time: "16:00",
+		pv: 205.1,
+		total_load: 182.9,
+		grid: 0,
+		feedin: 0,
+		soc: 97.2,
+	},
+	{
+		time: "17:00",
+		pv: 132.43,
+		total_load: 178.5,
+		grid: 0,
+		feedin: 0,
+		soc: 93.3,
+	},
+	{
+		time: "18:00",
+		pv: 89.24,
+		total_load: 162.9,
+		grid: 0,
+		feedin: 0,
+		soc: 76.63,
+	},
+	{ time: "19:00", pv: 34.85, total_load: 149, grid: 0, feedin: 0, soc: 46.94 },
+	{ time: "20:00", pv: 8.17, total_load: 68.15, grid: 0, feedin: 0, soc: 12.9 },
+	{ time: "21:00", pv: 0, total_load: 16.3, grid: 0.59, feedin: 0, soc: 3 },
+	{ time: "22:00", pv: 0, total_load: 18.4, grid: 18.4, feedin: 0, soc: 0 },
+	{ time: "23:00", pv: 0, total_load: 17.7, grid: 17.7, feedin: 0, soc: 0 },
 ];
 
 const DAILY_WINTER: DailyDataPoint[] = [
-	{ time: "00:00", pv: 0, load: 30.8, grid: 30.8, soc: 0, bat_kwh: 0 },
-	{ time: "04:00", pv: 0, load: 30.8, grid: 30.8, soc: 0, bat_kwh: 0 },
-	{ time: "08:00", pv: 1.8, load: 36.4, grid: 34.6, soc: 0, bat_kwh: 0 },
-	{ time: "12:00", pv: 17.8, load: 28.0, grid: 10.2, soc: 0, bat_kwh: 0 },
-	{ time: "16:00", pv: 0, load: 30.8, grid: 30.8, soc: 0, bat_kwh: 0 },
-	{ time: "20:00", pv: 0, load: 30.8, grid: 30.8, soc: 0, bat_kwh: 0 },
+	{ time: "00:00", pv: 0, total_load: 38.33, grid: 38.33, feedin: 0, soc: 0 },
+	{ time: "01:00", pv: 0, total_load: 38.1, grid: 38.1, feedin: 0, soc: 0 },
+	{ time: "02:00", pv: 0, total_load: 39.7, grid: 39.7, feedin: 0, soc: 0 },
+	{ time: "03:00", pv: 0, total_load: 37.3, grid: 37.3, feedin: 0, soc: 0 },
+	{ time: "04:00", pv: 0, total_load: 41.3, grid: 41.3, feedin: 0, soc: 0 },
+	{ time: "05:00", pv: 0, total_load: 87.42, grid: 87.42, feedin: 0, soc: 0 },
+	{ time: "06:00", pv: 0, total_load: 109.8, grid: 109.8, feedin: 0, soc: 0 },
+	{
+		time: "07:00",
+		pv: 0.33,
+		total_load: 112.56,
+		grid: 112.24,
+		feedin: 0,
+		soc: 0,
+	},
+	{ time: "08:00", pv: 5.8, total_load: 97.25, grid: 91.44, feedin: 0, soc: 0 },
+	{ time: "09:00", pv: 22.61, total_load: 96.6, grid: 74, feedin: 0, soc: 0 }, // PV hilft ein wenig
+	{
+		time: "10:00",
+		pv: 108.22,
+		total_load: 97.3,
+		grid: 14.5,
+		feedin: 0,
+		soc: 0.63,
+	}, // PV senkt Netzbezug (Rote Fläche wird kleiner)
+	{
+		time: "11:00",
+		pv: 193.78,
+		total_load: 98.57,
+		grid: 0,
+		feedin: 0,
+		soc: 19.33,
+	},
+	{
+		time: "12:00",
+		pv: 145.37,
+		total_load: 97.43,
+		grid: 0,
+		feedin: 0,
+		soc: 44.11,
+	},
+	{
+		time: "13:00",
+		pv: 68.1,
+		total_load: 94.19,
+		grid: 0,
+		feedin: 0,
+		soc: 49.16,
+	},
+	{
+		time: "14:00",
+		pv: 27.9,
+		total_load: 94.67,
+		grid: 0,
+		feedin: 0,
+		soc: 35.68,
+	},
+	{ time: "15:00", pv: 4.6, total_load: 68.27, grid: 0, feedin: 0, soc: 13.22 },
+	{
+		time: "16:00",
+		pv: 0,
+		total_load: 48.38,
+		grid: 44.12,
+		feedin: 0,
+		soc: 0.33,
+	},
+	{ time: "17:00", pv: 0, total_load: 44.97, grid: 44.97, feedin: 0, soc: 0 },
+	{ time: "18:00", pv: 0, total_load: 41, grid: 41, feedin: 0, soc: 0 },
+	{ time: "19:00", pv: 0, total_load: 35.37, grid: 35.37, feedin: 0, soc: 0 },
+	{ time: "20:00", pv: 0, total_load: 34.65, grid: 34.65, feedin: 0, soc: 0 },
+	{ time: "21:00", pv: 0, total_load: 33.78, grid: 33.78, feedin: 0, soc: 0 },
+	{ time: "22:00", pv: 0, total_load: 31.68, grid: 31.68, feedin: 0, soc: 0 },
+	{ time: "23:00", pv: 0, total_load: 32.3, grid: 32.3, feedin: 0, soc: 0 },
 ];
 
 function Dashboard() {
@@ -463,19 +632,18 @@ function Dashboard() {
 										<Legend content={<CustomGroupedLegend />} />
 
 										{/* LINKS: HERKUNFT (Stacked Supply) */}
-										<Bar
-											dataKey="pv"
-											stackId="supply"
-											name={m.dashboard_legend_pv_generation()}
-											fill="#16a34a"
-										/>
-										<Bar
-											dataKey="grid"
-											stackId="supply"
-											name={m.dashboard_legend_grid()}
-											fill="#ef4444"
-											radius={[4, 4, 0, 0]}
-										/>
+										<BarStack radius={[4, 4, 0, 0]} stackId="supply">
+											<Bar
+												dataKey="pv"
+												name={m.dashboard_legend_pv_generation()}
+												fill="#16a34a"
+											/>
+											<Bar
+												dataKey="grid"
+												name={m.dashboard_legend_grid()}
+												fill="#ef4444"
+											/>
+										</BarStack>
 
 										{/* RECHTS: VERWENDUNG (Stacked Consumption) */}
 										<BarStack radius={[4, 4, 0, 0]} stackId="consumption">
@@ -548,10 +716,11 @@ function Dashboard() {
 											fontSize={12}
 											tickLine={false}
 											axisLine={false}
-											interval={11}
+											interval={3}
 											dy={10}
 										/>
 
+										{/* Linke Y-Achse: Leistung (kW) */}
 										<YAxis
 											yAxisId="left"
 											fontSize={11}
@@ -560,6 +729,7 @@ function Dashboard() {
 											unit=" kW"
 											width={45}
 										/>
+										{/* Rechte Y-Achse: Batterie (%) */}
 										<YAxis
 											yAxisId="right"
 											orientation="right"
@@ -572,46 +742,70 @@ function Dashboard() {
 										/>
 
 										<RechartsTooltip content={<CustomInterplayTooltip />} />
+
 										<Legend
 											wrapperStyle={{ paddingTop: "20px", fontSize: "12px" }}
+											iconType="circle"
 										/>
 
+										{/* 1. NETZBEZUG (Rot): Ganz unten im Hintergrund, wenn aktiv */}
+										<Area
+											yAxisId="left"
+											type="step"
+											dataKey="grid"
+											name="Netzbezug"
+											fill="#fecaca" // Helles Rot
+											stroke="#ef4444" // Dunkles Rot
+											fillOpacity={0.6}
+											strokeWidth={1}
+										/>
+
+										{/* 2. PV-Erzeugung (Grün): Hauptfläche */}
 										<Area
 											yAxisId="left"
 											type="monotone"
 											dataKey="pv"
-											name="PV"
+											name="PV-Erzeugung"
 											fill="url(#colorPv)"
 											stroke="#16a34a"
+											strokeWidth={2}
 											fillOpacity={0.4}
 										/>
+
+										{/* 3. EINSPEISUNG (Lila): Liegt visuell über PV oder Last */}
+										<Area
+											yAxisId="left"
+											type="monotone"
+											dataKey="feedin"
+											name="Einspeisung"
+											fill="#d8b4fe" // Helles Lila
+											stroke="#8b5cf6" // Dunkles Lila
+											fillOpacity={0.6}
+											strokeWidth={1}
+										/>
+
+										{/* 4. VERBRAUCH (Blau): Die harte Grenze */}
 										<Line
 											yAxisId="left"
-											type="step"
-											dataKey="load"
-											name="Last"
-											stroke="#94a3b8"
+											type="monotone"
+											dataKey="total_load"
+											name="Gesamtverbrauch"
+											stroke="#1e40af" // Dunkelblau
 											strokeWidth={2}
 											dot={false}
+											activeDot={{ r: 6 }}
 										/>
-										<Line
-											yAxisId="left"
-											type="step"
-											dataKey="grid"
-											name="Netz"
-											stroke="#ef4444"
-											strokeWidth={2}
-											dot={false}
-											strokeDasharray="2 2"
-										/>
+
+										{/* 5. SPEICHER (Gelb): Rechte Achse */}
 										<Line
 											yAxisId="right"
 											type="monotone"
 											dataKey="soc"
-											name="Akku %"
+											name="Speicher %"
 											stroke="#f59e0b"
-											strokeWidth={2}
+											strokeWidth={3}
 											dot={false}
+											strokeDasharray="4 4"
 										/>
 
 										<defs>
@@ -619,12 +813,12 @@ function Dashboard() {
 												<stop
 													offset="5%"
 													stopColor="#16a34a"
-													stopOpacity={0.3}
+													stopOpacity={0.5}
 												/>
 												<stop
 													offset="95%"
 													stopColor="#16a34a"
-													stopOpacity={0}
+													stopOpacity={0.1}
 												/>
 											</linearGradient>
 										</defs>
