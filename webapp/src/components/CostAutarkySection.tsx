@@ -113,12 +113,15 @@ export function CostAutarkySection() {
 								cursor={{ fill: "rgba(0,0,0,0.05)" }}
 								wrapperStyle={{ zIndex: 100 }}
 							/>
-							<Legend wrapperStyle={{ paddingTop: "10px", fontSize: "12px" }} />
+							<Legend
+								iconType="circle"
+								wrapperStyle={{ paddingTop: "10px", fontSize: "12px" }}
+							/>
 							<Bar
 								dataKey="Strom"
 								stackId="a"
 								fill="#3b82f6"
-								name={m.dashboard_legend_electricity()}
+								name={m.dashboard_legend_grid()}
 							/>
 							<Bar
 								dataKey="Brennstoff"
@@ -137,7 +140,7 @@ export function CostAutarkySection() {
 							<Bar
 								dataKey="Erlöse"
 								stackId="a"
-								fill="#16a34a"
+								fill="#8b5cf6"
 								name={m.dashboard_legend_feedin()}
 								radius={[4, 4, 0, 0]}
 							/>

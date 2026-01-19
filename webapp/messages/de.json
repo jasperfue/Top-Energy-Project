@@ -120,7 +120,6 @@
 	"dashboard_chart_cost_desc": "Gesamtbetriebskosten Ist-Zustand vs. Soll-Zustand",
 	"dashboard_status_ist": "Ist-Zustand",
 	"dashboard_status_soll": "Soll-Zustand",
-	"dashboard_legend_electricity": "Strombezug",
 	"dashboard_legend_fuel": "Brennstoff (Gas)",
 	"dashboard_legend_maintenance": "Betrieb & Wartung",
 	"dashboard_legend_feedin": "Einspeisevergütung",

@@ -122,7 +122,6 @@
 	"dashboard_chart_cost_desc": "Total OpEx Status Quo vs. Target State",
 	"dashboard_status_ist": "Status Quo",
 	"dashboard_status_soll": "Target State",
-	"dashboard_legend_electricity": "Grid Electricity",
 	"dashboard_legend_fuel": "Fuel (Gas)",
 	"dashboard_legend_maintenance": "Maintenance",
 	"dashboard_legend_feedin": "Feed-in Tariff",
