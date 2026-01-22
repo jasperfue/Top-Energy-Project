@@ -1,3 +1,4 @@
+import { createServerOnlyFn } from "@tanstack/react-start";
 import { useSession } from "@tanstack/react-start/server";
 
 type userSession = {
@@ -50,7 +51,7 @@ type userSession = {
 	feedback?: string;
 };
 
-export const useUserSession = () =>
+export const useUserSession = createServerOnlyFn(() =>
 	useSession<userSession>({
 		name: "app-session",
 		// biome-ignore lint/style/noNonNullAssertion: Is set
@@ -61,4 +62,5 @@ export const useUserSession = () =>
 			httpOnly: true, // XSS protection
 			maxAge: 7 * 24 * 60 * 60, // 7 days
 		},
-	});
+	}),
+);
