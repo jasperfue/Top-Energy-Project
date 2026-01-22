@@ -4,6 +4,7 @@ import {cn} from "@/lib/utils";
 import useIsMobile from "@/hooks/use-is-mobile.ts";
 import {ChevronDownIcon, ChevronUpIcon} from "lucide-react";
 import { m } from "@/paraglide/messages.js";
+import { AnimatePresence, motion } from "motion/react";
 
 
 const SuggestionsContext = createContext<{
@@ -21,29 +22,61 @@ export const Suggestions = ({
     const [isOpen, setIsOpen] = useState(false);
     return (
             <div className={cn("flex flex-wrap items-center justify-center gap-2", className)} {...props}>
-                {isMobile && (!isOpen ? (
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-xs"
-                        onClick={() => setIsOpen(true)}
-                    >
-                        {m.chat_expand_suggestions()}
-                        <ChevronUpIcon className="size-3" />
-                    </Button>
-                )
-                : (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-xs"
-                            onClick={() => setIsOpen(false)}
+                <AnimatePresence mode="wait">
+                    {isMobile && (!isOpen ? (
+                        <motion.div
+                            key="expand"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ duration: 0.2 }}
                         >
-                            {m.chat_collapse_suggestions()}
-                            <ChevronDownIcon className="size-3" />
-                        </Button>
-                    ))}
-                {(!isMobile || (isMobile && isOpen)) && children}
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-xs"
+                                onClick={() => setIsOpen(true)}
+                            >
+                                {m.chat_expand_suggestions()}
+                                <ChevronUpIcon className="size-3" />
+                            </Button>
+                        </motion.div>
+                    )
+                    : (
+                            <motion.div
+                                key="collapse"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="text-xs"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    {m.chat_collapse_suggestions()}
+                                    <ChevronDownIcon className="size-3" />
+                                </Button>
+                            </motion.div>
+                        ))}
+                </AnimatePresence>
+
+                <AnimatePresence>
+                    {(!isMobile || (isMobile && isOpen)) && (
+                        <motion.div
+                            key="suggestions-list"
+                            initial={isMobile ? { height: 0, opacity: 0 } : false}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className={cn("flex flex-wrap items-center justify-center gap-2 overflow-hidden")}
+                        >
+                            {children}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
     )
 }
