@@ -1,15 +1,11 @@
-import {type ComponentProps, createContext, useContext, useState} from "react";
+import {type ComponentProps, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
 import useIsMobile from "@/hooks/use-is-mobile.ts";
 import {ChevronDownIcon, ChevronUpIcon} from "lucide-react";
-import { m } from "@/paraglide/messages.js";
-import { AnimatePresence, motion } from "motion/react";
+import {m} from "@/paraglide/messages.js";
+import {AnimatePresence, motion} from "motion/react";
 
-
-const SuggestionsContext = createContext<{
-    setIsOpen: (isOpen: boolean) => void;
-} | null>(null);
 
 export type SuggestionsProps = ComponentProps<"div">;
 
@@ -18,9 +14,9 @@ export const Suggestions = ({
   children,
   ...props
 }: SuggestionsProps) => {
-    const {isMobile} = useIsMobile();
+    const {isMobile, isLoading} = useIsMobile();
     const [isOpen, setIsOpen] = useState(false);
-    return (
+    return ( isLoading ? null :
             <div className={cn("flex flex-wrap items-center justify-center gap-2", className)} {...props}>
                 <AnimatePresence mode="wait">
                     {isMobile && (!isOpen ? (
@@ -71,7 +67,7 @@ export const Suggestions = ({
                             animate={{ height: "auto", opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.3, ease: "easeInOut" }}
-                            className={cn("flex flex-wrap items-center justify-center gap-2 overflow-hidden")}
+                            className={cn("flex w-full flex-wrap items-center justify-center gap-2 overflow-hidden")}
                         >
                             {children}
                         </motion.div>
@@ -95,15 +91,13 @@ export const Suggestion = ({
   children,
   ...props
 }: SuggestionProps) => {
-  const context = useContext(SuggestionsContext);
   const handleClick = () => {
     onClick?.(suggestion);
-    context?.setIsOpen(false);
   };
 
   return (
     <Button
-      className={cn("h-auto cursor-pointer rounded-full px-3 py-1.5 text-center text-xs whitespace-normal", className)}
+      className={cn("h-auto max-w-full cursor-pointer rounded-full px-3 py-1.5 text-center text-xs whitespace-normal break-words shrink", className)}
       onClick={handleClick}
       size={size}
       type="button"
