@@ -101,7 +101,7 @@ const demographicsAnswers = z.object({
 		"employee_lead",
 		"entrepreneur",
 	]),
-	domain_background: z.enum(["business", "stem", "other"]),
+	domain_background: z.enum(["business", "technical", "it", "other"]),
 	investment_experience: z.enum([
 		"none",
 		"theoretical",
@@ -685,7 +685,7 @@ function Questionnaire() {
 										]}
 									/>
 
-									{/* DOMAIN (Business vs STEM) */}
+									{/* DOMAIN (Technical vs Business vs IT) */}
 									<MultipleChoiceQuestion
 										name="domain_background"
 										control={form.control}
@@ -694,10 +694,20 @@ function Questionnaire() {
 										options={[
 											{
 												value: "business",
-												label: m.demographics_domain_business(),
+												label: m.demographics_domain_business(), // Kaufmännisch
 											},
-											{ value: "stem", label: m.demographics_domain_stem() }, // MINT
-											{ value: "other", label: m.demographics_domain_other() },
+											{
+												value: "technical",
+												label: m.demographics_domain_technical(), // Technisch / Handwerk
+											},
+											{
+												value: "it",
+												label: m.demographics_domain_it(), // IT
+											},
+											{
+												value: "other",
+												label: m.demographics_domain_other(),
+											},
 										]}
 									/>
 

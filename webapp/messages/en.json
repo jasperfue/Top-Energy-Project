@@ -122,7 +122,6 @@
 	"dashboard_chart_cost_desc": "Total OpEx Status Quo vs. Target State",
 	"dashboard_status_ist": "Status Quo",
 	"dashboard_status_soll": "Target State",
-	"dashboard_legend_electricity": "Grid Electricity",
 	"dashboard_legend_fuel": "Fuel (Gas)",
 	"dashboard_legend_maintenance": "Maintenance",
 	"dashboard_legend_feedin": "Feed-in Tariff",
@@ -250,10 +249,11 @@
 	"demographics_occupation_manager": "Manager / Executive",
 	"demographics_occupation_entrepreneur": "Entrepreneur / Business Owner",
 
-	"demographics_domain_question": "What is your primary field of work or study?",
-	"demographics_domain_business": "Business / Economics / Management",
-	"demographics_domain_stem": "STEM (Science, Tech, Engineering, Math)",
-	"demographics_domain_other": "Other field",
+	"demographics_domain_question": "What is your primary professional specialization (or field of study)?",
+	"demographics_domain_business": "Commercial / Business Admin / Administration",
+	"demographics_domain_technical": "Technical / Skilled Trades / Manufacturing / Engineering",
+	"demographics_domain_it": "IT / Digitalization",
+	"demographics_domain_other": "Other",
 
 	"demographics_investexp_question": "How much experience do you have with corporate investment decisions?",
 	"demographics_investexp_none": "No experience",

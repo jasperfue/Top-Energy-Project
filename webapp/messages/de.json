@@ -120,7 +120,6 @@
 	"dashboard_chart_cost_desc": "Gesamtbetriebskosten Ist-Zustand vs. Soll-Zustand",
 	"dashboard_status_ist": "Ist-Zustand",
 	"dashboard_status_soll": "Soll-Zustand",
-	"dashboard_legend_electricity": "Strombezug",
 	"dashboard_legend_fuel": "Brennstoff (Gas)",
 	"dashboard_legend_maintenance": "Betrieb & Wartung",
 	"dashboard_legend_feedin": "Einspeisevergütung",
@@ -248,10 +247,11 @@
 	"demographics_occupation_manager": "Führungskraft / Management",
 	"demographics_occupation_entrepreneur": "Unternehmer / Inhaber / Selbstständig",
 
-	"demographics_domain_question": "In welchem Bereich sind Sie tätig (oder studieren)?",
-	"demographics_domain_business": "Wirtschaftswissenschaften / Management",
-	"demographics_domain_stem": "MINT (Mathematik, Informatik, Naturwiss., Technik)",
-	"demographics_domain_other": "Anderer Bereich",
+	"demographics_domain_question": "In welchem fachlichen Schwerpunkt sind Sie überwiegend tätig (oder studieren)?",
+	"demographics_domain_business": "Kaufmännisch / Betriebswirtschaft / Verwaltung",
+	"demographics_domain_technical": "Technisch / Handwerk / Produktion / Ingenieurwesen",
+	"demographics_domain_it": "IT / Digitalisierung",
+	"demographics_domain_other": "Sonstiges",
 
 	"demographics_investexp_question": "Wie viel Erfahrung haben Sie mit unternehmerischen Investitionsentscheidungen?",
 	"demographics_investexp_none": "Keine Erfahrung",
