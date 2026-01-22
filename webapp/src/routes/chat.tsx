@@ -116,7 +116,7 @@ function Chat() {
 			<div className="flex-1 min-h-0 relative">
 				<div className="grid pb-0 h-full grid-rows-[1fr_auto]">
 					{/* Scrollable content */}
-					<Conversation className="overflow-x-hidden">
+					<Conversation className="overflow-x-hidden pb-2">
 						<ConversationContent>
 							{messages.map((message, index) => (
 								<Message from={message.role} key={message.id}>
