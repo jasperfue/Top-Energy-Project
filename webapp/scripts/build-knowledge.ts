@@ -20,7 +20,7 @@ function stripFrontmatter(s: string) {
 }
 
 function readAllFiles(dir: string): string[] {
-	const allowed = new Set([".md", ".mdx", ".txt", ".json"]);
+	const allowed = new Set([".md"]);
 	const files: string[] = [];
 	for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
 		const full = path.join(dir, entry.name);

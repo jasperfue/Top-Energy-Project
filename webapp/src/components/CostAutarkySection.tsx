@@ -50,8 +50,8 @@ const RAW_DATA = {
 	amortization: 5.95,
 	co2Ist: 76.55,
 	co2Soll: -18.89,
-	autarky: 61.7,
-	selfUse: 38.6,
+	autarky: 67.9,
+	selfUse: 48.4,
 };
 
 const PIE_DATA_AUTARKIE = [

@@ -11,8 +11,8 @@
 | Betriebskosten neue Komponenten [€/a] | `0`         | `7.845,50`   | `7.845,50`    | Summe der Betriebskosten für Wärmepumpe, PV und Stromspeicher                          |
 | Gesamte Betriebskosten [€/a]          | `190.282`   | `75.741,23`  | `-114.540,77` | Enthält Stromkosten (netto), Brennstoffkosten & Betriebskosten von WP, PV und Speicher |
 | Investitionskosten [€]                | `0`         | `498.524`    | `498.524`     | Einmalige Investition für Wärmepumpe, PV und Speicher                                  |
-| Autarkiegrad [%]                      | `0`         | `61,707`     | `61,707`      |                                                                                        |
-| Eigenverbrauchsquote [%]              | `0`         | `38,649`     | `38,649`      |                                                                                        |
+| Autarkiegrad [%]                      | `0`         | `67,953`     | `67,953`      |                                                                                        |
+| Eigenverbrauchsquote [%]              | `0`         | `48,405`     | `48,405`      |                                                                                        |
 
 ### Wirtschaftliches Fazit
 Die Umstellung auf das Soll-System ist wirtschaftlich hochattraktiv. Durch die Investition in PV, Speicher und Wärmepumpe sinken die **jährlichen Energiekosten um 109.860 €** und die **Gesamtbetriebskosten um über 114.540 €**. Bei Investitionskosten von knapp 500.000 € amortisiert sich die gesamte Anlage in nur **5,95 Jahren**.

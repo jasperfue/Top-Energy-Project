@@ -43,3 +43,19 @@ Im Ergebnis verschiebt sich der Energiemix:
 - weg von fossiler Wärmeerzeugung,
 - hin zu strombasierter, teilweise erneuerbar gespeister Wärmeerzeugung (Wärmepumpe),
 - mit höherem Eigenverbrauch von PV-Strom und reduziertem Netzstrombezug.
+
+## Systemverhalten an beispielhaften Tagen
+
+Um das Zusammenspiel der Komponenten zu verstehen, wird das System an zwei extremen Tagen betrachtet:
+
+### Beispielhafter Sommertag (Juli/August)
+An einem sonnigen Sommertag übersteigt die PV-Erzeugung (Peak bis zu 430 kW um die Mittagszeit) deutlich den Verbrauch.
+- **Vormittags:** Die PV-Anlage deckt den kompletten Eigenverbrauch. Überschüsse werden genutzt, um den **Stromspeicher** (SOC steigt auf fast 100 %) zu laden. Sobald der Speicher voll ist (ca. 16:00 Uhr), wird die Energie ins Netz eingespeist.
+- **Nachmittags/Abends:** Trotz hoher Kühllast (Kühltürme) bleibt der Netzbezug bei null, da der Speicher die Last abdeckt, bis seine Kapazität zur Neige geht.
+- **Nachts:** Der Speicher versorgt den Betrieb teilweise bis in die frühen Morgenstunden, erst danach erfolgt ein minimaler Netzbezug.
+
+### Beispielhafter Wintertag (Januar/Dezember)
+Im Winter ist die PV-Erzeugung deutlich geringer (Peak ca. 190 kW) und die Tage sind kürzer. Die **Wärmepumpe** sorgt für eine zusätzliche Grundlast.
+- **PV-Einfluss:** Nur in den Kernstunden (10:00 bis 14:00 Uhr) kann die PV-Anlage den Netzbezug signifikant reduzieren.
+- **Speicher:** Der Speicher wird nur teilweise geladen (SOC erreicht oft nur 50 %) und ist bereits am frühen Abend entleert.
+- **Netzbezug:** Das System ist im Winter stark auf Netzstrom angewiesen, da die PV-Leistung nicht ausreicht, um die Wärmepumpe und die Basislast vollständig zu decken.
