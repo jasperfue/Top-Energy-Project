@@ -147,26 +147,32 @@ function Chat() {
 								</Message>
 							))}
 						</ConversationContent>
-						<ConversationScrollButton />
+						<ConversationScrollButton className="z-20" />
 					</Conversation>
-					<div className="w-full bg-background pb-[env(safe-area-inset-bottom)] max-h-[40dvh] overflow-y-auto">
-						{suggestions.length > 0 && status === "ready" && (
-							<Suggestions className="px-4 py-2">
-								{suggestions.map((suggestion) => (
-									<Suggestion
-										key={suggestion}
-										onClick={(s) => sendMessage({ text: s })}
-										suggestion={suggestion}
-									/>
-								))}
-							</Suggestions>
-						)}
-						<PromptInputComponent
-							stop={stop}
-							// @ts-expect-error
-							sendMessage={sendMessage}
-							status={status}
-						/>
+					<div className="w-full bg-background pb-[env(safe-area-inset-bottom)]">
+						<div className="relative">
+							{suggestions.length > 0 && status === "ready" && (
+								<div className="absolute bottom-full left-0 right-0 z-10 pointer-events-none bg-gradient-to-t from-background/80 to-transparent">
+									<div className="max-h-[30dvh] overflow-y-auto pointer-events-auto">
+										<Suggestions className="px-4 py-2">
+											{suggestions.map((suggestion) => (
+												<Suggestion
+													key={suggestion}
+													onClick={(s) => sendMessage({ text: s })}
+													suggestion={suggestion}
+												/>
+											))}
+										</Suggestions>
+									</div>
+								</div>
+							)}
+							<PromptInputComponent
+								stop={stop}
+								// @ts-expect-error
+								sendMessage={sendMessage}
+								status={status}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
