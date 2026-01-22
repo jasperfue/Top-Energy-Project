@@ -34,6 +34,15 @@ const INITIAL_COMPONENTS: Partial<Components> = {
   pre: function PreComponent({ children }) {
     return <>{children}</>
   },
+    table: function TableComponent({ children }) {
+        return (
+            <div className="overflow-x-auto w-full">
+                <table className="min-w-full divide-y divide-border">
+                    {children}
+                </table>
+            </div>
+        )
+    },
 }
 
 const MemoizedMarkdownBlock = memo(
