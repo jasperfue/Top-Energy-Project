@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { ArrowRight, Loader2, TriangleAlert } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -38,6 +38,7 @@ export const Route = createFileRoute("/questionnaire")({
 			step: safeStep,
 		};
 	},
+	loader: async () => await getQuestionnaireSessionData(),
 	component: Questionnaire,
 });
 
@@ -114,6 +115,15 @@ const feedbackAnswer = z.object({
 	feedback: z.string().optional(),
 });
 
+const getQuestionnaireSessionData = createServerFn({ method: "GET" }).handler(
+	async () => {
+		const session = await useUserSession();
+		return {
+			...session.data,
+		};
+	},
+);
+
 const formSchema = z.object({
 	...understandingAnswers.shape,
 	...trustAnswers.shape,
@@ -125,20 +135,29 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+const updateQuestionnaireSession = createServerFn({ method: "POST" })
+	.inputValidator(formSchema.partial())
+	.handler(async ({ data }) => {
+		const session = await useUserSession();
+		await session.update({
+			...data,
+		});
+	});
+
 const submitQuestionnaire = createServerFn({ method: "POST" })
 	.inputValidator(formSchema)
 	.handler(async ({ data }) => {
 		const session = await useUserSession();
 
-		if (!session.data.recId) {
-			throw new Error("No record ID found in session");
+		if (!session.data["Teilnehmer ID"]) {
+			throw new Error("No participant ID found in session");
 		}
 
 		await airtable
-			.update([
+			.create([
 				{
-					id: session.data.recId,
 					fields: {
+						...session.data,
 						...data,
 					},
 				},
@@ -158,41 +177,44 @@ function Questionnaire() {
 		step < 6 ? { step: step + 1 } : undefined,
 	);
 
+	const sessionData = Route.useLoaderData();
+
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			trust_comp_1: undefined,
-			trust_ben_1: undefined,
-			trust_comp_2: undefined,
-			trust_ben_2: undefined,
-			trust_comp_3: undefined,
-			trust_ben_3: undefined,
-			trust_comp_4: undefined,
-			trust_int_1: undefined,
-			trust_int_2: undefined,
-			trust_int_3: undefined,
-			trust_int_4: undefined,
-			understanding_q1: undefined,
-			understanding_q2: undefined,
-			understanding_q3: undefined,
-			understanding_q4: undefined,
-			ueq_1: undefined,
-			ueq_2_swapped: undefined,
-			ueq_3: undefined,
-			ueq_4_swapped: undefined,
-			ueq_5: undefined,
-			ueq_6_swapped: undefined,
-			ueq_7: undefined,
-			ueq_8_swapped: undefined,
-			intention_q1: undefined,
-			intention_q2: undefined,
-			intention_q3: undefined,
-			age: undefined,
-			gender: undefined,
-			occupation_role: undefined,
-			domain_background: undefined,
-			investment_experience: undefined,
-			feedback: "",
+			trust_comp_1: (sessionData.trust_comp_1 as Likert7) ?? undefined,
+			trust_ben_1: (sessionData.trust_ben_1 as Likert7) ?? undefined,
+			trust_comp_2: (sessionData.trust_comp_2 as Likert7) ?? undefined,
+			trust_ben_2: (sessionData.trust_ben_2 as Likert7) ?? undefined,
+			trust_comp_3: (sessionData.trust_comp_3 as Likert7) ?? undefined,
+			trust_ben_3: (sessionData.trust_ben_3 as Likert7) ?? undefined,
+			trust_comp_4: (sessionData.trust_comp_4 as Likert7) ?? undefined,
+			trust_int_1: (sessionData.trust_int_1 as Likert7) ?? undefined,
+			trust_int_2: (sessionData.trust_int_2 as Likert7) ?? undefined,
+			trust_int_3: (sessionData.trust_int_3 as Likert7) ?? undefined,
+			trust_int_4: (sessionData.trust_int_4 as Likert7) ?? undefined,
+			understanding_q1: (sessionData.understanding_q1 as Likert7) ?? undefined,
+			understanding_q2: (sessionData.understanding_q2 as Likert7) ?? undefined,
+			understanding_q3: (sessionData.understanding_q3 as any) ?? undefined,
+			understanding_q4: (sessionData.understanding_q4 as any) ?? undefined,
+			ueq_1: (sessionData.ueq_1 as Likert7) ?? undefined,
+			ueq_2_swapped: (sessionData.ueq_2_swapped as Likert7) ?? undefined,
+			ueq_3: (sessionData.ueq_3 as Likert7) ?? undefined,
+			ueq_4_swapped: (sessionData.ueq_4_swapped as Likert7) ?? undefined,
+			ueq_5: (sessionData.ueq_5 as Likert7) ?? undefined,
+			ueq_6_swapped: (sessionData.ueq_6_swapped as Likert7) ?? undefined,
+			ueq_7: (sessionData.ueq_7 as Likert7) ?? undefined,
+			ueq_8_swapped: (sessionData.ueq_8_swapped as Likert7) ?? undefined,
+			intention_q1: (sessionData.intention_q1 as Likert7) ?? undefined,
+			intention_q2: (sessionData.intention_q2 as Likert7) ?? undefined,
+			intention_q3: (sessionData.intention_q3 as Likert7) ?? undefined,
+			age: sessionData.age ?? undefined,
+			gender: (sessionData.gender as any) ?? undefined,
+			occupation_role: (sessionData.occupation_role as any) ?? undefined,
+			domain_background: (sessionData.domain_background as any) ?? undefined,
+			investment_experience:
+				(sessionData.investment_experience as any) ?? undefined,
+			feedback: sessionData.feedback ?? "",
 		},
 		mode: "onChange",
 	});
@@ -244,6 +266,16 @@ function Questionnaire() {
 		if (currentStepConfig.isLast) return;
 
 		if (isValid) {
+			const values = form.getValues();
+			const currentFieldsData = currentStepConfig.fields.reduce(
+				(acc, field) => {
+					acc[field] = values[field];
+					return acc;
+				},
+				{} as any,
+			);
+			await updateQuestionnaireSession({ data: currentFieldsData });
+
 			await nav({
 				to: "/questionnaire",
 				search: { step: step + 1 },
@@ -770,12 +802,16 @@ function Questionnaire() {
 						<Button
 							type="button"
 							variant="ghost"
-							onClick={() =>
-								nav({ to: "/questionnaire", search: { step: step - 1 } })
-							}
 							className="pl-0 hover:bg-transparent hover:text-primary md:pl-4 md:hover:bg-accent"
+							asChild
 						>
-							{m.common_back()}
+							<Link
+								to={"/questionnaire"}
+								search={{ step: step - 1 }}
+								preload="intent"
+							>
+								{m.common_back()}
+							</Link>
 						</Button>
 					) : (
 						<div />

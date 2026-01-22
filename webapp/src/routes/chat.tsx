@@ -14,7 +14,6 @@ import PromptInputComponent from "@/components/PromptInput.tsx";
 import { StudyHeader } from "@/components/StudyHeader.tsx";
 import { AITypingBubble } from "@/components/ui/AITypingBubble.tsx";
 import { Markdown } from "@/components/ui/markdown.tsx";
-import { airtable } from "@/lib/airtable.ts";
 import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { m } from "@/paraglide/messages.js";
@@ -27,26 +26,17 @@ export const finishTask = createServerFn({ method: "POST" })
 	)
 	.handler(async ({ data }) => {
 		const session = await useUserSession();
-		if (!session.data.recId) throw new Error("No recId in session data");
+		if (!session.data["Teilnehmer ID"])
+			throw new Error("No Teilnehmer ID in session data");
 
-		await airtable
-			.update([
-				{
-					id: session.data.recId,
-					fields: {
-						// Set the end timestamp
-						Endzeit: new Date().toISOString(),
-						// Save message count if provided (only relevant for chat)
-						...(data.messageCount !== undefined && {
-							Nachrichten_Anzahl: data.messageCount,
-						}),
-					},
-				},
-			])
-			.catch((err: Error) => {
-				console.error("Error saving finish task data:", err);
-				throw err;
-			});
+		await session.update({
+			// Set the end timestamp
+			Endzeit: new Date().toISOString(),
+			// Save message count if provided (only relevant for chat)
+			...(data.messageCount !== undefined && {
+				Nachrichten_Anzahl: data.messageCount,
+			}),
+		});
 	});
 
 export const Route = createFileRoute("/chat")({

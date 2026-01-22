@@ -8,49 +8,18 @@ import { LikertScale } from "@/components/LikertScale";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { airtable } from "@/lib/airtable.ts";
 import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { m } from "@/paraglide/messages.js";
 
 export const Route = createFileRoute("/affinity-for-technology")({
 	component: AffinityForTechnologyForm,
+	loader: async () => await getAffTechSessionData(),
 });
 
 export const LIKERT_LEFT = m.common_likert7_1();
 export const LIKERT_CENTER = m.common_likert7_4();
 export const LIKERT_RIGHT = m.common_likert7_7();
-
-export const likert7Options = [
-	{
-		value: 1 as const,
-		label: m.common_likert7_1(),
-	},
-	{
-		value: 2 as const,
-		label: "",
-	},
-	{
-		value: 3 as const,
-		label: "",
-	},
-	{
-		value: 4 as const,
-		label: m.common_likert7_4(),
-	},
-	{
-		value: 5 as const,
-		label: "",
-	},
-	{
-		value: 6 as const,
-		label: "",
-	},
-	{
-		value: 7 as const,
-		label: m.common_likert7_7(),
-	},
-];
 
 export const Likert7 = z.union([
 	z.literal(1),
@@ -61,6 +30,8 @@ export const Likert7 = z.union([
 	z.literal(6),
 	z.literal(7),
 ]);
+
+export type Likert7 = z.infer<typeof Likert7>;
 
 const afftechAnswers = z.object({
 	afftech_q1: Likert7,
@@ -76,45 +47,54 @@ const afftechAnswers = z.object({
 
 type AffTechFormValues = z.infer<typeof afftechAnswers>;
 
+const getAffTechSessionData = createServerFn({ method: "GET" }).handler(
+	async () => {
+		const session = await useUserSession();
+		return {
+			afftech_q1: session.data.afftech_q1,
+			afftech_q2: session.data.afftech_q2,
+			afftech_q3: session.data.afftech_q3,
+			afftech_q4: session.data.afftech_q4,
+			afftech_q5: session.data.afftech_q5,
+			afftech_q6: session.data.afftech_q6,
+			afftech_q7: session.data.afftech_q7,
+			afftech_q8: session.data.afftech_q8,
+			afftech_q9: session.data.afftech_q9,
+		};
+	},
+);
+
 const submitAffinityForTechnologyForm = createServerFn({ method: "POST" })
 	.inputValidator(afftechAnswers)
 	.handler(async ({ data }) => {
 		const session = await useUserSession();
 
-		if (!session.data.recId) {
+		if (!session.data["Teilnehmer ID"]) {
 			throw redirect({ to: "/" });
 		}
-		await airtable
-			.update([
-				{
-					id: session.data.recId,
-					fields: {
-						...data,
-					},
-				},
-			])
-			.catch((err) => {
-				console.error("Airtable Update Error:", err);
-				throw err;
-			});
+		await session.update({
+			...data,
+		});
 	});
 
 export function AffinityForTechnologyForm() {
 	const nav = useNavigate();
 	usePreloadRoute("/scenario");
 
+	const sessionData = Route.useLoaderData();
+
 	const form = useForm<AffTechFormValues>({
 		resolver: zodResolver(afftechAnswers),
 		defaultValues: {
-			afftech_q1: undefined,
-			afftech_q2: undefined,
-			afftech_q3: undefined,
-			afftech_q4: undefined,
-			afftech_q5: undefined,
-			afftech_q6: undefined,
-			afftech_q7: undefined,
-			afftech_q8: undefined,
-			afftech_q9: undefined,
+			afftech_q1: sessionData.afftech_q1 as Likert7 | undefined,
+			afftech_q2: sessionData.afftech_q2 as Likert7 | undefined,
+			afftech_q3: sessionData.afftech_q3 as Likert7 | undefined,
+			afftech_q4: sessionData.afftech_q4 as Likert7 | undefined,
+			afftech_q5: sessionData.afftech_q5 as Likert7 | undefined,
+			afftech_q6: sessionData.afftech_q6 as Likert7 | undefined,
+			afftech_q7: sessionData.afftech_q7 as Likert7 | undefined,
+			afftech_q8: sessionData.afftech_q8 as Likert7 | undefined,
+			afftech_q9: sessionData.afftech_q9 as Likert7 | undefined,
 		},
 		mode: "onSubmit",
 	});

@@ -21,15 +21,24 @@ import {
 	SelectTrigger,
 } from "@/components/ui/select.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { airtable } from "@/lib/airtable.ts";
 import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
 import { getLocale, locales, setLocale } from "@/paraglide/runtime";
 
+export const clearSession = createServerFn({ method: "POST" }).handler(
+	async () => {
+		const session = await useUserSession();
+		await session.clear();
+	},
+);
+
 export const Route = createFileRoute("/")({
 	component: Consent,
+	beforeLoad: async () => {
+		await clearSession();
+	},
 });
 
 const getCountryCode = (locale: string) =>
@@ -42,25 +51,11 @@ const startStudy = createServerFn({ method: "POST" })
 		}),
 	)
 	.handler(async ({ data }) => {
-		const [session, records] = await Promise.all([
-			useUserSession(),
-			airtable.create([
-				{
-					fields: {
-						"Teilnehmer ID": crypto.randomUUID(),
-						Zielgruppe: data.isTargetAudience,
-					},
-				},
-			]),
-		]);
-
-		if (!records || records.length === 0) {
-			throw new Error("Failed to create Airtable record");
-		}
-
-		const newRecId = records[0].id;
-		await session.update({ recId: newRecId });
-		return { recId: newRecId };
+		const session = await useUserSession();
+		await session.update({
+			"Teilnehmer ID": crypto.randomUUID(),
+			Zielgruppe: data.isTargetAudience,
+		});
 	});
 
 function Consent() {

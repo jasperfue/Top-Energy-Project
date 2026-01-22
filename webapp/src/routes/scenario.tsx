@@ -34,42 +34,25 @@ const updateStudyVariant = createServerFn({ method: "POST" })
 	.inputValidator(z.enum(["chat", "dashboard"]))
 	.handler(async ({ data }) => {
 		const session = await useUserSession();
-		if (!session.data.recId) throw new Error("No recId in session data");
+		if (!session.data["Teilnehmer ID"])
+			throw new Error("No Teilnehmer ID in session data");
 
-		await airtable
-			.update([
-				{
-					id: session.data.recId,
-					fields: {
-						Studienvariante: data === "chat" ? "Chat" : "Dashboard",
-						Startzeit: new Date().toISOString(),
-					},
-				},
-			])
-			.catch((err: Error) => {
-				console.error("Error updating study variant:", err);
-			});
+		await session.update({
+			Studienvariante: data === "chat" ? "Chat" : "Dashboard",
+			Startzeit: new Date().toISOString(),
+		});
 	});
 
 const getPrototypeType = createServerFn().handler(
-	async (): Promise<{ variant: "chat" | "dashboard"; isExisting: boolean }> => {
+	async (): Promise<{ variant: "chat" | "dashboard" }> => {
 		const session = await useUserSession();
 
-		// Check if there is already a record for the current user
-		if (session.data.recId) {
-			try {
-				const userRecord = await airtable.find(session.data.recId);
-				const currentVariant = userRecord.fields?.Studienvariante;
-
-				if (currentVariant === "Chat") {
-					return { variant: "chat", isExisting: true };
-				}
-				if (currentVariant === "Dashboard") {
-					return { variant: "dashboard", isExisting: true };
-				}
-			} catch (error) {
-				console.error("Failed to fetch existing user record:", error);
-			}
+		if (session.data.Studienvariante) {
+			return {
+				variant: session.data.Studienvariante.toLowerCase() as
+					| "chat"
+					| "dashboard",
+			};
 		}
 
 		const allRecords = await airtable
@@ -84,7 +67,7 @@ const getPrototypeType = createServerFn().handler(
 		}
 
 		const newVariant = counts.chat > counts.dashboard ? "dashboard" : "chat";
-		return { variant: newVariant, isExisting: false };
+		return { variant: newVariant };
 	},
 );
 
@@ -111,11 +94,9 @@ function Scenario() {
 		setIsLoading(true);
 
 		try {
-			const { variant, isExisting } = await deferredSlowData;
-			// Only update if the variant is not already set in Airtable
-			if (!isExisting) {
-				await updateStudyVariant({ data: variant });
-			}
+			const { variant } = await deferredSlowData;
+			// Update session if it's a new session or variant changed
+			await updateStudyVariant({ data: variant });
 			await nav({ to: `/${variant}` });
 		} catch (error) {
 			console.error("Error during start sequence:", error);
