@@ -253,7 +253,7 @@
 	"demographics_domain_business": "Commercial / Business Admin / Administration",
 	"demographics_domain_technical": "Technical / Skilled Trades / Manufacturing / Engineering",
 	"demographics_domain_it": "IT / Digitalization",
-	"demographics_domain_other": "Other ",
+	"demographics_domain_other": "Other",
 
 	"demographics_investexp_question": "How much experience do you have with corporate investment decisions?",
 	"demographics_investexp_none": "No experience",
