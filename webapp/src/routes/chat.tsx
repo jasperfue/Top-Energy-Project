@@ -10,6 +10,10 @@ import {
 	ConversationScrollButton,
 } from "@/components/ai-elements/conversation.tsx";
 import { Message, MessageContent } from "@/components/ai-elements/message.tsx";
+import {
+	Suggestion,
+	Suggestions,
+} from "@/components/ai-elements/suggestion.tsx";
 import PromptInputComponent from "@/components/PromptInput.tsx";
 import { StudyHeader } from "@/components/StudyHeader.tsx";
 import { AITypingBubble } from "@/components/ui/AITypingBubble.tsx";
@@ -96,6 +100,18 @@ function Chat() {
 		}
 	};
 
+	const lastAssistantMessage = [...messages]
+		.reverse()
+		.find((m) => m.role === "assistant");
+
+	const suggestions =
+		lastAssistantMessage?.parts
+			.filter((part) => part.type === "text")
+			.flatMap((part) => {
+				const matches = part.text.matchAll(/<Suggestion>(.*?)<\/Suggestion>/g);
+				return Array.from(matches).map((match) => match[1]);
+			}) || [];
+
 	return (
 		// We set h-dvh here to ensure the chat takes the full viewport height
 		<div className="flex flex-col pt-2 md:pt-4 h-dvh w-full overflow-hidden bg-background overscroll-y-none">
@@ -114,7 +130,10 @@ function Chat() {
 												case "text": // we don't use any reasoning or tool calls in this example
 													return (
 														<Markdown key={`${message.id}-${i}`}>
-															{part.text}
+															{part.text.replace(
+																/<Suggestion>.*?<\/Suggestion>/g,
+																"",
+															)}
 														</Markdown>
 													);
 												default:
@@ -130,7 +149,18 @@ function Chat() {
 						</ConversationContent>
 						<ConversationScrollButton />
 					</Conversation>
-					<div className="w-full bg-background pb-[env(safe-area-inset-bottom)]">
+					<div className="w-full bg-background pb-[env(safe-area-inset-bottom)] max-h-[40dvh] overflow-y-auto">
+						{suggestions.length > 0 && status === "ready" && (
+							<Suggestions className="px-4 py-2">
+								{suggestions.map((suggestion) => (
+									<Suggestion
+										key={suggestion}
+										onClick={(s) => sendMessage({ text: s })}
+										suggestion={suggestion}
+									/>
+								))}
+							</Suggestions>
+						)}
 						<PromptInputComponent
 							stop={stop}
 							// @ts-expect-error
