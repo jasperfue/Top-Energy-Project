@@ -58,7 +58,7 @@ const RAW_DATA = {
 	co2Ist: 76.55,
 	co2Soll: -18.89,
 	autarky: 67.9,
-	selfUse: 48.4,
+	selfUse: 54.4,
 };
 
 const PIE_DATA_AUTARKIE = [
