@@ -34,7 +34,7 @@ import {
 import { TooltipProvider } from "@/components/ui/tooltip.tsx";
 import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import * as m from "@/paraglide/messages";
-import type { getLocale } from "@/paraglide/runtime";
+import { getLocale } from "@/paraglide/runtime";
 import { finishTask } from "@/routes/chat.tsx";
 
 export const Route = createFileRoute("/dashboard")({
@@ -105,6 +105,7 @@ function Dashboard() {
 // --- SUB-COMPONENTS ---
 
 function AssumptionsSection() {
+	const currentLocale = getLocale();
 	return (
 		<section className="mt-8">
 			<Card className="shadow-sm">
@@ -137,16 +138,20 @@ function AssumptionsSection() {
 												<TableCell className="font-medium">
 													{m.dashboard_row_electricity()}
 												</TableCell>
-												<TableCell>24,92 ct/kWh</TableCell>
-												<TableCell>153,55 €/kW/a</TableCell>
-												<TableCell>6,2 ct/kWh</TableCell>
+												<TableCell>
+													{fmt(24.92, currentLocale)} ct/kWh
+												</TableCell>
+												<TableCell>
+													{fmt(153.55, currentLocale)} €/kW/a
+												</TableCell>
+												<TableCell>{fmt(6.2, currentLocale)} ct/kWh</TableCell>
 											</TableRow>
 											<TableRow>
 												<TableCell className="font-medium">
 													{m.dashboard_row_fuel()}
 												</TableCell>
-												<TableCell>8,00 ct/kWh</TableCell>
-												<TableCell>500,00 €/a</TableCell>
+												<TableCell>8 ct/kWh</TableCell>
+												<TableCell>500 €/a</TableCell>
 												<TableCell>-</TableCell>
 											</TableRow>
 										</TableBody>
@@ -170,9 +175,9 @@ function AssumptionsSection() {
 											{m.dashboard_load_elec_total()}
 										</span>
 										<span className="font-medium block pt-1">
-											395 MWh/a + 70 MWh
+											395 MWh/a + 70 MWh{" "}
 											<span className="text-muted-foreground text-xs ml-1">
-												({m.dashboard_load_cool().split(" ")[1]})
+												{m.dashboard_load_cool().split(" ")[1]}
 											</span>
 										</span>
 									</div>
@@ -180,13 +185,17 @@ function AssumptionsSection() {
 										<span className="block text-muted-foreground text-xs uppercase tracking-wide">
 											{m.dashboard_load_elec_peak()}
 										</span>
-										<span className="font-medium block pt-1">352,8 kW</span>
+										<span className="font-medium block pt-1">
+											{fmt(352.8, currentLocale)} kW
+										</span>
 									</div>
 									<div className="space-y-1 bg-muted/30 p-3 rounded-md">
 										<span className="block text-muted-foreground text-xs uppercase tracking-wide">
 											{m.dashboard_load_heat()}
 										</span>
-										<span className="font-medium block pt-1">126,5 MWh/a</span>
+										<span className="font-medium block pt-1">
+											{fmt(126.5, currentLocale)} MWh/a
+										</span>
 									</div>
 									<div className="space-y-1 bg-muted/30 p-3 rounded-md">
 										<span className="block text-muted-foreground text-xs uppercase tracking-wide">
