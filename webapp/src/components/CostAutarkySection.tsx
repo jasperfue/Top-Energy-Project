@@ -183,14 +183,14 @@ export function CostAutarkySection() {
 						<div className="grid grid-cols-2 gap-4 w-full">
 							{/* Autarky Chart */}
 							<div className="flex flex-col items-center">
-								<div className="relative w-full md:h-[200px] h-[140px]">
+								<div className="relative w-full aspect-square max-h-[200px] md:max-h-[300px]">
 									<ResponsiveContainer width="100%" height="100%">
 										<PieChart>
 											<Pie
 												data={PIE_DATA_AUTARKIE}
 												cx="50%"
 												cy="50%"
-												innerRadius={isMobile ? 40 : 60}
+												innerRadius={isMobile ? 45 : 60}
 												outerRadius={isMobile ? 60 : 80}
 												paddingAngle={5}
 												dataKey="value"
@@ -204,7 +204,7 @@ export function CostAutarkySection() {
 										</PieChart>
 									</ResponsiveContainer>
 									<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-										<span className="text-xl font-bold">
+										<span className="text-lg md:text-xl font-bold">
 											{fmt(RAW_DATA.autarky, currentLocale)}%
 										</span>
 									</div>
@@ -236,14 +236,14 @@ export function CostAutarkySection() {
 
 							{/* Self-Use Chart */}
 							<div className="flex flex-col items-center">
-								<div className="relative w-full md:h-[200px] h-[140px]">
+								<div className="relative w-full aspect-square max-h-[140px] md:max-h-[200px]">
 									<ResponsiveContainer width="100%" height="100%">
 										<PieChart>
 											<Pie
 												data={PIE_DATA_SELF_USE}
 												cx="50%"
 												cy="50%"
-												innerRadius={isMobile ? 40 : 60}
+												innerRadius={isMobile ? 45 : 60}
 												outerRadius={isMobile ? 60 : 80}
 												paddingAngle={5}
 												dataKey="value"
@@ -257,7 +257,7 @@ export function CostAutarkySection() {
 										</PieChart>
 									</ResponsiveContainer>
 									<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-										<span className="text-xl font-bold">
+										<span className="text-lg md:text-xl font-bold">
 											{fmt(RAW_DATA.selfUse, currentLocale)}%
 										</span>
 									</div>
@@ -289,21 +289,21 @@ export function CostAutarkySection() {
 						</div>
 					</TooltipProvider>
 
-					<div className="grid grid-cols-2 gap-x-8 gap-y-2 mt-2">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mt-2">
 						{/* Autarky Legend */}
-						<div className="space-y-2">
-							<div className="flex justify-between md:flex-row flex-col text-xs items-center">
+						<div className="space-y-1.5">
+							<div className="flex justify-between text-[11px] md:text-xs items-center">
 								<span className="flex items-center gap-2 text-muted-foreground">
-									<div className="w-2.5 h-2.5 rounded-full bg-green-600 shrink-0" />
+									<div className="w-2 h-2 rounded-full bg-green-600 shrink-0" />
 									{m.dashboard_label_own_generation()}
 								</span>
 								<span className="font-medium">
 									{fmt(RAW_DATA.autarky, currentLocale)}%
 								</span>
 							</div>
-							<div className="flex justify-between md:flex-row flex-col text-xs items-center">
+							<div className="flex justify-between text-[11px] md:text-xs items-center">
 								<span className="flex items-center gap-2 text-muted-foreground">
-									<div className="w-2.5 h-2.5 rounded-full bg-slate-200 shrink-0" />
+									<div className="w-2 h-2 rounded-full bg-slate-200 shrink-0" />
 									{m.dashboard_legend_grid()}
 								</span>
 								<span className="font-medium">
@@ -313,19 +313,19 @@ export function CostAutarkySection() {
 						</div>
 
 						{/* Self-Use Legend */}
-						<div className="space-y-2">
-							<div className="flex justify-between md:flex-row flex-col text-xs items-center">
+						<div className="space-y-1.5">
+							<div className="flex justify-between text-[11px] md:text-xs items-center">
 								<span className="flex items-center gap-2 text-muted-foreground">
-									<div className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0" />
+									<div className="w-2 h-2 rounded-full bg-blue-500 shrink-0" />
 									{m.dashboard_label_self_consumption()}
 								</span>
 								<span className="font-medium">
 									{fmt(RAW_DATA.selfUse, currentLocale)}%
 								</span>
 							</div>
-							<div className="flex justify-between md:flex-row flex-col text-xs items-center">
+							<div className="flex justify-between text-[11px] md:text-xs items-center">
 								<span className="flex items-center gap-2 text-muted-foreground">
-									<div className="w-2.5 h-2.5 rounded-full bg-slate-200 shrink-0" />
+									<div className="w-2 h-2 rounded-full bg-slate-200 shrink-0" />
 									{m.dashboard_legend_export()}
 								</span>
 								<span className="font-medium">
