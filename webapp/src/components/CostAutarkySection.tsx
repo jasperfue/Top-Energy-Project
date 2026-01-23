@@ -1,3 +1,4 @@
+import { Info } from "lucide-react";
 import {
 	Bar,
 	BarChart,
@@ -13,7 +14,7 @@ import {
 	YAxis,
 } from "recharts";
 import type { CustomTooltipProps } from "@/components/SystemDynamicsSection.tsx";
-import { Separator } from "@/components/ui/separator.tsx";
+import useIsMobile from "@/hooks/use-is-mobile.ts";
 import * as m from "@/paraglide/messages";
 import { getLocale } from "@/paraglide/runtime";
 import { fmt } from "@/routes/dashboard.tsx";
@@ -24,6 +25,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from "./ui/card";
+import {
+	Tooltip as ShadTooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "./ui/tooltip";
 
 const COST_DATA = [
 	{
@@ -56,19 +63,33 @@ const RAW_DATA = {
 
 const PIE_DATA_AUTARKIE = [
 	{
-		name: m.dashboard_legend_grid(),
-		value: 100 - RAW_DATA.autarky,
-		color: "#94a3b8",
-	},
-	{
 		name: m.dashboard_legend_autarky_pv(),
 		value: RAW_DATA.autarky,
 		color: "#16a34a",
+	},
+	{
+		name: m.dashboard_legend_grid(),
+		value: 100 - RAW_DATA.autarky,
+		color: "#e2e8f0",
+	},
+];
+
+const PIE_DATA_SELF_USE = [
+	{
+		name: m.dashboard_label_self_consumption(),
+		value: RAW_DATA.selfUse,
+		color: "#3b82f6",
+	},
+	{
+		name: m.dashboard_legend_export(),
+		value: 100 - RAW_DATA.selfUse,
+		color: "#e2e8f0",
 	},
 ];
 
 export function CostAutarkySection() {
 	const currentLocale = getLocale();
+	const { isMobile } = useIsMobile();
 	return (
 		<section className="grid gap-4 md:grid-cols-7">
 			<Card className="md:col-span-4 shadow-sm">
@@ -157,54 +178,160 @@ export function CostAutarkySection() {
 						{m.dashboard_chart_autarky_desc()}
 					</CardDescription>
 				</CardHeader>
-				<CardContent className="flex flex-col items-center justify-center h-[280px] md:h-[300px]">
-					<div className="relative w-full h-[180px]">
-						<ResponsiveContainer width="100%" height="100%">
-							<PieChart>
-								<Pie
-									data={PIE_DATA_AUTARKIE}
-									cx="50%"
-									cy="50%"
-									innerRadius={60}
-									outerRadius={80}
-									paddingAngle={5}
-									dataKey="value"
-								>
-									{PIE_DATA_AUTARKIE.map((entry) => (
-										<Cell key={`cell-${entry.name}`} fill={entry.color} />
-									))}
-								</Pie>
-							</PieChart>
-						</ResponsiveContainer>
-						<div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-							<span className="text-3xl font-bold">
-								{fmt(RAW_DATA.autarky, currentLocale)}%
-							</span>
-							<span className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider">
-								{m.dashboard_label_autarky()}
-							</span>
+				<CardContent className="flex flex-col gap-6 py-4 h-full justify-center">
+					<TooltipProvider>
+						<div className="grid grid-cols-2 gap-4 w-full">
+							{/* Autarky Chart */}
+							<div className="flex flex-col items-center">
+								<div className="relative w-full md:h-[200px] h-[140px]">
+									<ResponsiveContainer width="100%" height="100%">
+										<PieChart>
+											<Pie
+												data={PIE_DATA_AUTARKIE}
+												cx="50%"
+												cy="50%"
+												innerRadius={isMobile ? 40 : 60}
+												outerRadius={isMobile ? 60 : 80}
+												paddingAngle={5}
+												dataKey="value"
+												startAngle={90}
+												endAngle={450}
+											>
+												{PIE_DATA_AUTARKIE.map((entry) => (
+													<Cell key={`cell-${entry.name}`} fill={entry.color} />
+												))}
+											</Pie>
+										</PieChart>
+									</ResponsiveContainer>
+									<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+										<span className="text-xl font-bold">
+											{fmt(RAW_DATA.autarky, currentLocale)}%
+										</span>
+									</div>
+								</div>
+								<div className="flex items-center gap-1.5 mt-2">
+									<span className="text-xs font-medium text-center leading-tight">
+										{m.dashboard_label_autarky()}
+									</span>
+									<ShadTooltip>
+										<TooltipTrigger asChild>
+											<div className="p-1 -m-1 cursor-pointer">
+												<Info className="h-3.5 w-3.5 text-muted-foreground/50 hover:text-primary transition-colors" />
+											</div>
+										</TooltipTrigger>
+										<TooltipContent
+											side="bottom"
+											align="start"
+											className="p-0 overflow-hidden shadow-lg border-none z-50"
+										>
+											<div className="bg-popover border text-popover-foreground p-3 max-w-[250px]">
+												<p className="text-sm leading-relaxed">
+													{m.dashboard_tooltip_autarky_desc()}
+												</p>
+											</div>
+										</TooltipContent>
+									</ShadTooltip>
+								</div>
+							</div>
+
+							{/* Self-Use Chart */}
+							<div className="flex flex-col items-center">
+								<div className="relative w-full md:h-[200px] h-[140px]">
+									<ResponsiveContainer width="100%" height="100%">
+										<PieChart>
+											<Pie
+												data={PIE_DATA_SELF_USE}
+												cx="50%"
+												cy="50%"
+												innerRadius={isMobile ? 40 : 60}
+												outerRadius={isMobile ? 60 : 80}
+												paddingAngle={5}
+												dataKey="value"
+												startAngle={90}
+												endAngle={450}
+											>
+												{PIE_DATA_SELF_USE.map((entry) => (
+													<Cell key={`cell-${entry.name}`} fill={entry.color} />
+												))}
+											</Pie>
+										</PieChart>
+									</ResponsiveContainer>
+									<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+										<span className="text-xl font-bold">
+											{fmt(RAW_DATA.selfUse, currentLocale)}%
+										</span>
+									</div>
+								</div>
+								<div className="flex items-center gap-1.5 mt-2">
+									<span className="text-xs font-medium text-center leading-tight">
+										{m.dashboard_label_self_consumption()}
+									</span>
+									<ShadTooltip>
+										<TooltipTrigger asChild>
+											<div className="p-1 -m-1 cursor-pointer">
+												<Info className="h-3.5 w-3.5 text-muted-foreground/50 hover:text-primary transition-colors" />
+											</div>
+										</TooltipTrigger>
+										<TooltipContent
+											side="bottom"
+											align="start"
+											className="p-0 overflow-hidden shadow-lg border-none z-50"
+										>
+											<div className="bg-popover border text-popover-foreground p-3 max-w-[250px]">
+												<p className="text-sm leading-relaxed">
+													{m.dashboard_tooltip_self_use_desc()}
+												</p>
+											</div>
+										</TooltipContent>
+									</ShadTooltip>
+								</div>
+							</div>
 						</div>
-					</div>
-					<div className="mt-4 w-full space-y-3 px-2">
-						<div className="flex justify-between text-sm items-center">
-							<span className="flex items-center gap-2">
-								<div className="w-3 h-3 rounded-full bg-green-600 shrink-0" />
-								<span className="truncate">
+					</TooltipProvider>
+
+					<div className="grid grid-cols-2 gap-x-8 gap-y-2 mt-2">
+						{/* Autarky Legend */}
+						<div className="space-y-2">
+							<div className="flex justify-between md:flex-row flex-col text-xs items-center">
+								<span className="flex items-center gap-2 text-muted-foreground">
+									<div className="w-2.5 h-2.5 rounded-full bg-green-600 shrink-0" />
 									{m.dashboard_label_own_generation()}
 								</span>
-							</span>
-							<span className="font-medium whitespace-nowrap">
-								{fmt(RAW_DATA.autarky, currentLocale)}%
-							</span>
+								<span className="font-medium">
+									{fmt(RAW_DATA.autarky, currentLocale)}%
+								</span>
+							</div>
+							<div className="flex justify-between md:flex-row flex-col text-xs items-center">
+								<span className="flex items-center gap-2 text-muted-foreground">
+									<div className="w-2.5 h-2.5 rounded-full bg-slate-200 shrink-0" />
+									{m.dashboard_legend_grid()}
+								</span>
+								<span className="font-medium">
+									{fmt(100 - RAW_DATA.autarky, currentLocale)}%
+								</span>
+							</div>
 						</div>
-						<Separator />
-						<div className="flex justify-between text-sm items-center">
-							<span className="text-muted-foreground truncate pr-2">
-								{m.dashboard_label_self_consumption()}
-							</span>
-							<span className="font-medium whitespace-nowrap">
-								{fmt(RAW_DATA.selfUse, currentLocale)}%
-							</span>
+
+						{/* Self-Use Legend */}
+						<div className="space-y-2">
+							<div className="flex justify-between md:flex-row flex-col text-xs items-center">
+								<span className="flex items-center gap-2 text-muted-foreground">
+									<div className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0" />
+									{m.dashboard_label_self_consumption()}
+								</span>
+								<span className="font-medium">
+									{fmt(RAW_DATA.selfUse, currentLocale)}%
+								</span>
+							</div>
+							<div className="flex justify-between md:flex-row flex-col text-xs items-center">
+								<span className="flex items-center gap-2 text-muted-foreground">
+									<div className="w-2.5 h-2.5 rounded-full bg-slate-200 shrink-0" />
+									{m.dashboard_legend_export()}
+								</span>
+								<span className="font-medium">
+									{fmt(100 - RAW_DATA.selfUse, currentLocale)}%
+								</span>
+							</div>
 						</div>
 					</div>
 				</CardContent>

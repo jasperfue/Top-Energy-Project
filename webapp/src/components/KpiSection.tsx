@@ -145,7 +145,7 @@ function KpiCard({
 	trend,
 	trendText,
 	tooltipData,
-}: KpiCardProps) {
+}: Readonly<KpiCardProps>) {
 	return (
 		<Card className="relative overflow-visible shadow-sm">
 			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
