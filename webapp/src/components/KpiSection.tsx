@@ -16,6 +16,7 @@ import {
 import {
 	Tooltip,
 	TooltipContent,
+	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip.tsx";
 import * as m from "@/paraglide/messages";
@@ -87,42 +88,44 @@ export function KpiSection() {
 		],
 	};
 	return (
-		<section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-			<KpiCard
-				title={m.dashboard_kpi_invest_title()}
-				value={`${fmt(RAW_DATA.invest, currentLocale)} €`}
-				subtitle={m.dashboard_kpi_invest_subtitle()}
-				icon={Euro}
-				tooltipData={KPI_DETAILS.invest}
-			/>
-			<KpiCard
-				title={m.dashboard_kpi_savings_title()}
-				value={`${fmt(RAW_DATA.savingsYearly, currentLocale)} €`}
-				subtitle={m.dashboard_kpi_savings_subtitle()}
-				icon={TrendingDown}
-				trend="positive"
-				trendText={m.dashboard_kpi_savings_trend()}
-				tooltipData={KPI_DETAILS.savings}
-			/>
-			<KpiCard
-				title={m.dashboard_kpi_amortization_title()}
-				value={`${fmt(RAW_DATA.amortization, currentLocale)} ${m.dashboard_kpi_amortization_unit()}`}
-				subtitle={m.dashboard_kpi_amortization_subtitle()}
-				icon={Timer}
-			/>
-			<KpiCard
-				title={m.dashboard_kpi_co2_title()}
-				value={`${fmt(RAW_DATA.co2Soll, currentLocale)} t/a`}
-				subtitle={m.dashboard_kpi_co2_subtitle({
-					value: fmt(RAW_DATA.co2Ist, currentLocale),
-				})}
-				icon={Leaf}
-				highlightClass="text-green-600"
-				trend="positive"
-				trendText={m.dashboard_kpi_co2_trend()}
-				tooltipData={KPI_DETAILS.co2}
-			/>
-		</section>
+		<TooltipProvider delayDuration={300}>
+			<section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+				<KpiCard
+					title={m.dashboard_kpi_invest_title()}
+					value={`${fmt(RAW_DATA.invest, currentLocale)} €`}
+					subtitle={m.dashboard_kpi_invest_subtitle()}
+					icon={Euro}
+					tooltipData={KPI_DETAILS.invest}
+				/>
+				<KpiCard
+					title={m.dashboard_kpi_savings_title()}
+					value={`${fmt(RAW_DATA.savingsYearly, currentLocale)} €`}
+					subtitle={m.dashboard_kpi_savings_subtitle()}
+					icon={TrendingDown}
+					trend="positive"
+					trendText={m.dashboard_kpi_savings_trend()}
+					tooltipData={KPI_DETAILS.savings}
+				/>
+				<KpiCard
+					title={m.dashboard_kpi_amortization_title()}
+					value={`${fmt(RAW_DATA.amortization, currentLocale)} ${m.dashboard_kpi_amortization_unit()}`}
+					subtitle={m.dashboard_kpi_amortization_subtitle()}
+					icon={Timer}
+				/>
+				<KpiCard
+					title={m.dashboard_kpi_co2_title()}
+					value={`${fmt(RAW_DATA.co2Soll, currentLocale)} t/a`}
+					subtitle={m.dashboard_kpi_co2_subtitle({
+						value: fmt(RAW_DATA.co2Ist, currentLocale),
+					})}
+					icon={Leaf}
+					highlightClass="text-green-600"
+					trend="positive"
+					trendText={m.dashboard_kpi_co2_trend()}
+					tooltipData={KPI_DETAILS.co2}
+				/>
+			</section>
+		</TooltipProvider>
 	);
 }
 

@@ -31,7 +31,6 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table.tsx";
-import { TooltipProvider } from "@/components/ui/tooltip.tsx";
 import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import * as m from "@/paraglide/messages";
 import { getLocale } from "@/paraglide/runtime";
@@ -83,10 +82,8 @@ function Dashboard() {
 
 			<div className="flex-1 flex flex-col">
 				<main className="container mx-auto px-2 md:px-4 py-4 md:py-8 space-y-6 md:space-y-8 pb-10 flex-1 flex flex-col">
-					<TooltipProvider delayDuration={300}>
-						{/* 1. SECTION: EXECUTIVE SUMMARY (KPIs) */}
-						<KpiSection />
-					</TooltipProvider>
+					{/* 1. SECTION: EXECUTIVE SUMMARY (KPIs) */}
+					<KpiSection />
 
 					<SystemConfigurationBar />
 
