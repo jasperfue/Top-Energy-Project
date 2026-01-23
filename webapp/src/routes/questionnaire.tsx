@@ -193,6 +193,10 @@ function Questionnaire() {
 
 	const sessionData = Route.useLoaderData();
 
+	useEffect(() => {
+		console.log("Session data:", sessionData);
+	}, [sessionData]);
+
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {

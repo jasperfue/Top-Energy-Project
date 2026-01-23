@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { Loader2 } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
@@ -85,6 +86,10 @@ export function AffinityForTechnologyForm() {
 	usePreloadRoute("/scenario");
 
 	const sessionData = Route.useLoaderData();
+
+	useEffect(() => {
+		console.log("session Data", sessionData);
+	}, [sessionData]);
 
 	const form = useForm<AffTechFormValues>({
 		resolver: zodResolver(afftechAnswers),
