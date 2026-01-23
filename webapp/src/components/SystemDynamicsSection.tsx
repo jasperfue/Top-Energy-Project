@@ -378,7 +378,7 @@ export function SystemDynamicsSection() {
 		<section className="grid gap-4 md:grid-cols-7">
 			{/* GRAPH 1: DAILY DYNAMICS */}
 			<Card className="md:col-span-3 shadow-sm">
-				<CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
+				<CardHeader className="pb-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 space-y-0">
 					<div className="space-y-1">
 						<CardTitle className="text-lg">
 							{m.dashboard_chart_daily_title()}
@@ -390,18 +390,18 @@ export function SystemDynamicsSection() {
 								: m.dashboard_chart_daily_desc_winter()}
 						</CardDescription>
 					</div>
-					<div className="flex bg-muted rounded-lg p-1 shrink-0">
+					<div className="flex bg-muted rounded-lg p-1 shrink-0 w-full md:w-auto">
 						<button
 							type="button"
 							onClick={() => setViewMode("summer")}
-							className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${viewMode === "summer" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+							className={`flex-1 md:flex-none px-3 py-1.5 text-xs font-medium rounded-md transition-all ${viewMode === "summer" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
 						>
 							{m.dashboard_season_summer()}
 						</button>
 						<button
 							type="button"
 							onClick={() => setViewMode("winter")}
-							className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${viewMode === "winter" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+							className={`flex-1 md:flex-none px-3 py-1.5 text-xs font-medium rounded-md transition-all ${viewMode === "winter" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
 						>
 							{m.dashboard_season_winter()}
 						</button>
@@ -534,7 +534,7 @@ export function SystemDynamicsSection() {
 			</Card>
 			{/* GRAPH 2: SEASONAL BALANCE (Fully Stacked Comparison) */}
 			<Card className="md:col-span-4 shadow-sm">
-				<CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
+				<CardHeader className="pb-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 space-y-0">
 					<div className="space-y-1">
 						<CardTitle className="text-lg">
 							{m.dashboard_chart_seasonal_title()}
@@ -543,18 +543,18 @@ export function SystemDynamicsSection() {
 							{m.dashboard_chart_seasonal_desc()}
 						</CardDescription>
 					</div>
-					<div className="flex bg-muted rounded-lg p-1 shrink-0">
+					<div className="flex bg-muted rounded-lg p-1 shrink-0 w-full md:w-auto">
 						<button
 							type="button"
 							onClick={() => setSeasonalViewMode("ist")}
-							className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${seasonalViewMode === "ist" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+							className={`flex-1 md:flex-none px-3 py-1.5 text-xs font-medium rounded-md transition-all ${seasonalViewMode === "ist" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
 						>
 							{m.dashboard_status_ist()}
 						</button>
 						<button
 							type="button"
 							onClick={() => setSeasonalViewMode("soll")}
-							className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${seasonalViewMode === "soll" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+							className={`flex-1 md:flex-none px-3 py-1.5 text-xs font-medium rounded-md transition-all ${seasonalViewMode === "soll" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
 						>
 							{m.dashboard_status_soll()}
 						</button>
