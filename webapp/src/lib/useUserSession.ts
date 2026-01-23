@@ -1,6 +1,6 @@
 import { createServerOnlyFn } from "@tanstack/react-start";
 import { useSession } from "@tanstack/react-start/server";
-import type { Likert7 } from "@/routes/affinity-for-technology.tsx";
+import type { Likert7 } from "@/components/LikertScale.tsx";
 
 type userSession = {
 	"Teilnehmer ID"?: string;

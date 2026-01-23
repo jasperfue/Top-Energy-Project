@@ -5,10 +5,27 @@ import {
 	type FieldPath,
 	type FieldValues,
 } from "react-hook-form";
+import z from "zod";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
+
+export const LIKERT_LEFT = m.common_likert7_1();
+export const LIKERT_CENTER = m.common_likert7_4();
+export const LIKERT_RIGHT = m.common_likert7_7();
+
+export const Likert7 = z.union([
+	z.literal(1),
+	z.literal(2),
+	z.literal(3),
+	z.literal(4),
+	z.literal(5),
+	z.literal(6),
+	z.literal(7),
+]);
+
+export type Likert7 = z.infer<typeof Likert7>;
 
 export type LikertScaleProps<TFieldValues extends FieldValues> = {
 	name: FieldPath<TFieldValues>;

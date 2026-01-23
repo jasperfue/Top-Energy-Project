@@ -7,6 +7,12 @@ import { useEffect, useEffectEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
+import {
+	LIKERT_CENTER,
+	LIKERT_LEFT,
+	LIKERT_RIGHT,
+	Likert7,
+} from "@/components/LikertScale.tsx";
 import { MultipleChoiceQuestion } from "@/components/MultipleChoiceQuestion.tsx";
 import { SemanticDifferential } from "@/components/SemanticDifferential.tsx";
 import { Button } from "@/components/ui/button";
