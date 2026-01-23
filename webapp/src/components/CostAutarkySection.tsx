@@ -159,7 +159,7 @@ export function CostAutarkySection() {
 								dataKey="Erlöse"
 								stackId="a"
 								fill="#8b5cf6"
-								name={m.dashboard_legend_feedin()}
+								name={m.dashboard_legend_feedin_saving()}
 								radius={[4, 4, 0, 0]}
 							/>
 						</BarChart>
