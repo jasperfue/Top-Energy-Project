@@ -1,10 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-	createFileRoute,
-	Link,
-	useNavigate,
-	useRouter,
-} from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { ArrowRight, Loader2, TriangleAlert } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -45,6 +40,7 @@ export const Route = createFileRoute("/questionnaire")({
 	},
 	loader: async () => await getQuestionnaireSessionData(),
 	component: Questionnaire,
+	gcTime: 0,
 });
 
 const trustAnswers = z.object({
@@ -181,7 +177,6 @@ const submitQuestionnaire = createServerFn({ method: "POST" })
 function Questionnaire() {
 	const { step } = Route.useSearch();
 	const nav = useNavigate();
-	const router = useRouter();
 	const submitQuestionnaireServerFn = useServerFn(submitQuestionnaire);
 	const updateQuestionnaireSessionServerFn = useServerFn(
 		updateQuestionnaireSession,
@@ -192,10 +187,6 @@ function Questionnaire() {
 	);
 
 	const sessionData = Route.useLoaderData();
-
-	useEffect(() => {
-		console.log("Session data:", sessionData);
-	}, [sessionData]);
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -293,7 +284,6 @@ function Questionnaire() {
 				},
 				{} as any,
 			);
-			router.invalidate();
 			await updateQuestionnaireSessionServerFn({ data: currentFieldsData });
 
 			await nav({
@@ -305,9 +295,7 @@ function Questionnaire() {
 
 	const submit = form.handleSubmit(async (values) => {
 		try {
-			console.log("Submitting questionnaire...", values);
 			await submitQuestionnaireServerFn({ data: values });
-			router.invalidate();
 			await nav({ to: "/thanks" });
 		} catch (error) {
 			console.error("Failed to submit questionnaire:", error);

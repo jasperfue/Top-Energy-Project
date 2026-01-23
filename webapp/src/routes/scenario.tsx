@@ -28,6 +28,7 @@ export const Route = createFileRoute("/scenario")({
 	loader: () => ({
 		deferredSlowData: getPrototypeType(),
 	}),
+	gcTime: 0,
 });
 
 const updateStudyVariant = createServerFn({ method: "POST" })
@@ -76,7 +77,7 @@ function Scenario() {
 	const [isLoading, setIsLoading] = useState(false);
 	const { deferredSlowData } = Route.useLoaderData();
 	const router = useRouter();
-	const updateStudyVaraintServerFn = useServerFn(updateStudyVariant);
+	const updateStudyVariantServerFn = useServerFn(updateStudyVariant);
 
 	useEffect(() => {
 		deferredSlowData
@@ -97,7 +98,7 @@ function Scenario() {
 		try {
 			const { variant } = await deferredSlowData;
 			// Update session if it's a new session or variant changed
-			await updateStudyVaraintServerFn({ data: variant });
+			await updateStudyVariantServerFn({ data: variant });
 			await nav({ to: `/${variant}` });
 		} catch (error) {
 			console.error("Error during start sequence:", error);

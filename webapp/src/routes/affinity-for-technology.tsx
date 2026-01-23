@@ -7,7 +7,6 @@ import {
 } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
@@ -21,6 +20,7 @@ import { m } from "@/paraglide/messages.js";
 export const Route = createFileRoute("/affinity-for-technology")({
 	component: AffinityForTechnologyForm,
 	loader: async () => await getAffTechSessionData(),
+	gcTime: 0,
 });
 
 export const LIKERT_LEFT = m.common_likert7_1();
@@ -92,10 +92,6 @@ export function AffinityForTechnologyForm() {
 	const router = useRouter();
 
 	const sessionData = Route.useLoaderData();
-
-	useEffect(() => {
-		console.log("session Data", sessionData);
-	}, [sessionData]);
 
 	const form = useForm<AffTechFormValues>({
 		resolver: zodResolver(afftechAnswers),
