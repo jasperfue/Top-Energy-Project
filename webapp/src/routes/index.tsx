@@ -1,4 +1,8 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	useNavigate,
+	useRouter,
+} from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { ArrowRight, Clock, Loader2, Mail } from "lucide-react";
 import { useState } from "react";
@@ -21,7 +25,6 @@ import {
 	SelectTrigger,
 } from "@/components/ui/select.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
@@ -60,17 +63,20 @@ const startStudy = createServerFn({ method: "POST" })
 
 function Consent() {
 	const nav = useNavigate();
+	const router = useRouter();
 	const [selection, setSelection] = useState<"yes" | "no" | undefined>(
 		undefined,
 	);
 	const [isLoading, setIsLoading] = useState(false);
-	usePreloadRoute("/affinity-for-technology");
 
 	const handleStart = async () => {
 		if (!selection) return;
 		setIsLoading(true);
 		try {
-			await startStudy({ data: { isTargetAudience: selection === "yes" } });
+			await Promise.all([
+				startStudy({ data: { isTargetAudience: selection === "yes" } }),
+				router.invalidate(),
+			]);
 			await nav({ to: "/affinity-for-technology" });
 		} catch (error) {
 			console.error("Failed to start study:", error);

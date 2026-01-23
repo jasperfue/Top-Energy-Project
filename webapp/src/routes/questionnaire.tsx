@@ -1,5 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	Link,
+	useNavigate,
+	useRouter,
+} from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { ArrowRight, Loader2, TriangleAlert } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -176,6 +181,7 @@ const submitQuestionnaire = createServerFn({ method: "POST" })
 function Questionnaire() {
 	const { step } = Route.useSearch();
 	const nav = useNavigate();
+	const router = useRouter();
 	usePreloadRoute(
 		step < 6 ? "/questionnaire" : "/thanks",
 		step < 6 ? { step: step + 1 } : undefined,
@@ -292,6 +298,7 @@ function Questionnaire() {
 		try {
 			console.log("Submitting questionnaire...", values);
 			await submitQuestionnaire({ data: values });
+			await router.invalidate();
 			await nav({ to: "/thanks" });
 		} catch (error) {
 			console.error("Failed to submit questionnaire:", error);
