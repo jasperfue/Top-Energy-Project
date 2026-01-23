@@ -293,6 +293,7 @@ function Questionnaire() {
 				},
 				{} as any,
 			);
+			router.invalidate();
 			await updateQuestionnaireSessionServerFn({ data: currentFieldsData });
 
 			await nav({
@@ -306,7 +307,7 @@ function Questionnaire() {
 		try {
 			console.log("Submitting questionnaire...", values);
 			await submitQuestionnaireServerFn({ data: values });
-			await router.invalidate();
+			router.invalidate();
 			await nav({ to: "/thanks" });
 		} catch (error) {
 			console.error("Failed to submit questionnaire:", error);

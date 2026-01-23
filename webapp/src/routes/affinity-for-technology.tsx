@@ -1,5 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	redirect,
+	useNavigate,
+	useRouter,
+} from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
@@ -84,6 +89,7 @@ export function AffinityForTechnologyForm() {
 		submitAffinityForTechnologyForm,
 	);
 	usePreloadRoute("/scenario");
+	const router = useRouter();
 
 	const sessionData = Route.useLoaderData();
 
@@ -109,6 +115,7 @@ export function AffinityForTechnologyForm() {
 
 	const submit = form.handleSubmit(async (values) => {
 		await submitAffinityForTechnologyFormServerFn({ data: values });
+		router.invalidate();
 		await nav({ to: "/scenario" });
 	});
 
