@@ -113,6 +113,10 @@ const demographicsAnswers = z.object({
 
 const feedbackAnswer = z.object({
 	feedback: z.string().optional(),
+	email: z
+		.email({ message: m.questionnaire_email_error() })
+		.optional()
+		.or(z.literal("")),
 });
 
 const getQuestionnaireSessionData = createServerFn({ method: "GET" }).handler(
@@ -215,8 +219,9 @@ function Questionnaire() {
 			investment_experience:
 				(sessionData.investment_experience as any) ?? undefined,
 			feedback: sessionData.feedback ?? "",
+			email: sessionData.email ?? "",
 		},
-		mode: "onChange",
+		mode: "onTouched",
 	});
 
 	const steps = [
@@ -777,19 +782,57 @@ function Questionnaire() {
 										{m.questionnaire_section_feedback()}
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-2 md:px-6 px-4">
-									<Label
-										htmlFor="feedback"
-										className="text-muted-foreground font-normal"
-									>
-										{m.questionnaire_feedback_label()}
-									</Label>
-									<Textarea
-										id="feedback"
-										placeholder={m.questionnaire_feedback_placeholder()}
-										{...form.register("feedback")}
-										className="mt-2 resize-none h-24 text-base md:text-sm"
-									/>
+								<CardContent className="space-y-4 md:px-6 px-4">
+									<div className="space-y-2">
+										<Label
+											htmlFor="feedback"
+											className="text-muted-foreground font-normal"
+										>
+											{m.questionnaire_feedback_label()}
+										</Label>
+										<Textarea
+											id="feedback"
+											placeholder={m.questionnaire_feedback_placeholder()}
+											{...form.register("feedback")}
+											className="mt-2 resize-none h-24 text-base md:text-sm"
+										/>
+									</div>
+
+									<Separator className="my-4" />
+
+									<div className="space-y-2">
+										<Label
+											htmlFor="email"
+											className="text-muted-foreground font-normal"
+										>
+											{m.questionnaire_email_label()}
+										</Label>
+										<Controller
+											control={form.control}
+											name="email"
+											render={({ field, fieldState }) => (
+												<>
+													<Input
+														{...field}
+														id="email"
+														type="email"
+														placeholder={m.questionnaire_email_placeholder()}
+														className={cn(
+															"text-base md:text-sm",
+															fieldState.error &&
+																"border-destructive focus-visible:ring-destructive",
+														)}
+													/>
+													{fieldState.error && (
+														<div className="mt-1 flex items-center justify-start gap-2 text-xs text-destructive font-medium animate-in fade-in-0 slide-in-from-top-1">
+															<TriangleAlert className="h-4 w-4" />
+															<span>{fieldState.error.message}</span>
+														</div>
+													)}
+												</>
+											)}
+										/>
+									</div>
 								</CardContent>
 							</Card>
 						)}

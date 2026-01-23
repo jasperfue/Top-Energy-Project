@@ -267,6 +267,9 @@
 	"questionnaire_section_feedback": "Comments",
 	"questionnaire_feedback_label": "Do you have any further comments regarding the study or the system? (Optional)",
 	"questionnaire_feedback_placeholder": "Enter your feedback here...",
+	"questionnaire_email_label": "Email (Optional, if you wish to be informed about the results)",
+	"questionnaire_email_placeholder": "your@email.com",
+	"questionnaire_email_error": "Please enter a valid email address",
 
 	"thanks_title": "Thank You!",
 	"thanks_subtitle": "Your answers have been successfully saved. Thank you very much for supporting this Master's thesis.",

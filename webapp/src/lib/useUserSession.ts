@@ -49,6 +49,7 @@ type userSession = {
 	domain_background?: string;
 	investment_experience?: string;
 	feedback?: string;
+	email?: string;
 };
 
 export const useUserSession = createServerOnlyFn(() =>

@@ -265,6 +265,9 @@
 	"questionnaire_section_feedback": "Anmerkungen",
 	"questionnaire_feedback_label": "Haben Sie noch Anmerkungen zur Studie oder zum System? (Optional)",
 	"questionnaire_feedback_placeholder": "Hier können Sie Feedback eingeben...",
+	"questionnaire_email_label": "E-Mail (Optional, falls Sie über die Ergebnisse informiert werden möchten)",
+	"questionnaire_email_placeholder": "ihre@email.de",
+	"questionnaire_email_error": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
 
 	"thanks_title": "Vielen Dank!",
 	"thanks_subtitle": "Ihre Antworten wurden erfolgreich gespeichert. Wir bedanken uns herzlich für Ihre Unterstützung bei dieser Masterarbeit.",
