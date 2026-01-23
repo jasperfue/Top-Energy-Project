@@ -334,15 +334,18 @@ function Questionnaire() {
 	const checkPreviousSteps = useEffectEvent(async () => {
 		if (step === 1) return;
 		const previousSteps = steps.filter((s) => s.id < step);
-		const fieldsToCheck = previousSteps.flatMap((s) => s.fields);
-		const isValid = await form.trigger(fieldsToCheck);
-		if (!isValid) {
-			form.clearErrors(fieldsToCheck);
-			await nav({
-				to: "/questionnaire",
-				search: { step: 1 },
-				replace: true,
-			});
+
+		for (const prevStep of previousSteps) {
+			const isStepValid = await form.trigger(prevStep.fields);
+			if (!isStepValid) {
+				form.clearErrors(prevStep.fields);
+				await nav({
+					to: "/questionnaire",
+					search: { step: prevStep.id },
+					replace: true,
+				});
+				return;
+			}
 		}
 	});
 
