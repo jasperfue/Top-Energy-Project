@@ -1,6 +1,6 @@
 import { useChat } from "@ai-sdk/react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
+import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { DefaultChatTransport } from "ai";
 import { useState } from "react";
 import { z } from "zod";
@@ -50,6 +50,8 @@ export const Route = createFileRoute("/chat")({
 function Chat() {
 	const navigate = useNavigate();
 	const [isFinishing, setIsFinishing] = useState(false);
+	const finishTaskServerFn = useServerFn(finishTask);
+
 	usePreloadRoute("/questionnaire", { step: 1 });
 	const { messages, sendMessage, status, stop } = useChat({
 		transport: new DefaultChatTransport({
@@ -74,7 +76,7 @@ function Chat() {
 		setIsFinishing(true);
 
 		try {
-			await finishTask({
+			await finishTaskServerFn({
 				data: {
 					messageCount: messages.length,
 				},

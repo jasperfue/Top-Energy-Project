@@ -1,7 +1,11 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	useNavigate,
+	useRouter,
+} from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { ArrowRight, Clock, Loader2, Mail } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { z } from "zod";
 import {
@@ -21,7 +25,6 @@ import {
 	SelectTrigger,
 } from "@/components/ui/select.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
@@ -60,11 +63,15 @@ const startStudy = createServerFn({ method: "POST" })
 
 function Consent() {
 	const nav = useNavigate();
+	const router = useRouter();
 	const [selection, setSelection] = useState<"yes" | "no" | undefined>(
 		undefined,
 	);
 	const [isLoading, setIsLoading] = useState(false);
-	usePreloadRoute("/affinity-for-technology");
+
+	useEffect(() => {
+		router.invalidate();
+	}, [router]);
 
 	const handleStart = async () => {
 		if (!selection) return;

@@ -32,7 +32,7 @@ export function MultipleChoiceQuestion<TFieldValues extends FieldValues>({
 	options,
 	required,
 	className,
-}: MultipleChoiceQuestionProps<TFieldValues>) {
+}: Readonly<MultipleChoiceQuestionProps<TFieldValues>>) {
 	return (
 		<div
 			className={cn(
@@ -40,13 +40,12 @@ export function MultipleChoiceQuestion<TFieldValues extends FieldValues>({
 				className,
 			)}
 		>
-			<div className="flex flex-col md:grid md:grid-cols-[minmax(12rem,1.5fr)_minmax(0,1fr)] gap-3 md:gap-4 md:items-start mt-4 md:mt-7">
+			<div className="flex flex-col gap-3 md:gap-4 mt-4 md:mt-7">
 				<Label
 					htmlFor={name}
 					className="leading-snug text-base md:text-sm font-medium"
 				>
 					{question}
-					{/*{required ? " *" : ""}*/}
 				</Label>
 
 				<Controller

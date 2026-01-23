@@ -1,7 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
+import {
+	createFileRoute,
+	redirect,
+	useNavigate,
+	useRouter,
+} from "@tanstack/react-router";
+import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { Loader2 } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
@@ -79,28 +85,37 @@ const submitAffinityForTechnologyForm = createServerFn({ method: "POST" })
 
 export function AffinityForTechnologyForm() {
 	const nav = useNavigate();
+	const submitAffinityForTechnologyFormServerFn = useServerFn(
+		submitAffinityForTechnologyForm,
+	);
 	usePreloadRoute("/scenario");
+	const router = useRouter();
 
 	const sessionData = Route.useLoaderData();
+
+	useEffect(() => {
+		console.log("session Data", sessionData);
+	}, [sessionData]);
 
 	const form = useForm<AffTechFormValues>({
 		resolver: zodResolver(afftechAnswers),
 		defaultValues: {
-			afftech_q1: sessionData.afftech_q1 as Likert7 | undefined,
-			afftech_q2: sessionData.afftech_q2 as Likert7 | undefined,
-			afftech_q3: sessionData.afftech_q3 as Likert7 | undefined,
-			afftech_q4: sessionData.afftech_q4 as Likert7 | undefined,
-			afftech_q5: sessionData.afftech_q5 as Likert7 | undefined,
-			afftech_q6: sessionData.afftech_q6 as Likert7 | undefined,
-			afftech_q7: sessionData.afftech_q7 as Likert7 | undefined,
-			afftech_q8: sessionData.afftech_q8 as Likert7 | undefined,
-			afftech_q9: sessionData.afftech_q9 as Likert7 | undefined,
+			afftech_q1: sessionData.afftech_q1,
+			afftech_q2: sessionData.afftech_q2,
+			afftech_q3: sessionData.afftech_q3,
+			afftech_q4: sessionData.afftech_q4,
+			afftech_q5: sessionData.afftech_q5,
+			afftech_q6: sessionData.afftech_q6,
+			afftech_q7: sessionData.afftech_q7,
+			afftech_q8: sessionData.afftech_q8,
+			afftech_q9: sessionData.afftech_q9,
 		},
 		mode: "onSubmit",
 	});
 
 	const submit = form.handleSubmit(async (values) => {
-		await submitAffinityForTechnologyForm({ data: values });
+		await submitAffinityForTechnologyFormServerFn({ data: values });
+		router.invalidate();
 		await nav({ to: "/scenario" });
 	});
 

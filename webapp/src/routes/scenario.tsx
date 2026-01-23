@@ -3,7 +3,7 @@ import {
 	useNavigate,
 	useRouter,
 } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
+import { createServerFn, useServerFn } from "@tanstack/react-start";
 import {
 	AlertCircle,
 	ArrowRight,
@@ -76,6 +76,7 @@ function Scenario() {
 	const [isLoading, setIsLoading] = useState(false);
 	const { deferredSlowData } = Route.useLoaderData();
 	const router = useRouter();
+	const updateStudyVaraintServerFn = useServerFn(updateStudyVariant);
 
 	useEffect(() => {
 		deferredSlowData
@@ -96,7 +97,7 @@ function Scenario() {
 		try {
 			const { variant } = await deferredSlowData;
 			// Update session if it's a new session or variant changed
-			await updateStudyVariant({ data: variant });
+			await updateStudyVaraintServerFn({ data: variant });
 			await nav({ to: `/${variant}` });
 		} catch (error) {
 			console.error("Error during start sequence:", error);

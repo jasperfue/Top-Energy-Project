@@ -4,8 +4,9 @@ This project is a Study application built with **Tanstack Start**.
 ### Tech Stack
 - **Framework:** Tanstack Start
 - **Storage:** Airtable (used to store results)
-- **i18n:** Paraglide
+- **i18n:** Paraglide (Everything should be translatable)
   - Supported Languages: English (`en.json`) and German (`de.json`)
+- **UI:** Tailwind CSS and Shadcn
 
 ### User Flow
 The study follows a strictly defined flow for users:

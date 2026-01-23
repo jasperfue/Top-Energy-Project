@@ -1,6 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
+import {
+	createFileRoute,
+	Link,
+	useNavigate,
+	useRouter,
+} from "@tanstack/react-router";
+import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { ArrowRight, Loader2, TriangleAlert } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useEffectEvent } from "react";
@@ -113,6 +118,10 @@ const demographicsAnswers = z.object({
 
 const feedbackAnswer = z.object({
 	feedback: z.string().optional(),
+	email: z
+		.email({ message: m.questionnaire_email_error() })
+		.optional()
+		.or(z.literal("")),
 });
 
 const getQuestionnaireSessionData = createServerFn({ method: "GET" }).handler(
@@ -172,6 +181,11 @@ const submitQuestionnaire = createServerFn({ method: "POST" })
 function Questionnaire() {
 	const { step } = Route.useSearch();
 	const nav = useNavigate();
+	const router = useRouter();
+	const submitQuestionnaireServerFn = useServerFn(submitQuestionnaire);
+	const updateQuestionnaireSessionServerFn = useServerFn(
+		updateQuestionnaireSession,
+	);
 	usePreloadRoute(
 		step < 6 ? "/questionnaire" : "/thanks",
 		step < 6 ? { step: step + 1 } : undefined,
@@ -179,35 +193,39 @@ function Questionnaire() {
 
 	const sessionData = Route.useLoaderData();
 
+	useEffect(() => {
+		console.log("Session data:", sessionData);
+	}, [sessionData]);
+
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			trust_comp_1: (sessionData.trust_comp_1 as Likert7) ?? undefined,
-			trust_ben_1: (sessionData.trust_ben_1 as Likert7) ?? undefined,
-			trust_comp_2: (sessionData.trust_comp_2 as Likert7) ?? undefined,
-			trust_ben_2: (sessionData.trust_ben_2 as Likert7) ?? undefined,
-			trust_comp_3: (sessionData.trust_comp_3 as Likert7) ?? undefined,
-			trust_ben_3: (sessionData.trust_ben_3 as Likert7) ?? undefined,
-			trust_comp_4: (sessionData.trust_comp_4 as Likert7) ?? undefined,
-			trust_int_1: (sessionData.trust_int_1 as Likert7) ?? undefined,
-			trust_int_2: (sessionData.trust_int_2 as Likert7) ?? undefined,
-			trust_int_3: (sessionData.trust_int_3 as Likert7) ?? undefined,
-			trust_int_4: (sessionData.trust_int_4 as Likert7) ?? undefined,
-			understanding_q1: (sessionData.understanding_q1 as Likert7) ?? undefined,
-			understanding_q2: (sessionData.understanding_q2 as Likert7) ?? undefined,
-			understanding_q3: (sessionData.understanding_q3 as any) ?? undefined,
-			understanding_q4: (sessionData.understanding_q4 as any) ?? undefined,
-			ueq_1: (sessionData.ueq_1 as Likert7) ?? undefined,
-			ueq_2_swapped: (sessionData.ueq_2_swapped as Likert7) ?? undefined,
-			ueq_3: (sessionData.ueq_3 as Likert7) ?? undefined,
-			ueq_4_swapped: (sessionData.ueq_4_swapped as Likert7) ?? undefined,
-			ueq_5: (sessionData.ueq_5 as Likert7) ?? undefined,
-			ueq_6_swapped: (sessionData.ueq_6_swapped as Likert7) ?? undefined,
-			ueq_7: (sessionData.ueq_7 as Likert7) ?? undefined,
-			ueq_8_swapped: (sessionData.ueq_8_swapped as Likert7) ?? undefined,
-			intention_q1: (sessionData.intention_q1 as Likert7) ?? undefined,
-			intention_q2: (sessionData.intention_q2 as Likert7) ?? undefined,
-			intention_q3: (sessionData.intention_q3 as Likert7) ?? undefined,
+			trust_comp_1: sessionData.trust_comp_1,
+			trust_ben_1: sessionData.trust_ben_1,
+			trust_comp_2: sessionData.trust_comp_2,
+			trust_ben_2: sessionData.trust_ben_2,
+			trust_comp_3: sessionData.trust_comp_3,
+			trust_ben_3: sessionData.trust_ben_3,
+			trust_comp_4: sessionData.trust_comp_4,
+			trust_int_1: sessionData.trust_int_1,
+			trust_int_2: sessionData.trust_int_2,
+			trust_int_3: sessionData.trust_int_3,
+			trust_int_4: sessionData.trust_int_4,
+			understanding_q1: sessionData.understanding_q1,
+			understanding_q2: sessionData.understanding_q2,
+			understanding_q3: sessionData.understanding_q3 as any,
+			understanding_q4: sessionData.understanding_q4 as any,
+			ueq_1: sessionData.ueq_1,
+			ueq_2_swapped: sessionData.ueq_2_swapped,
+			ueq_3: sessionData.ueq_3,
+			ueq_4_swapped: sessionData.ueq_4_swapped,
+			ueq_5: sessionData.ueq_5,
+			ueq_6_swapped: sessionData.ueq_6_swapped,
+			ueq_7: sessionData.ueq_7,
+			ueq_8_swapped: sessionData.ueq_8_swapped,
+			intention_q1: sessionData.intention_q1,
+			intention_q2: sessionData.intention_q2,
+			intention_q3: sessionData.intention_q3,
 			age: sessionData.age ?? undefined,
 			gender: (sessionData.gender as any) ?? undefined,
 			occupation_role: (sessionData.occupation_role as any) ?? undefined,
@@ -215,8 +233,9 @@ function Questionnaire() {
 			investment_experience:
 				(sessionData.investment_experience as any) ?? undefined,
 			feedback: sessionData.feedback ?? "",
+			email: sessionData.email ?? "",
 		},
-		mode: "onChange",
+		mode: "onTouched",
 	});
 
 	const steps = [
@@ -274,7 +293,8 @@ function Questionnaire() {
 				},
 				{} as any,
 			);
-			await updateQuestionnaireSession({ data: currentFieldsData });
+			router.invalidate();
+			await updateQuestionnaireSessionServerFn({ data: currentFieldsData });
 
 			await nav({
 				to: "/questionnaire",
@@ -286,7 +306,8 @@ function Questionnaire() {
 	const submit = form.handleSubmit(async (values) => {
 		try {
 			console.log("Submitting questionnaire...", values);
-			await submitQuestionnaire({ data: values });
+			await submitQuestionnaireServerFn({ data: values });
+			router.invalidate();
 			await nav({ to: "/thanks" });
 		} catch (error) {
 			console.error("Failed to submit questionnaire:", error);
@@ -777,19 +798,57 @@ function Questionnaire() {
 										{m.questionnaire_section_feedback()}
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-2 md:px-6 px-4">
-									<Label
-										htmlFor="feedback"
-										className="text-muted-foreground font-normal"
-									>
-										{m.questionnaire_feedback_label()}
-									</Label>
-									<Textarea
-										id="feedback"
-										placeholder={m.questionnaire_feedback_placeholder()}
-										{...form.register("feedback")}
-										className="mt-2 resize-none h-24 text-base md:text-sm"
-									/>
+								<CardContent className="space-y-4 md:px-6 px-4">
+									<div className="space-y-2">
+										<Label
+											htmlFor="feedback"
+											className="text-muted-foreground font-normal"
+										>
+											{m.questionnaire_feedback_label()}
+										</Label>
+										<Textarea
+											id="feedback"
+											placeholder={m.questionnaire_feedback_placeholder()}
+											{...form.register("feedback")}
+											className="mt-2 resize-none h-24 text-base md:text-sm"
+										/>
+									</div>
+
+									<Separator className="my-4" />
+
+									<div className="space-y-2">
+										<Label
+											htmlFor="email"
+											className="text-muted-foreground font-normal"
+										>
+											{m.questionnaire_email_label()}
+										</Label>
+										<Controller
+											control={form.control}
+											name="email"
+											render={({ field, fieldState }) => (
+												<>
+													<Input
+														{...field}
+														id="email"
+														type="email"
+														placeholder={m.questionnaire_email_placeholder()}
+														className={cn(
+															"text-base md:text-sm",
+															fieldState.error &&
+																"border-destructive focus-visible:ring-destructive",
+														)}
+													/>
+													{fieldState.error && (
+														<div className="mt-1 flex items-center justify-start gap-2 text-xs text-destructive font-medium animate-in fade-in-0 slide-in-from-top-1">
+															<TriangleAlert className="h-4 w-4" />
+															<span>{fieldState.error.message}</span>
+														</div>
+													)}
+												</>
+											)}
+										/>
+									</div>
 								</CardContent>
 							</Card>
 						)}
