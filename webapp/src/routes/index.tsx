@@ -78,7 +78,7 @@ function Consent() {
 	};
 
 	return (
-		<main className="mx-auto max-w-2xl w-full p-4 md:p-6 space-y-6 md:space-y-8 min-h-[80vh] flex flex-col justify-center">
+		<main className="mx-auto max-w-4xl w-full p-4 md:p-6 space-y-6 md:space-y-8 flex-1 flex flex-col justify-center">
 			{/* HEADER SECTION */}
 			<div className="space-y-4 text-center sm:text-left">
 				<h1 className="text-2xl md:text-3xl font-bold tracking-tight text-primary">

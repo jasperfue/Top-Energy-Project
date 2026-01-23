@@ -41,10 +41,7 @@ export function MultipleChoiceQuestion<TFieldValues extends FieldValues>({
 			)}
 		>
 			<div className="flex flex-col gap-3 md:gap-4 mt-4 md:mt-7">
-				<Label
-					htmlFor={name}
-					className="leading-snug text-base md:text-sm font-medium"
-				>
+				<Label htmlFor={name} className="leading-snug text-base font-medium">
 					{question}
 				</Label>
 

@@ -363,7 +363,7 @@ function Questionnaire() {
 	] as const;
 
 	return (
-		<main className="mx-auto w-full pt-4 md:p-6 max-w-4xl space-y-6 min-h-[80vh] flex flex-col justify-center">
+		<main className="mx-auto w-full pt-4 md:p-6 max-w-5xl space-y-6 min-h-[80vh] flex flex-col justify-center">
 			<h2 className="text-xl md:text-2xl font-semibold">
 				{m.questionnaire_title()}
 			</h2>
@@ -401,7 +401,7 @@ function Questionnaire() {
 										{m.questionnaire_section_general()}
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-6 md:space-y-5 md:px-6 px-4">
+								<CardContent className="space-y-4 md:space-y-3 md:px-6 px-4">
 									{trustItems.map((item) => (
 										<LikertScale
 											key={item.name}
@@ -426,7 +426,7 @@ function Questionnaire() {
 										{m.questionnaire_section_impression()}
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-4 md:px-6 px-4">
+								<CardContent className="space-y-4 md:space-y-3 md:px-6 px-4">
 									<div className="mb-4 p-3 bg-muted/50 rounded-lg text-sm leading-relaxed">
 										{m.ueq_instruction()}
 									</div>
@@ -454,7 +454,7 @@ function Questionnaire() {
 										{m.questionnaire_section_understanding()}
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-6 md:space-y-5 md:px-6 px-4">
+								<CardContent className="space-y-4 md:space-y-3 md:px-6 px-4">
 									<LikertScale
 										name="understanding_q1"
 										control={form.control}
@@ -533,7 +533,7 @@ function Questionnaire() {
 										{m.questionnaire_section_intention()}
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-6 md:space-y-5 md:px-6 px-4">
+								<CardContent className="space-y-4 md:space-y-3 md:px-6 px-4">
 									{/* --- NEUER DISCLAIMER START --- */}
 									<div
 										className="rounded-md bg-muted/60 p-4 text-sm text-foreground border border-border"
@@ -860,7 +860,7 @@ function Questionnaire() {
 						<Button
 							type="button"
 							variant="ghost"
-							className="pl-0 hover:bg-transparent hover:text-primary md:pl-4 md:hover:bg-accent"
+							className="pl-0 hover:bg-transparent hover:text-primary pl-4 hover:bg-accent"
 							asChild
 						>
 							<Link

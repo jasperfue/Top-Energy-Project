@@ -59,7 +59,10 @@ function Dashboard() {
 			await finishTaskServerFn({
 				data: {},
 			});
-			await nav({ to: "/questionnaire", search: { step: 1 } });
+			await nav({
+				to: "/questionnaire",
+				search: { step: 1 },
+			});
 		} catch (error) {
 			console.error(
 				"Failed to finish task before navigating to questionnaire",
@@ -75,13 +78,11 @@ function Dashboard() {
 	};
 
 	return (
-		<div className="flex flex-col pt-2 md:pt-4 h-dvh overflow-hidden bg-background overscroll-none">
-			<div className="flex-none">
-				<StudyHeader onFinish={handleFinish} isLoading={isFinishing} />
-			</div>
+		<div className="flex flex-col bg-background overscroll-none flex-1">
+			<StudyHeader onFinish={handleFinish} isLoading={isFinishing} />
 
-			<div className="flex-1 overflow-y-auto min-h-0">
-				<main className="container mx-auto px-2 md:px-4 py-4 md:py-8 space-y-6 md:space-y-8 pb-10">
+			<div className="flex-1 flex flex-col">
+				<main className="container mx-auto px-2 md:px-4 py-4 md:py-8 space-y-6 md:space-y-8 pb-10 flex-1 flex flex-col">
 					<TooltipProvider delayDuration={300}>
 						{/* 1. SECTION: EXECUTIVE SUMMARY (KPIs) */}
 						<KpiSection />

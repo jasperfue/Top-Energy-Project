@@ -52,6 +52,7 @@ function RootComponent() {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	const location = useLocation();
+	const isFullWidthPage = location.pathname.includes("/chat");
 
 	// Calculate progress based on current route
 	const getProgress = (pathname: string) => {
@@ -105,8 +106,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					/>
 				</div>
 
-				<div className="flex-1 flex flex-col min-h-0 relative">
-					<div className="container mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col">
+				<div className="flex-1 flex flex-col relative">
+					<div
+						className={
+							isFullWidthPage
+								? "flex-1 flex flex-col w-full" // Volle Breite für Chat
+								: "container mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col" // Container für Rest
+						}
+					>
 						{children}
 					</div>
 				</div>
