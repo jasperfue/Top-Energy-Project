@@ -407,7 +407,7 @@ export function SystemDynamicsSection() {
 						</button>
 					</div>
 				</CardHeader>
-				<CardContent className="h-[300px] md:h-[350px] px-0 md:px-6">
+				<CardContent className="h-[300px] md:h-[350px] px-2 md:px-6">
 					<ResponsiveContainer width="100%" height="100%">
 						<ComposedChart
 							data={currentDailyData}
@@ -560,7 +560,7 @@ export function SystemDynamicsSection() {
 						</button>
 					</div>
 				</CardHeader>
-				<CardContent className="h-[300px] md:h-[350px]">
+				<CardContent className="h-[380px] md:h-[400px] flex flex-col">
 					<ResponsiveContainer width="100%" height="100%">
 						<BarChart
 							data={currentMonthlyData}
@@ -675,7 +675,7 @@ const CustomGroupedLegend = (props: any) => {
 					{m.dashboard_tooltip_supply()}
 				</span>
 				{/* Items-Wrapper: Erlaubt Umbruch (wrap) innerhalb der Gruppe */}
-				<div className="flex flex-wrap gap-x-4 gap-y-2">
+				<div className="flex flex-wrap gap-x-3 gap-y-1.5">
 					{supplyItems.map((entry: any, index: number) => (
 						<div
 							key={`supply-${
@@ -701,11 +701,11 @@ const CustomGroupedLegend = (props: any) => {
 
 			{/* GRUPPE 2: CONSUMPTION (VERWENDUNG) */}
 			{/* Auf Desktop rechtsbündig ausgerichtet für schöne Symmetrie, mobil links */}
-			<div className="flex flex-col gap-1.5 md:items-end">
-				<span className="font-semibold text-muted-foreground uppercase tracking-wider text-[10px]">
+			<div className="flex flex-col gap-1 md:items-end">
+				<span className="font-bold text-muted-foreground uppercase tracking-wider text-[10px]">
 					{m.dashboard_tooltip_usage()}
 				</span>
-				<div className="flex flex-wrap gap-x-4 gap-y-2 md:justify-end">
+				<div className="flex flex-wrap gap-x-3 gap-y-1.5 md:justify-end">
 					{usageItems.map((entry: any, index: number) => (
 						<div
 							key={`usage-${
