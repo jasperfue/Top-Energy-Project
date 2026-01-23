@@ -101,7 +101,7 @@ export function CostAutarkySection() {
 						{m.dashboard_chart_cost_desc()}
 					</CardDescription>
 				</CardHeader>
-				<CardContent className="h-[300px] md:h-[350px] pl-0">
+				<CardContent className="h-[300px] md:h-[350px]">
 					<ResponsiveContainer width="100%" height="100%">
 						<BarChart
 							data={COST_DATA}
@@ -134,10 +134,7 @@ export function CostAutarkySection() {
 								cursor={{ fill: "rgba(0,0,0,0.05)" }}
 								wrapperStyle={{ zIndex: 100 }}
 							/>
-							<Legend
-								iconType="circle"
-								wrapperStyle={{ paddingTop: "10px", fontSize: "12px" }}
-							/>
+							<Legend content={<CustomCostLegend />} />
 							<Bar
 								dataKey="Strom"
 								stackId="a"
@@ -183,7 +180,7 @@ export function CostAutarkySection() {
 						<div className="grid grid-cols-2 gap-4 w-full">
 							{/* Autarky Chart */}
 							<div className="flex flex-col items-center">
-								<div className="relative w-full aspect-square max-h-[200px] md:max-h-[300px]">
+								<div className="relative w-full aspect-square max-h-[140px] md:max-h-[200px]">
 									<ResponsiveContainer width="100%" height="100%">
 										<PieChart>
 											<Pie
@@ -379,4 +376,34 @@ const CustomCostTooltip = ({ active, payload, label }: CustomTooltipProps) => {
 		);
 	}
 	return null;
+};
+
+const CustomCostLegend = (props: any) => {
+	const { payload } = props;
+	if (!payload) return null;
+
+	return (
+		<div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 pt-4 px-2 md:gap-x-5">
+			{payload.map((entry: any, index: number) => (
+				<div
+					key={`legend-${
+						// biome-ignore lint/suspicious/noArrayIndexKey: It is how it is
+						index
+					}`}
+					className="flex items-center gap-1.5"
+				>
+					<div
+						className="w-2.5 h-2.5 rounded-full shrink-0"
+						style={{ backgroundColor: entry.color }}
+					/>
+					<span
+						className="text-xs whitespace-nowrap md:text-sm"
+						style={{ color: entry.color }}
+					>
+						{entry.value}
+					</span>
+				</div>
+			))}
+		</div>
+	);
 };

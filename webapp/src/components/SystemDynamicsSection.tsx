@@ -560,7 +560,7 @@ export function SystemDynamicsSection() {
 						</button>
 					</div>
 				</CardHeader>
-				<CardContent className="h-[380px] md:h-[400px] flex flex-col">
+				<CardContent className="h-[450px] md:h-[400px] flex flex-col">
 					<ResponsiveContainer width="100%" height="100%">
 						<BarChart
 							data={currentMonthlyData}
@@ -667,7 +667,7 @@ const CustomGroupedLegend = (props: any) => {
 
 	return (
 		// CONTAINER: Mobil 1 Spalte (untereinander), ab Tablet (md) 2 Spalten
-		<div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6 text-xs w-full">
+		<div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6 text-xs md:text-sm w-full">
 			{/* GRUPPE 1: SUPPLY (HERKUNFT) */}
 			<div className="flex flex-col gap-1.5">
 				{/* Gruppen-Titel */}
