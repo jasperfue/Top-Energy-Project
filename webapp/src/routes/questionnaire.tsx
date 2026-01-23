@@ -1,9 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	Link,
+	redirect,
+	useNavigate,
+} from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { ArrowRight, Loader2, TriangleAlert } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useEffectEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { LikertScale } from "@/components/LikertScale";
@@ -27,12 +31,6 @@ import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { cn } from "@/lib/utils.ts";
 import { m } from "@/paraglide/messages.js";
-import {
-	LIKERT_CENTER,
-	LIKERT_LEFT,
-	LIKERT_RIGHT,
-	Likert7,
-} from "@/routes/affinity-for-technology.tsx";
 
 export const Route = createFileRoute("/questionnaire")({
 	validateSearch: (search?) => {
@@ -44,7 +42,34 @@ export const Route = createFileRoute("/questionnaire")({
 			step: safeStep,
 		};
 	},
-	loader: async () => await getQuestionnaireSessionData(),
+	beforeLoad: async ({ search }) => {
+		const step = search.step;
+		if (step === 1) return;
+		const data = await getUserSessionData();
+
+		const stepSchemas = [
+			{ id: 1, schema: trustAnswers },
+			{ id: 2, schema: ueqAnswers },
+			{ id: 3, schema: understandingAnswers },
+			{ id: 4, schema: intentionAnswers },
+			{ id: 5, schema: demographicsAnswers },
+			{ id: 6, schema: feedbackAnswer },
+		];
+
+		for (const stepConfig of stepSchemas) {
+			if (stepConfig.id >= step) break;
+
+			const result = stepConfig.schema.safeParse(data);
+			if (!result.success) {
+				throw redirect({
+					to: "/questionnaire",
+					search: { step: stepConfig.id },
+					replace: true,
+				});
+			}
+		}
+	},
+	loader: async () => await getUserSessionData(),
 	component: Questionnaire,
 	gcTime: 0,
 });
@@ -126,7 +151,7 @@ const feedbackAnswer = z.object({
 		.or(z.literal("")),
 });
 
-const getQuestionnaireSessionData = createServerFn({ method: "GET" }).handler(
+const getUserSessionData = createServerFn({ method: "GET" }).handler(
 	async () => {
 		const session = await useUserSession();
 		return {
@@ -336,29 +361,6 @@ function Questionnaire() {
 		{ name: "ueq_7", min: m.ueq_7_min(), max: m.ueq_7_max() },
 		{ name: "ueq_8_swapped", min: m.ueq_8_max(), max: m.ueq_8_min() },
 	] as const;
-
-	const checkPreviousSteps = useEffectEvent(async () => {
-		if (step === 1) return;
-		const previousSteps = steps.filter((s) => s.id < step);
-
-		for (const prevStep of previousSteps) {
-			const isStepValid = await form.trigger(prevStep.fields);
-			if (!isStepValid) {
-				form.clearErrors(prevStep.fields);
-				await nav({
-					to: "/questionnaire",
-					search: { step: prevStep.id },
-					replace: true,
-				});
-				return;
-			}
-		}
-	});
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: We need Step here
-	useEffect(() => {
-		void checkPreviousSteps();
-	}, [step]);
 
 	return (
 		<main className="mx-auto w-full pt-4 md:p-6 max-w-4xl space-y-6 min-h-[80vh] flex flex-col justify-center">
