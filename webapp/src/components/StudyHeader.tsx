@@ -7,7 +7,10 @@ interface StudyHeaderProps {
 	isLoading?: boolean;
 }
 
-export function StudyHeader({ onFinish, isLoading }: StudyHeaderProps) {
+export function StudyHeader({
+	onFinish,
+	isLoading,
+}: Readonly<StudyHeaderProps>) {
 	return (
 		<div className="sticky top-0 z-20 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
 			<div className="container mx-auto px-4 flex items-center justify-between py-2 md:py-3">

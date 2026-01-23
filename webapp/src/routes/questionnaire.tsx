@@ -5,7 +5,7 @@ import {
 	useNavigate,
 	useRouter,
 } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
+import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { ArrowRight, Loader2, TriangleAlert } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useEffectEvent } from "react";
@@ -182,6 +182,10 @@ function Questionnaire() {
 	const { step } = Route.useSearch();
 	const nav = useNavigate();
 	const router = useRouter();
+	const submitQuestionnaireServerFn = useServerFn(submitQuestionnaire);
+	const updateQuestionnaireSessionServerFn = useServerFn(
+		updateQuestionnaireSession,
+	);
 	usePreloadRoute(
 		step < 6 ? "/questionnaire" : "/thanks",
 		step < 6 ? { step: step + 1 } : undefined,
@@ -285,7 +289,7 @@ function Questionnaire() {
 				},
 				{} as any,
 			);
-			await updateQuestionnaireSession({ data: currentFieldsData });
+			await updateQuestionnaireSessionServerFn({ data: currentFieldsData });
 
 			await nav({
 				to: "/questionnaire",
@@ -297,7 +301,7 @@ function Questionnaire() {
 	const submit = form.handleSubmit(async (values) => {
 		try {
 			console.log("Submitting questionnaire...", values);
-			await submitQuestionnaire({ data: values });
+			await submitQuestionnaireServerFn({ data: values });
 			await router.invalidate();
 			await nav({ to: "/thanks" });
 		} catch (error) {

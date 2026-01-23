@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
+import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -79,6 +79,9 @@ const submitAffinityForTechnologyForm = createServerFn({ method: "POST" })
 
 export function AffinityForTechnologyForm() {
 	const nav = useNavigate();
+	const submitAffinityForTechnologyFormServerFn = useServerFn(
+		submitAffinityForTechnologyForm,
+	);
 	usePreloadRoute("/scenario");
 
 	const sessionData = Route.useLoaderData();
@@ -100,7 +103,7 @@ export function AffinityForTechnologyForm() {
 	});
 
 	const submit = form.handleSubmit(async (values) => {
-		await submitAffinityForTechnologyForm({ data: values });
+		await submitAffinityForTechnologyFormServerFn({ data: values });
 		await nav({ to: "/scenario" });
 	});
 

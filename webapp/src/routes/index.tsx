@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { ArrowRight, Clock, Loader2, Mail } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { z } from "zod";
 import {
@@ -69,14 +69,15 @@ function Consent() {
 	);
 	const [isLoading, setIsLoading] = useState(false);
 
+	useEffect(() => {
+		router.invalidate();
+	}, [router]);
+
 	const handleStart = async () => {
 		if (!selection) return;
 		setIsLoading(true);
 		try {
-			await Promise.all([
-				startStudy({ data: { isTargetAudience: selection === "yes" } }),
-				router.invalidate(),
-			]);
+			await startStudy({ data: { isTargetAudience: selection === "yes" } });
 			await nav({ to: "/affinity-for-technology" });
 		} catch (error) {
 			console.error("Failed to start study:", error);

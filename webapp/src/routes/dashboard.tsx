@@ -1,4 +1,9 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	useHydrated,
+	useNavigate,
+} from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { CostAutarkySection } from "@/components/CostAutarkySection.tsx";
 import { KpiSection } from "@/components/KpiSection.tsx";
@@ -42,14 +47,16 @@ export const fmt = (num: number, currentLocale: ReturnType<typeof getLocale>) =>
 function Dashboard() {
 	const nav = useNavigate();
 	const [isFinishing, setIsFinishing] = useState(false);
+	const finishTaskServerFn = useServerFn(finishTask);
 	usePreloadRoute("/questionnaire");
+	const hydrated = useHydrated();
 
 	const handleFinish = async () => {
 		if (isFinishing) return;
 		setIsFinishing(true);
 
 		try {
-			await finishTask({
+			await finishTaskServerFn({
 				data: {},
 			});
 			await nav({ to: "/questionnaire", search: { step: 1 } });
@@ -59,9 +66,11 @@ function Dashboard() {
 				error,
 			);
 			setIsFinishing(false);
-			window.alert(
-				"Es ist ein Fehler beim Speichern aufgetreten. Bitte versuchen Sie es erneut.",
-			);
+			if (hydrated) {
+				window.alert(
+					"Es ist ein Fehler beim Speichern aufgetreten. Bitte versuchen Sie es erneut.",
+				);
+			}
 		}
 	};
 
