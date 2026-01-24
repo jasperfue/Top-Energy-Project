@@ -1,9 +1,13 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
-import { ArrowRight, Clock, Loader2, Mail } from "lucide-react";
-import { useState } from "react";
+import {
+	createFileRoute,
+	useHydrated,
+	useNavigate,
+	useRouter,
+} from "@tanstack/react-router";
+import { createServerFn, useServerFn } from "@tanstack/react-start";
+import { ArrowRight, Clock, Mail } from "lucide-react";
+import { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
-import { z } from "zod";
 import {
 	Accordion,
 	AccordionContent,
@@ -31,6 +35,13 @@ const clearSession = createServerFn({ method: "POST" }).handler(async () => {
 	await session.clear();
 });
 
+const setTeilnehmerId = createServerFn({ method: "GET" }).handler(async () => {
+	const session = await useUserSession();
+	await session.update({
+		"Teilnehmer ID": crypto.randomUUID(),
+	});
+});
+
 export const Route = createFileRoute("/")({
 	component: Consent,
 	beforeLoad: async () => {
@@ -42,38 +53,26 @@ export const Route = createFileRoute("/")({
 const getCountryCode = (locale: string) =>
 	locale === "en" ? "GB" : locale.toUpperCase();
 
-const startStudy = createServerFn({ method: "POST" })
-	.inputValidator(
-		z.object({
-			isTargetAudience: z.boolean(),
-		}),
-	)
-	.handler(async ({ data }) => {
-		const session = await useUserSession();
-		await session.update({
-			"Teilnehmer ID": crypto.randomUUID(),
-			Zielgruppe: data.isTargetAudience,
-		});
-	});
-
 function Consent() {
 	const nav = useNavigate();
 	const [selection, setSelection] = useState<"yes" | "no" | undefined>(
 		undefined,
 	);
-	const [isLoading, setIsLoading] = useState(false);
+	const hydrated = useHydrated();
+	const router = useRouter();
+	const setTeilnehmerIdServerFn = useServerFn(setTeilnehmerId);
+	const [teilnehmerIdIsSet, setTeilnehmerIdIsSet] = useState<boolean>(false);
 
-	const handleStart = async () => {
-		if (!selection) return;
-		setIsLoading(true);
-		try {
-			await startStudy({ data: { isTargetAudience: selection === "yes" } });
-			await nav({ to: "/affinity-for-technology" });
-		} catch (error) {
-			console.error("Failed to start study:", error);
-			setIsLoading(false);
+	useEffect(() => {
+		setTeilnehmerIdServerFn().then(() => setTeilnehmerIdIsSet(true));
+	}, [setTeilnehmerIdServerFn]);
+
+	useEffect(() => {
+		if (hydrated && teilnehmerIdIsSet) {
+			router.preloadRoute({ to: "/affinity-for-technology" });
+			console.log("preloaded next route");
 		}
-	};
+	}, [hydrated, router, teilnehmerIdIsSet]);
 
 	return (
 		<main className="mx-auto max-w-4xl w-full p-4 md:p-6 space-y-6 md:space-y-8 flex-1 flex flex-col justify-center">
@@ -224,18 +223,12 @@ function Consent() {
 			<div className="flex justify-end pt-2 pb-4 md:pb-0">
 				<Button
 					size="lg"
-					onClick={handleStart}
-					disabled={isLoading || selection !== "yes"}
+					onClick={async () => await nav({ to: "/affinity-for-technology" })}
+					disabled={!teilnehmerIdIsSet || selection !== "yes"}
 					className="w-full sm:w-auto h-12 shadow-md sm:shadow-none"
 				>
-					{isLoading ? (
-						<Loader2 className="h-4 w-4 animate-spin" />
-					) : (
-						<>
-							{m.common_start_study()}
-							<ArrowRight className="ml-2 h-4 w-4" />
-						</>
-					)}
+					{m.common_start_study()}
+					<ArrowRight className="ml-2 h-4 w-4" />
 				</Button>
 			</div>
 		</main>

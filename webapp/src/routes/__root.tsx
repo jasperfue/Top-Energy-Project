@@ -59,12 +59,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 		if (pathname === "/") return 5;
 		if (pathname.includes("affinity-for-technology")) return 20;
 		if (pathname.includes("scenario")) return 40;
-		if (pathname.includes("dashboard") || pathname.includes("chat")) return 60;
+		if (pathname.includes("dashboard") || pathname.includes("chat")) return 55;
 		if (pathname.includes("questionnaire")) {
 			const currentStep = location.search.step || 1;
 			const totalSteps = 6;
-			const baseProgress = 60;
-			const remainingScope = 35;
+			const baseProgress = 65;
+			const remainingScope = 25;
 
 			return baseProgress + (currentStep / totalSteps) * remainingScope;
 		}
