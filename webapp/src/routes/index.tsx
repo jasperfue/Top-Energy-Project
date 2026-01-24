@@ -1,7 +1,12 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	useHydrated,
+	useNavigate,
+	useRouter,
+} from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { ArrowRight, Clock, Mail } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import {
 	Accordion,
@@ -20,7 +25,6 @@ import {
 	SelectTrigger,
 } from "@/components/ui/select.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
@@ -42,7 +46,9 @@ export const Route = createFileRoute("/")({
 	component: Consent,
 	beforeLoad: async () => {
 		await clearSession();
+		console.log("Session cleared");
 		await setTeilnehmerId();
+		console.log("assigned Teilnehmer Id");
 	},
 	gcTime: 0,
 });
@@ -55,7 +61,15 @@ function Consent() {
 	const [selection, setSelection] = useState<"yes" | "no" | undefined>(
 		undefined,
 	);
-	usePreloadRoute("/affinity-for-technology");
+	const hydrated = useHydrated();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (hydrated) {
+			router.preloadRoute({ to: "/affinity-for-technology" });
+			console.log("preloaded next route");
+		}
+	}, [hydrated, router]);
 
 	return (
 		<main className="mx-auto max-w-4xl w-full p-4 md:p-6 space-y-6 md:space-y-8 flex-1 flex flex-col justify-center">
