@@ -10,6 +10,13 @@ export function usePreloadRoute(
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: JSON.stringify helps
 	useEffect(() => {
-		void router.preloadRoute({ to: routePath, search: search });
+		async function preload() {
+			try {
+				await router.preloadRoute({ to: routePath, search: search });
+			} catch (error) {
+				console.error("Preload failed:", error);
+			}
+		}
+		void preload();
 	}, [router, routePath, JSON.stringify(search)]);
 }

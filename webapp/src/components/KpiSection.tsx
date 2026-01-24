@@ -16,8 +16,10 @@ import {
 import {
 	Tooltip,
 	TooltipContent,
+	TooltipPositioner,
 	TooltipTrigger,
 } from "@/components/ui/tooltip.tsx";
+import { cn } from "@/lib/utils.ts";
 import * as m from "@/paraglide/messages";
 import { getLocale } from "@/paraglide/runtime";
 import { fmt } from "@/routes/dashboard.tsx";
@@ -145,7 +147,7 @@ function KpiCard({
 	trend,
 	trendText,
 	tooltipData,
-}: KpiCardProps) {
+}: Readonly<KpiCardProps>) {
 	return (
 		<Card className="relative overflow-visible shadow-sm">
 			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -153,39 +155,40 @@ function KpiCard({
 					<CardTitle className="text-sm font-medium text-muted-foreground truncate">
 						{title}
 					</CardTitle>
-					<div className={!tooltipData ? "hidden" : "block"}>
+					<div className={cn(!tooltipData ? "hidden" : "flex", "items-center")}>
 						<Tooltip>
-							<TooltipTrigger asChild>
+							<TooltipTrigger>
 								<div className="p-1 -m-1 cursor-pointer">
 									<Info className="h-3.5 w-3.5 text-muted-foreground/50 hover:text-primary transition-colors" />
 								</div>
 							</TooltipTrigger>
-							<TooltipContent
-								side="bottom"
-								align="start"
-								className="p-0 overflow-hidden shadow-lg border-none z-50"
-							>
-								<div className="bg-popover border text-popover-foreground p-3 min-w-[200px]">
-									<p className="font-semibold text-xs text-muted-foreground uppercase mb-2">
-										{m.dashboard_tooltip_composition()}
-									</p>
-									<div className="space-y-1.5">
-										{tooltipData?.map((item) => (
-											<div
-												key={item.label}
-												className="flex justify-between text-sm gap-4"
-											>
-												<span className="text-muted-foreground">
-													{item.label}
-												</span>
-												<span className="font-mono font-medium">
-													{item.value}
-												</span>
-											</div>
-										))}
+
+							{/* NEU: Positioner umschließt Content */}
+							{/* side und align gehören jetzt zum Positioner */}
+							<TooltipPositioner side="right" align="start">
+								<TooltipContent className="p-0 overflow-hidden shadow-lg border-none">
+									<div className="bg-popover border text-popover-foreground p-3 min-w-[200px]">
+										<p className="font-semibold text-xs text-muted-foreground uppercase mb-2">
+											{m.dashboard_tooltip_composition()}
+										</p>
+										<div className="space-y-1.5">
+											{tooltipData?.map((item) => (
+												<div
+													key={item.label}
+													className="flex justify-between text-sm gap-4"
+												>
+													<span className="text-muted-foreground">
+														{item.label}
+													</span>
+													<span className="font-mono font-medium">
+														{item.value}
+													</span>
+												</div>
+											))}
+										</div>
 									</div>
-								</div>
-							</TooltipContent>
+								</TooltipContent>
+							</TooltipPositioner>
 						</Tooltip>
 					</div>
 				</div>

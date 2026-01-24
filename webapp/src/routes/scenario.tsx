@@ -28,6 +28,7 @@ export const Route = createFileRoute("/scenario")({
 	loader: () => ({
 		deferredSlowData: getPrototypeType(),
 	}),
+	gcTime: 0,
 });
 
 const updateStudyVariant = createServerFn({ method: "POST" })
@@ -76,7 +77,7 @@ function Scenario() {
 	const [isLoading, setIsLoading] = useState(false);
 	const { deferredSlowData } = Route.useLoaderData();
 	const router = useRouter();
-	const updateStudyVaraintServerFn = useServerFn(updateStudyVariant);
+	const updateStudyVariantServerFn = useServerFn(updateStudyVariant);
 
 	useEffect(() => {
 		deferredSlowData
@@ -97,7 +98,7 @@ function Scenario() {
 		try {
 			const { variant } = await deferredSlowData;
 			// Update session if it's a new session or variant changed
-			await updateStudyVaraintServerFn({ data: variant });
+			await updateStudyVariantServerFn({ data: variant });
 			await nav({ to: `/${variant}` });
 		} catch (error) {
 			console.error("Error during start sequence:", error);
@@ -106,8 +107,8 @@ function Scenario() {
 	};
 
 	return (
-		<main className="bg-muted/20 min-h-dvh w-full flex flex-col items-center py-4 px-4 md:py-10 md:px-6">
-			<div className="max-w-4xl w-full space-y-6 md:space-y-8 bg-background p-5 md:p-8 rounded-xl shadow-sm border">
+		<main className="mx-auto w-full pt-4 md:p-6 max-w-5xl space-y-6 min-h-[80vh] flex flex-col justify-center">
+			<div className="w-full space-y-6 md:space-y-8 bg-background p-5 md:p-8 rounded-xl shadow-sm border">
 				{/* HEADLINE & ROLE */}
 				<div className="space-y-3 md:space-y-4 text-center max-w-2xl mx-auto">
 					<div className="flex justify-center mb-2 md:mb-4">

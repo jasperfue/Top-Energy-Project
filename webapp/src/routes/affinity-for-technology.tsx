@@ -7,10 +7,15 @@ import {
 } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { LikertScale } from "@/components/LikertScale";
+import {
+	LIKERT_CENTER,
+	LIKERT_LEFT,
+	LIKERT_RIGHT,
+	Likert7,
+	LikertScale,
+} from "@/components/LikertScale";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -21,23 +26,8 @@ import { m } from "@/paraglide/messages.js";
 export const Route = createFileRoute("/affinity-for-technology")({
 	component: AffinityForTechnologyForm,
 	loader: async () => await getAffTechSessionData(),
+	gcTime: 0,
 });
-
-export const LIKERT_LEFT = m.common_likert7_1();
-export const LIKERT_CENTER = m.common_likert7_4();
-export const LIKERT_RIGHT = m.common_likert7_7();
-
-export const Likert7 = z.union([
-	z.literal(1),
-	z.literal(2),
-	z.literal(3),
-	z.literal(4),
-	z.literal(5),
-	z.literal(6),
-	z.literal(7),
-]);
-
-export type Likert7 = z.infer<typeof Likert7>;
 
 const afftechAnswers = z.object({
 	afftech_q1: Likert7,
@@ -93,10 +83,6 @@ export function AffinityForTechnologyForm() {
 
 	const sessionData = Route.useLoaderData();
 
-	useEffect(() => {
-		console.log("session Data", sessionData);
-	}, [sessionData]);
-
 	const form = useForm<AffTechFormValues>({
 		resolver: zodResolver(afftechAnswers),
 		defaultValues: {
@@ -120,7 +106,7 @@ export function AffinityForTechnologyForm() {
 	});
 
 	return (
-		<main className="mx-auto w-full max-w-4xl p-4 md:p-6 space-y-6 min-h-[80vh] flex flex-col justify-center">
+		<main className="mx-auto w-full pt-4 md:p-6 max-w-5xl space-y-6 min-h-[80vh] flex flex-col justify-center">
 			<h2 className="text-xl md:text-2xl font-semibold">{m.afftech_title()}</h2>
 
 			<Card>

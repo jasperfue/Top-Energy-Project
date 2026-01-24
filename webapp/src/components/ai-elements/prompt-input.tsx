@@ -1,17 +1,8 @@
 "use client";
 
-import type { ChatStatus, FileUIPart } from "ai";
-import {
-	ImageIcon,
-	Loader2Icon,
-	MicIcon,
-	PaperclipIcon,
-	PlusIcon,
-	SendIcon,
-	SquareIcon,
-	XIcon,
-} from "lucide-react";
-import { nanoid } from "nanoid";
+import type {ChatStatus, FileUIPart} from "ai";
+import {ImageIcon, Loader2Icon, MicIcon, PlusIcon, SendIcon, SquareIcon, XIcon,} from "lucide-react";
+import {nanoid} from "nanoid";
 import {
 	type ChangeEvent,
 	type ChangeEventHandler,
@@ -35,7 +26,6 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { Button } from "@/components/ui/button";
 import {
 	Command,
 	CommandEmpty,
@@ -45,36 +35,11 @@ import {
 	CommandList,
 	CommandSeparator,
 } from "@/components/ui/command";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-	HoverCard,
-	HoverCardContent,
-	HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import {
-	InputGroup,
-	InputGroupAddon,
-	InputGroupButton,
-	InputGroupTextarea,
-} from "@/components/ui/input-group";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu";
+import {HoverCard, HoverCardContent, HoverCardTrigger,} from "@/components/ui/hover-card";
+import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupTextarea,} from "@/components/ui/input-group";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
+import {cn} from "@/lib/utils";
 // ============================================================================
 // Provider Context & Types
 // ============================================================================
@@ -263,67 +228,6 @@ export type PromptInputAttachmentProps = HTMLAttributes<HTMLDivElement> & {
 	className?: string;
 };
 
-export function PromptInputAttachment({
-	data,
-	className,
-	...props
-}: PromptInputAttachmentProps) {
-	const attachments = usePromptInputAttachments();
-
-	const mediaType =
-		data.mediaType?.startsWith("image/") && data.url ? "image" : "file";
-
-	return (
-		<div
-			className={cn(
-				"group relative h-14 w-14 rounded-md border",
-				className,
-				mediaType === "image" ? "h-14 w-14" : "h-8 w-auto max-w-full",
-			)}
-			key={data.id}
-			{...props}
-		>
-			{mediaType === "image" ? (
-				<img
-					alt={data.filename || "attachment"}
-					className="size-full rounded-md object-cover"
-					height={56}
-					src={data.url}
-					width={56}
-				/>
-			) : (
-				<div className="flex size-full max-w-full cursor-pointer items-center justify-start gap-2 overflow-hidden px-2 text-muted-foreground">
-					<PaperclipIcon className="size-4 shrink-0" />
-					<Tooltip delayDuration={400}>
-						<TooltipTrigger className="min-w-0 flex-1">
-							<h4 className="w-full truncate text-left font-medium text-sm">
-								{data.filename || "Unknown file"}
-							</h4>
-						</TooltipTrigger>
-						<TooltipContent>
-							<div className="text-muted-foreground text-xs">
-								<h4 className="max-w-[240px] overflow-hidden whitespace-normal break-words text-left font-semibold text-sm">
-									{data.filename || "Unknown file"}
-								</h4>
-								{data.mediaType && <div>{data.mediaType}</div>}
-							</div>
-						</TooltipContent>
-					</Tooltip>
-				</div>
-			)}
-			<Button
-				aria-label="Remove attachment"
-				className="-right-1.5 -top-1.5 absolute h-6 w-6 rounded-full opacity-0 group-hover:opacity-100"
-				onClick={() => attachments.remove(data.id)}
-				size="icon"
-				type="button"
-				variant="outline"
-			>
-				<XIcon className="h-3 w-3" />
-			</Button>
-		</div>
-	);
-}
 
 export type PromptInputAttachmentsProps = Omit<
 	HTMLAttributes<HTMLDivElement>,

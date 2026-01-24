@@ -2,16 +2,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	createFileRoute,
 	Link,
+	redirect,
 	useNavigate,
-	useRouter,
 } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { ArrowRight, Loader2, TriangleAlert } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useEffectEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { LikertScale } from "@/components/LikertScale";
+import {
+	LIKERT_CENTER,
+	LIKERT_LEFT,
+	LIKERT_RIGHT,
+	Likert7,
+	LikertScale,
+} from "@/components/LikertScale.tsx";
 import { MultipleChoiceQuestion } from "@/components/MultipleChoiceQuestion.tsx";
 import { SemanticDifferential } from "@/components/SemanticDifferential.tsx";
 import { Button } from "@/components/ui/button";
@@ -22,16 +27,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { airtable } from "@/lib/airtable.ts";
-import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { cn } from "@/lib/utils.ts";
 import { m } from "@/paraglide/messages.js";
-import {
-	LIKERT_CENTER,
-	LIKERT_LEFT,
-	LIKERT_RIGHT,
-	Likert7,
-} from "@/routes/affinity-for-technology.tsx";
 
 export const Route = createFileRoute("/questionnaire")({
 	validateSearch: (search?) => {
@@ -43,8 +41,27 @@ export const Route = createFileRoute("/questionnaire")({
 			step: safeStep,
 		};
 	},
-	loader: async () => await getQuestionnaireSessionData(),
+	beforeLoad: async ({ search }) => {
+		const step = search.step;
+		if (step === 1) return;
+		const data = await getUserSessionData();
+
+		for (const stepConfig of steps) {
+			if (stepConfig.id >= step) break;
+
+			const result = stepConfig.schema.safeParse(data);
+			if (!result.success) {
+				throw redirect({
+					to: "/questionnaire",
+					search: { step: stepConfig.id },
+					replace: true,
+				});
+			}
+		}
+	},
+	loader: async () => await getUserSessionData(),
 	component: Questionnaire,
+	gcTime: 0,
 });
 
 const trustAnswers = z.object({
@@ -124,7 +141,52 @@ const feedbackAnswer = z.object({
 		.or(z.literal("")),
 });
 
-const getQuestionnaireSessionData = createServerFn({ method: "GET" }).handler(
+const steps = [
+	{
+		id: 1,
+		title: m.questionnaire_section_general(),
+		fields: Object.keys(trustAnswers.shape) as (keyof FormValues)[],
+		schema: trustAnswers,
+		isLast: false,
+	},
+	{
+		id: 2,
+		title: m.questionnaire_section_impression(),
+		fields: Object.keys(ueqAnswers.shape) as (keyof FormValues)[],
+		schema: ueqAnswers,
+		isLast: false,
+	},
+	{
+		id: 3,
+		title: m.questionnaire_section_understanding(),
+		fields: Object.keys(understandingAnswers.shape) as (keyof FormValues)[],
+		schema: understandingAnswers,
+		isLast: false,
+	},
+	{
+		id: 4,
+		title: m.questionnaire_section_intention(),
+		fields: Object.keys(intentionAnswers.shape) as (keyof FormValues)[],
+		schema: intentionAnswers,
+		isLast: false,
+	},
+	{
+		id: 5,
+		title: m.questionnaire_section_demographics(),
+		fields: Object.keys(demographicsAnswers.shape) as (keyof FormValues)[],
+		schema: demographicsAnswers,
+		isLast: false,
+	},
+	{
+		id: 6,
+		title: m.questionnaire_section_feedback(),
+		fields: Object.keys(feedbackAnswer.shape) as (keyof FormValues)[],
+		schema: feedbackAnswer,
+		isLast: true,
+	},
+];
+
+const getUserSessionData = createServerFn({ method: "GET" }).handler(
 	async () => {
 		const session = await useUserSession();
 		return {
@@ -181,21 +243,12 @@ const submitQuestionnaire = createServerFn({ method: "POST" })
 function Questionnaire() {
 	const { step } = Route.useSearch();
 	const nav = useNavigate();
-	const router = useRouter();
 	const submitQuestionnaireServerFn = useServerFn(submitQuestionnaire);
 	const updateQuestionnaireSessionServerFn = useServerFn(
 		updateQuestionnaireSession,
 	);
-	usePreloadRoute(
-		step < 6 ? "/questionnaire" : "/thanks",
-		step < 6 ? { step: step + 1 } : undefined,
-	);
 
 	const sessionData = Route.useLoaderData();
-
-	useEffect(() => {
-		console.log("Session data:", sessionData);
-	}, [sessionData]);
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -238,54 +291,17 @@ function Questionnaire() {
 		mode: "onTouched",
 	});
 
-	const steps = [
-		{
-			id: 1,
-			title: m.questionnaire_section_general(),
-			fields: Object.keys(trustAnswers.shape) as (keyof FormValues)[],
-			isLast: false,
-		},
-		{
-			id: 2,
-			title: m.questionnaire_section_impression(),
-			fields: Object.keys(ueqAnswers.shape) as (keyof FormValues)[],
-			isLast: false,
-		},
-		{
-			id: 3,
-			title: m.questionnaire_section_understanding(),
-			fields: Object.keys(understandingAnswers.shape) as (keyof FormValues)[],
-			isLast: false,
-		},
-		{
-			id: 4,
-			title: m.questionnaire_section_intention(),
-			fields: Object.keys(intentionAnswers.shape) as (keyof FormValues)[],
-			isLast: false,
-		},
-		{
-			id: 5,
-			title: m.questionnaire_section_demographics(),
-			fields: Object.keys(demographicsAnswers.shape) as (keyof FormValues)[],
-			isLast: false,
-		},
-		{
-			id: 6,
-			title: m.questionnaire_section_feedback(),
-			fields: Object.keys(feedbackAnswer.shape) as (keyof FormValues)[],
-			isLast: true,
-		},
-	];
-
 	const currentStepConfig = steps.find((s) => s.id === step) || steps[0];
 
-	const handleNext = async () => {
+	const handleNext = async (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault();
 		const isValid = await form.trigger(currentStepConfig.fields);
 
 		if (currentStepConfig.isLast) return;
 
 		if (isValid) {
 			const values = form.getValues();
+
 			const currentFieldsData = currentStepConfig.fields.reduce(
 				(acc, field) => {
 					acc[field] = values[field];
@@ -293,7 +309,6 @@ function Questionnaire() {
 				},
 				{} as any,
 			);
-			router.invalidate();
 			await updateQuestionnaireSessionServerFn({ data: currentFieldsData });
 
 			await nav({
@@ -305,9 +320,7 @@ function Questionnaire() {
 
 	const submit = form.handleSubmit(async (values) => {
 		try {
-			console.log("Submitting questionnaire...", values);
 			await submitQuestionnaireServerFn({ data: values });
-			router.invalidate();
 			await nav({ to: "/thanks" });
 		} catch (error) {
 			console.error("Failed to submit questionnaire:", error);
@@ -343,28 +356,8 @@ function Questionnaire() {
 		{ name: "ueq_8_swapped", min: m.ueq_8_max(), max: m.ueq_8_min() },
 	] as const;
 
-	const checkPreviousSteps = useEffectEvent(async () => {
-		if (step === 1) return;
-		const previousSteps = steps.filter((s) => s.id < step);
-		const fieldsToCheck = previousSteps.flatMap((s) => s.fields);
-		const isValid = await form.trigger(fieldsToCheck);
-		if (!isValid) {
-			form.clearErrors(fieldsToCheck);
-			await nav({
-				to: "/questionnaire",
-				search: { step: 1 },
-				replace: true,
-			});
-		}
-	});
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: We need Step here
-	useEffect(() => {
-		void checkPreviousSteps();
-	}, [step]);
-
 	return (
-		<main className="mx-auto w-full pt-4 md:p-6 max-w-4xl space-y-6 min-h-[80vh] flex flex-col justify-center">
+		<main className="mx-auto w-full pt-4 md:p-6 max-w-5xl space-y-6 min-h-[80vh] flex flex-col justify-center">
 			<h2 className="text-xl md:text-2xl font-semibold">
 				{m.questionnaire_title()}
 			</h2>
@@ -402,7 +395,7 @@ function Questionnaire() {
 										{m.questionnaire_section_general()}
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-6 md:space-y-5 md:px-6 px-4">
+								<CardContent className="space-y-4 md:space-y-3 md:px-6 px-4">
 									{trustItems.map((item) => (
 										<LikertScale
 											key={item.name}
@@ -427,7 +420,7 @@ function Questionnaire() {
 										{m.questionnaire_section_impression()}
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-4 md:px-6 px-4">
+								<CardContent className="space-y-4 md:space-y-3 md:px-6 px-4">
 									<div className="mb-4 p-3 bg-muted/50 rounded-lg text-sm leading-relaxed">
 										{m.ueq_instruction()}
 									</div>
@@ -455,7 +448,7 @@ function Questionnaire() {
 										{m.questionnaire_section_understanding()}
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-6 md:space-y-5 md:px-6 px-4">
+								<CardContent className="space-y-4 md:space-y-3 md:px-6 px-4">
 									<LikertScale
 										name="understanding_q1"
 										control={form.control}
@@ -534,7 +527,7 @@ function Questionnaire() {
 										{m.questionnaire_section_intention()}
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="space-y-6 md:space-y-5 md:px-6 px-4">
+								<CardContent className="space-y-4 md:space-y-3 md:px-6 px-4">
 									{/* --- NEUER DISCLAIMER START --- */}
 									<div
 										className="rounded-md bg-muted/60 p-4 text-sm text-foreground border border-border"
@@ -861,7 +854,7 @@ function Questionnaire() {
 						<Button
 							type="button"
 							variant="ghost"
-							className="pl-0 hover:bg-transparent hover:text-primary md:pl-4 md:hover:bg-accent"
+							className="hover:bg-transparent hover:text-primary pl-4 hover:bg-accent"
 							asChild
 						>
 							<Link
@@ -893,7 +886,11 @@ function Questionnaire() {
 							)}
 						</Button>
 					) : (
-						<Button key={`next-btn-${step}`} type="button" onClick={handleNext}>
+						<Button
+							key={`next-btn-${step}`}
+							type="button"
+							onClick={(e) => handleNext(e)}
+						>
 							{m.common_continue()}
 						</Button>
 					)}

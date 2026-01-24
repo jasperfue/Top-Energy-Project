@@ -378,7 +378,7 @@ export function SystemDynamicsSection() {
 		<section className="grid gap-4 md:grid-cols-7">
 			{/* GRAPH 1: DAILY DYNAMICS */}
 			<Card className="md:col-span-3 shadow-sm">
-				<CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
+				<CardHeader className="pb-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 space-y-0">
 					<div className="space-y-1">
 						<CardTitle className="text-lg">
 							{m.dashboard_chart_daily_title()}
@@ -390,24 +390,24 @@ export function SystemDynamicsSection() {
 								: m.dashboard_chart_daily_desc_winter()}
 						</CardDescription>
 					</div>
-					<div className="flex bg-muted rounded-lg p-1 shrink-0">
+					<div className="flex bg-muted rounded-lg p-1 shrink-0 w-full md:w-auto">
 						<button
 							type="button"
 							onClick={() => setViewMode("summer")}
-							className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${viewMode === "summer" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+							className={`flex-1 md:flex-none px-3 py-1.5 text-xs font-medium rounded-md transition-all ${viewMode === "summer" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
 						>
 							{m.dashboard_season_summer()}
 						</button>
 						<button
 							type="button"
 							onClick={() => setViewMode("winter")}
-							className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${viewMode === "winter" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+							className={`flex-1 md:flex-none px-3 py-1.5 text-xs font-medium rounded-md transition-all ${viewMode === "winter" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
 						>
 							{m.dashboard_season_winter()}
 						</button>
 					</div>
 				</CardHeader>
-				<CardContent className="h-[300px] md:h-[350px] px-0 md:px-6">
+				<CardContent className="h-[300px] md:h-[350px] px-2 md:px-6">
 					<ResponsiveContainer width="100%" height="100%">
 						<ComposedChart
 							data={currentDailyData}
@@ -534,7 +534,7 @@ export function SystemDynamicsSection() {
 			</Card>
 			{/* GRAPH 2: SEASONAL BALANCE (Fully Stacked Comparison) */}
 			<Card className="md:col-span-4 shadow-sm">
-				<CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
+				<CardHeader className="pb-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 space-y-0">
 					<div className="space-y-1">
 						<CardTitle className="text-lg">
 							{m.dashboard_chart_seasonal_title()}
@@ -543,24 +543,24 @@ export function SystemDynamicsSection() {
 							{m.dashboard_chart_seasonal_desc()}
 						</CardDescription>
 					</div>
-					<div className="flex bg-muted rounded-lg p-1 shrink-0">
+					<div className="flex bg-muted rounded-lg p-1 shrink-0 w-full md:w-auto">
 						<button
 							type="button"
 							onClick={() => setSeasonalViewMode("ist")}
-							className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${seasonalViewMode === "ist" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+							className={`flex-1 md:flex-none px-3 py-1.5 text-xs font-medium rounded-md transition-all ${seasonalViewMode === "ist" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
 						>
 							{m.dashboard_status_ist()}
 						</button>
 						<button
 							type="button"
 							onClick={() => setSeasonalViewMode("soll")}
-							className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${seasonalViewMode === "soll" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+							className={`flex-1 md:flex-none px-3 py-1.5 text-xs font-medium rounded-md transition-all ${seasonalViewMode === "soll" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
 						>
 							{m.dashboard_status_soll()}
 						</button>
 					</div>
 				</CardHeader>
-				<CardContent className="h-[300px] md:h-[350px]">
+				<CardContent className="h-[450px] md:h-[400px] flex flex-col">
 					<ResponsiveContainer width="100%" height="100%">
 						<BarChart
 							data={currentMonthlyData}
@@ -667,7 +667,7 @@ const CustomGroupedLegend = (props: any) => {
 
 	return (
 		// CONTAINER: Mobil 1 Spalte (untereinander), ab Tablet (md) 2 Spalten
-		<div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6 text-xs w-full">
+		<div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6 text-xs md:text-sm w-full">
 			{/* GRUPPE 1: SUPPLY (HERKUNFT) */}
 			<div className="flex flex-col gap-1.5">
 				{/* Gruppen-Titel */}
@@ -675,7 +675,7 @@ const CustomGroupedLegend = (props: any) => {
 					{m.dashboard_tooltip_supply()}
 				</span>
 				{/* Items-Wrapper: Erlaubt Umbruch (wrap) innerhalb der Gruppe */}
-				<div className="flex flex-wrap gap-x-4 gap-y-2">
+				<div className="flex flex-wrap gap-x-3 gap-y-1.5">
 					{supplyItems.map((entry: any, index: number) => (
 						<div
 							key={`supply-${
@@ -701,11 +701,11 @@ const CustomGroupedLegend = (props: any) => {
 
 			{/* GRUPPE 2: CONSUMPTION (VERWENDUNG) */}
 			{/* Auf Desktop rechtsbündig ausgerichtet für schöne Symmetrie, mobil links */}
-			<div className="flex flex-col gap-1.5 md:items-end">
-				<span className="font-semibold text-muted-foreground uppercase tracking-wider text-[10px]">
+			<div className="flex flex-col gap-1 md:items-end">
+				<span className="font-bold text-muted-foreground uppercase tracking-wider text-[10px]">
 					{m.dashboard_tooltip_usage()}
 				</span>
-				<div className="flex flex-wrap gap-x-4 gap-y-2 md:justify-end">
+				<div className="flex flex-wrap gap-x-3 gap-y-1.5 md:justify-end">
 					{usageItems.map((entry: any, index: number) => (
 						<div
 							key={`usage-${

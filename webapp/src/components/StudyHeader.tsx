@@ -12,7 +12,7 @@ export function StudyHeader({
 	isLoading,
 }: Readonly<StudyHeaderProps>) {
 	return (
-		<div className="sticky top-0 z-20 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
+		<div className="pt-2 md:pt-4 sticky top-0 z-20 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
 			<div className="container mx-auto px-4 flex items-center justify-between py-2 md:py-3">
 				<div className="flex items-center gap-2">
 					<div className="bg-primary/10 p-1.5 md:p-2 rounded-md">

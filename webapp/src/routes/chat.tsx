@@ -112,14 +112,20 @@ function Chat() {
 
 	return (
 		// We set h-dvh here to ensure the chat takes the full viewport height
-		<div className="flex flex-col pt-2 md:pt-4 h-dvh w-full overflow-hidden bg-background overscroll-y-none">
-			<StudyHeader onFinish={handleFinish} isLoading={isFinishing} />
+		<div className="flex flex-col h-dvh w-full overflow-hidden bg-background overscroll-y-none">
+			{/* StudyHeader braucht eventuell auch ein px-4 wrapper, falls er jetzt zu breit wirkt */}
+			<div className="w-full container mx-auto px-4">
+				<StudyHeader onFinish={handleFinish} isLoading={isFinishing} />
+			</div>
 
 			<div className="flex-1 min-h-0 relative">
 				<div className="grid pb-0 h-full grid-rows-[1fr_auto]">
-					{/* Scrollable content */}
-					<Conversation className="overflow-x-hidden pb-2">
-						<ConversationContent>
+					{/* Conversation ist jetzt 100% breit -> Scrollen geht überall.
+                    Wir müssen den Inhalt (ConversationContent) zentrieren.
+                */}
+					<Conversation className="overflow-x-hidden pb-2 w-full">
+						{/* Hier fügen wir max-width und margin auto hinzu, damit der Text mittig bleibt */}
+						<ConversationContent className="container mx-auto px-4 w-full">
 							{messages.map((message, index) => (
 								<Message from={message.role} key={message.id}>
 									<MessageContent>
@@ -128,7 +134,7 @@ function Chat() {
 												case "text": // we don't use any reasoning or tool calls in this example
 													return (
 														<Markdown key={`${message.id}-${i}`}>
-															{part.text.replace(
+															{part.text.replaceAll(
 																/<Suggestion>.*?<\/Suggestion>/g,
 																"",
 															)}
@@ -152,24 +158,31 @@ function Chat() {
 							{suggestions.length > 0 && status === "ready" && (
 								<div className="absolute bottom-full left-0 right-0 z-10 pointer-events-none bg-gradient-to-t from-background/80 to-transparent">
 									<div className="max-h-[30dvh] overflow-y-auto pointer-events-auto">
-										<Suggestions className="px-4 py-2">
-											{suggestions.map((suggestion) => (
-												<Suggestion
-													key={suggestion}
-													onClick={(s) => sendMessage({ text: s })}
-													suggestion={suggestion}
-												/>
-											))}
-										</Suggestions>
+										{/* Suggestions auch zentrieren */}
+										<div className="container mx-auto w-full">
+											<Suggestions className="px-4 py-2">
+												{suggestions.map((suggestion) => (
+													<Suggestion
+														key={suggestion}
+														onClick={(s) => sendMessage({ text: s })}
+														suggestion={suggestion}
+													/>
+												))}
+											</Suggestions>
+										</div>
 									</div>
 								</div>
 							)}
-							<PromptInputComponent
-								stop={stop}
-								// @ts-expect-error
-								sendMessage={sendMessage}
-								status={status}
-							/>
+
+							{/* Input Feld zentrieren */}
+							<div className="container mx-auto w-full px-4">
+								<PromptInputComponent
+									stop={stop}
+									// @ts-expect-error
+									sendMessage={sendMessage}
+									status={status}
+								/>
+							</div>
 						</div>
 					</div>
 				</div>

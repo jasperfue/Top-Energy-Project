@@ -26,9 +26,6 @@ export default defineConfig({
 				filter: ({ path }) => {
 					return !path.startsWith("/scenario");
 				},
-				onSuccess: ({ page }) => {
-					console.log(`Prerendered ${page.path}`);
-				},
 			},
 		}),
 		viteReact({

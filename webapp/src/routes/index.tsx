@@ -1,11 +1,7 @@
-import {
-	createFileRoute,
-	useNavigate,
-	useRouter,
-} from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { ArrowRight, Clock, Loader2, Mail } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { z } from "zod";
 import {
@@ -30,18 +26,17 @@ import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
 import { getLocale, locales, setLocale } from "@/paraglide/runtime";
 
-export const clearSession = createServerFn({ method: "POST" }).handler(
-	async () => {
-		const session = await useUserSession();
-		await session.clear();
-	},
-);
+const clearSession = createServerFn({ method: "POST" }).handler(async () => {
+	const session = await useUserSession();
+	await session.clear();
+});
 
 export const Route = createFileRoute("/")({
 	component: Consent,
 	beforeLoad: async () => {
 		await clearSession();
 	},
+	gcTime: 0,
 });
 
 const getCountryCode = (locale: string) =>
@@ -63,15 +58,10 @@ const startStudy = createServerFn({ method: "POST" })
 
 function Consent() {
 	const nav = useNavigate();
-	const router = useRouter();
 	const [selection, setSelection] = useState<"yes" | "no" | undefined>(
 		undefined,
 	);
 	const [isLoading, setIsLoading] = useState(false);
-
-	useEffect(() => {
-		router.invalidate();
-	}, [router]);
 
 	const handleStart = async () => {
 		if (!selection) return;
@@ -86,7 +76,7 @@ function Consent() {
 	};
 
 	return (
-		<main className="mx-auto max-w-2xl w-full p-4 md:p-6 space-y-6 md:space-y-8 min-h-[80vh] flex flex-col justify-center">
+		<main className="mx-auto max-w-4xl w-full p-4 md:p-6 space-y-6 md:space-y-8 flex-1 flex flex-col justify-center">
 			{/* HEADER SECTION */}
 			<div className="space-y-4 text-center sm:text-left">
 				<h1 className="text-2xl md:text-3xl font-bold tracking-tight text-primary">
