@@ -3,7 +3,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { ArrowRight, Clock, Loader2, Mail } from "lucide-react";
 import { useState } from "react";
 import ReactCountryFlag from "react-country-flag";
-import { z } from "zod";
 import {
 	Accordion,
 	AccordionContent,
@@ -21,6 +20,7 @@ import {
 	SelectTrigger,
 } from "@/components/ui/select.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
+import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
@@ -36,44 +36,31 @@ export const Route = createFileRoute("/")({
 	beforeLoad: async () => {
 		await clearSession();
 	},
+	loader: () => ({ deferredSlowData: setTeilnehmerId() }),
 	gcTime: 0,
 });
 
 const getCountryCode = (locale: string) =>
 	locale === "en" ? "GB" : locale.toUpperCase();
 
-const startStudy = createServerFn({ method: "POST" })
-	.inputValidator(
-		z.object({
-			isTargetAudience: z.boolean(),
-		}),
-	)
-	.handler(async ({ data }) => {
-		const session = await useUserSession();
-		await session.update({
-			"Teilnehmer ID": crypto.randomUUID(),
-			Zielgruppe: data.isTargetAudience,
-		});
+const setTeilnehmerId = createServerFn({ method: "GET" }).handler(async () => {
+	const session = await useUserSession();
+	await session.update({
+		"Teilnehmer ID": crypto.randomUUID(),
 	});
+	return { success: true };
+});
 
 function Consent() {
 	const nav = useNavigate();
 	const [selection, setSelection] = useState<"yes" | "no" | undefined>(
 		undefined,
 	);
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+	usePreloadRoute("/affinity-for-technology");
 
-	const handleStart = async () => {
-		if (!selection) return;
-		setIsLoading(true);
-		try {
-			await startStudy({ data: { isTargetAudience: selection === "yes" } });
-			await nav({ to: "/affinity-for-technology" });
-		} catch (error) {
-			console.error("Failed to start study:", error);
-			setIsLoading(false);
-		}
-	};
+	const { deferredSlowData } = Route.useLoaderData();
+	deferredSlowData.then(() => setIsLoading(false));
 
 	return (
 		<main className="mx-auto max-w-4xl w-full p-4 md:p-6 space-y-6 md:space-y-8 flex-1 flex flex-col justify-center">
@@ -224,7 +211,7 @@ function Consent() {
 			<div className="flex justify-end pt-2 pb-4 md:pb-0">
 				<Button
 					size="lg"
-					onClick={handleStart}
+					onClick={async () => await nav({ to: "/affinity-for-technology" })}
 					disabled={isLoading || selection !== "yes"}
 					className="w-full sm:w-auto h-12 shadow-md sm:shadow-none"
 				>
