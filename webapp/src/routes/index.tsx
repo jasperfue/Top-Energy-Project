@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { ArrowRight, Clock, Loader2, Mail } from "lucide-react";
+import { ArrowRight, Clock, Mail } from "lucide-react";
 import { useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import {
@@ -31,36 +31,31 @@ const clearSession = createServerFn({ method: "POST" }).handler(async () => {
 	await session.clear();
 });
 
+const setTeilnehmerId = createServerFn({ method: "GET" }).handler(async () => {
+	const session = await useUserSession();
+	await session.update({
+		"Teilnehmer ID": crypto.randomUUID(),
+	});
+});
+
 export const Route = createFileRoute("/")({
 	component: Consent,
 	beforeLoad: async () => {
 		await clearSession();
+		await setTeilnehmerId();
 	},
-	loader: () => ({ deferredSlowData: setTeilnehmerId() }),
 	gcTime: 0,
 });
 
 const getCountryCode = (locale: string) =>
 	locale === "en" ? "GB" : locale.toUpperCase();
 
-const setTeilnehmerId = createServerFn({ method: "GET" }).handler(async () => {
-	const session = await useUserSession();
-	await session.update({
-		"Teilnehmer ID": crypto.randomUUID(),
-	});
-	return { success: true };
-});
-
 function Consent() {
 	const nav = useNavigate();
 	const [selection, setSelection] = useState<"yes" | "no" | undefined>(
 		undefined,
 	);
-	const [isLoading, setIsLoading] = useState(true);
 	usePreloadRoute("/affinity-for-technology");
-
-	const { deferredSlowData } = Route.useLoaderData();
-	deferredSlowData.then(() => setIsLoading(false));
 
 	return (
 		<main className="mx-auto max-w-4xl w-full p-4 md:p-6 space-y-6 md:space-y-8 flex-1 flex flex-col justify-center">
@@ -212,17 +207,11 @@ function Consent() {
 				<Button
 					size="lg"
 					onClick={async () => await nav({ to: "/affinity-for-technology" })}
-					disabled={isLoading || selection !== "yes"}
+					disabled={selection !== "yes"}
 					className="w-full sm:w-auto h-12 shadow-md sm:shadow-none"
 				>
-					{isLoading ? (
-						<Loader2 className="h-4 w-4 animate-spin" />
-					) : (
-						<>
-							{m.common_start_study()}
-							<ArrowRight className="ml-2 h-4 w-4" />
-						</>
-					)}
+					{m.common_start_study()}
+					<ArrowRight className="ml-2 h-4 w-4" />
 				</Button>
 			</div>
 		</main>
