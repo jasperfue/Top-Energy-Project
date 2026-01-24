@@ -16,9 +16,10 @@ import {
 import {
 	Tooltip,
 	TooltipContent,
-	TooltipProvider,
+	TooltipPositioner,
 	TooltipTrigger,
 } from "@/components/ui/tooltip.tsx";
+import { cn } from "@/lib/utils.ts";
 import * as m from "@/paraglide/messages";
 import { getLocale } from "@/paraglide/runtime";
 import { fmt } from "@/routes/dashboard.tsx";
@@ -88,44 +89,42 @@ export function KpiSection() {
 		],
 	};
 	return (
-		<TooltipProvider delayDuration={300}>
-			<section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-				<KpiCard
-					title={m.dashboard_kpi_invest_title()}
-					value={`${fmt(RAW_DATA.invest, currentLocale)} €`}
-					subtitle={m.dashboard_kpi_invest_subtitle()}
-					icon={Euro}
-					tooltipData={KPI_DETAILS.invest}
-				/>
-				<KpiCard
-					title={m.dashboard_kpi_savings_title()}
-					value={`${fmt(RAW_DATA.savingsYearly, currentLocale)} €`}
-					subtitle={m.dashboard_kpi_savings_subtitle()}
-					icon={TrendingDown}
-					trend="positive"
-					trendText={m.dashboard_kpi_savings_trend()}
-					tooltipData={KPI_DETAILS.savings}
-				/>
-				<KpiCard
-					title={m.dashboard_kpi_amortization_title()}
-					value={`${fmt(RAW_DATA.amortization, currentLocale)} ${m.dashboard_kpi_amortization_unit()}`}
-					subtitle={m.dashboard_kpi_amortization_subtitle()}
-					icon={Timer}
-				/>
-				<KpiCard
-					title={m.dashboard_kpi_co2_title()}
-					value={`${fmt(RAW_DATA.co2Soll, currentLocale)} t/a`}
-					subtitle={m.dashboard_kpi_co2_subtitle({
-						value: fmt(RAW_DATA.co2Ist, currentLocale),
-					})}
-					icon={Leaf}
-					highlightClass="text-green-600"
-					trend="positive"
-					trendText={m.dashboard_kpi_co2_trend()}
-					tooltipData={KPI_DETAILS.co2}
-				/>
-			</section>
-		</TooltipProvider>
+		<section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+			<KpiCard
+				title={m.dashboard_kpi_invest_title()}
+				value={`${fmt(RAW_DATA.invest, currentLocale)} €`}
+				subtitle={m.dashboard_kpi_invest_subtitle()}
+				icon={Euro}
+				tooltipData={KPI_DETAILS.invest}
+			/>
+			<KpiCard
+				title={m.dashboard_kpi_savings_title()}
+				value={`${fmt(RAW_DATA.savingsYearly, currentLocale)} €`}
+				subtitle={m.dashboard_kpi_savings_subtitle()}
+				icon={TrendingDown}
+				trend="positive"
+				trendText={m.dashboard_kpi_savings_trend()}
+				tooltipData={KPI_DETAILS.savings}
+			/>
+			<KpiCard
+				title={m.dashboard_kpi_amortization_title()}
+				value={`${fmt(RAW_DATA.amortization, currentLocale)} ${m.dashboard_kpi_amortization_unit()}`}
+				subtitle={m.dashboard_kpi_amortization_subtitle()}
+				icon={Timer}
+			/>
+			<KpiCard
+				title={m.dashboard_kpi_co2_title()}
+				value={`${fmt(RAW_DATA.co2Soll, currentLocale)} t/a`}
+				subtitle={m.dashboard_kpi_co2_subtitle({
+					value: fmt(RAW_DATA.co2Ist, currentLocale),
+				})}
+				icon={Leaf}
+				highlightClass="text-green-600"
+				trend="positive"
+				trendText={m.dashboard_kpi_co2_trend()}
+				tooltipData={KPI_DETAILS.co2}
+			/>
+		</section>
 	);
 }
 
@@ -156,39 +155,40 @@ function KpiCard({
 					<CardTitle className="text-sm font-medium text-muted-foreground truncate">
 						{title}
 					</CardTitle>
-					<div className={!tooltipData ? "hidden" : "block"}>
+					<div className={cn(!tooltipData ? "hidden" : "flex", "items-center")}>
 						<Tooltip>
-							<TooltipTrigger asChild>
+							<TooltipTrigger>
 								<div className="p-1 -m-1 cursor-pointer">
 									<Info className="h-3.5 w-3.5 text-muted-foreground/50 hover:text-primary transition-colors" />
 								</div>
 							</TooltipTrigger>
-							<TooltipContent
-								side="bottom"
-								align="start"
-								className="p-0 overflow-hidden shadow-lg border-none z-50"
-							>
-								<div className="bg-popover border text-popover-foreground p-3 min-w-[200px]">
-									<p className="font-semibold text-xs text-muted-foreground uppercase mb-2">
-										{m.dashboard_tooltip_composition()}
-									</p>
-									<div className="space-y-1.5">
-										{tooltipData?.map((item) => (
-											<div
-												key={item.label}
-												className="flex justify-between text-sm gap-4"
-											>
-												<span className="text-muted-foreground">
-													{item.label}
-												</span>
-												<span className="font-mono font-medium">
-													{item.value}
-												</span>
-											</div>
-										))}
+
+							{/* NEU: Positioner umschließt Content */}
+							{/* side und align gehören jetzt zum Positioner */}
+							<TooltipPositioner side="right" align="start">
+								<TooltipContent className="p-0 overflow-hidden shadow-lg border-none">
+									<div className="bg-popover border text-popover-foreground p-3 min-w-[200px]">
+										<p className="font-semibold text-xs text-muted-foreground uppercase mb-2">
+											{m.dashboard_tooltip_composition()}
+										</p>
+										<div className="space-y-1.5">
+											{tooltipData?.map((item) => (
+												<div
+													key={item.label}
+													className="flex justify-between text-sm gap-4"
+												>
+													<span className="text-muted-foreground">
+														{item.label}
+													</span>
+													<span className="font-mono font-medium">
+														{item.value}
+													</span>
+												</div>
+											))}
+										</div>
 									</div>
-								</div>
-							</TooltipContent>
+								</TooltipContent>
+							</TooltipPositioner>
 						</Tooltip>
 					</div>
 				</div>

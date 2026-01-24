@@ -28,7 +28,7 @@ import {
 import {
 	Tooltip as ShadTooltip,
 	TooltipContent,
-	TooltipProvider,
+	TooltipPositioner,
 	TooltipTrigger,
 } from "./ui/tooltip";
 
@@ -176,115 +176,112 @@ export function CostAutarkySection() {
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="flex flex-col gap-6 py-4 h-full justify-center">
-					<TooltipProvider>
-						<div className="grid grid-cols-2 gap-4 w-full">
-							{/* Autarky Chart */}
-							<div className="flex flex-col items-center">
-								<div className="relative w-full aspect-square max-h-[140px] md:max-h-[200px]">
-									<ResponsiveContainer width="100%" height="100%">
-										<PieChart>
-											<Pie
-												data={PIE_DATA_AUTARKIE}
-												cx="50%"
-												cy="50%"
-												innerRadius={isMobile ? 45 : 60}
-												outerRadius={isMobile ? 60 : 80}
-												paddingAngle={5}
-												dataKey="value"
-												startAngle={90}
-												endAngle={450}
-											>
-												{PIE_DATA_AUTARKIE.map((entry) => (
-													<Cell key={`cell-${entry.name}`} fill={entry.color} />
-												))}
-											</Pie>
-										</PieChart>
-									</ResponsiveContainer>
-									<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-										<span className="text-lg md:text-xl font-bold">
-											{fmt(RAW_DATA.autarky, currentLocale)}%
-										</span>
-									</div>
-								</div>
-								<div className="flex items-center gap-1.5 mt-2">
-									<span className="text-xs font-medium text-center leading-tight">
-										{m.dashboard_label_autarky()}
-									</span>
-									<ShadTooltip>
-										<TooltipTrigger asChild>
-											<div className="p-1 -m-1 cursor-pointer">
-												<Info className="h-3.5 w-3.5 text-muted-foreground/50 hover:text-primary transition-colors" />
-											</div>
-										</TooltipTrigger>
-										<TooltipContent
-											side="bottom"
-											align="start"
-											className="p-0 overflow-hidden shadow-lg border-none z-50"
+					<div className="grid grid-cols-2 gap-4 w-full">
+						{/* Autarky Chart */}
+						<div className="flex flex-col items-center">
+							<div className="relative w-full aspect-square max-h-[140px] md:max-h-[200px]">
+								<ResponsiveContainer width="100%" height="100%">
+									<PieChart>
+										<Pie
+											data={PIE_DATA_AUTARKIE}
+											cx="50%"
+											cy="50%"
+											innerRadius={isMobile ? 45 : 60}
+											outerRadius={isMobile ? 60 : 80}
+											paddingAngle={5}
+											dataKey="value"
+											startAngle={90}
+											endAngle={450}
 										>
+											{PIE_DATA_AUTARKIE.map((entry) => (
+												<Cell key={`cell-${entry.name}`} fill={entry.color} />
+											))}
+										</Pie>
+									</PieChart>
+								</ResponsiveContainer>
+								<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+									<span className="text-lg md:text-xl font-bold">
+										{fmt(RAW_DATA.autarky, currentLocale)}%
+									</span>
+								</div>
+							</div>
+							<div className="flex items-center gap-1.5 mt-2">
+								<span className="text-xs font-medium text-center leading-tight">
+									{m.dashboard_label_autarky()}
+								</span>
+								<ShadTooltip>
+									<TooltipTrigger>
+										<div className="p-1 -m-1 cursor-pointer">
+											<Info className="h-3.5 w-3.5 text-muted-foreground/50 hover:text-primary transition-colors" />
+										</div>
+									</TooltipTrigger>
+
+									{/* KORREKTUR: Positioner eingefügt */}
+									<TooltipPositioner side="bottom" align="start">
+										<TooltipContent className="p-0 overflow-hidden shadow-lg border-none">
 											<div className="bg-popover border text-popover-foreground p-3 max-w-[250px]">
 												<p className="text-sm leading-relaxed">
 													{m.dashboard_tooltip_autarky_desc()}
 												</p>
 											</div>
 										</TooltipContent>
-									</ShadTooltip>
+									</TooltipPositioner>
+								</ShadTooltip>
+							</div>
+						</div>
+
+						{/* Self-Use Chart */}
+						<div className="flex flex-col items-center">
+							<div className="relative w-full aspect-square max-h-[140px] md:max-h-[200px]">
+								<ResponsiveContainer width="100%" height="100%">
+									<PieChart>
+										<Pie
+											data={PIE_DATA_SELF_USE}
+											cx="50%"
+											cy="50%"
+											innerRadius={isMobile ? 45 : 60}
+											outerRadius={isMobile ? 60 : 80}
+											paddingAngle={5}
+											dataKey="value"
+											startAngle={90}
+											endAngle={450}
+										>
+											{PIE_DATA_SELF_USE.map((entry) => (
+												<Cell key={`cell-${entry.name}`} fill={entry.color} />
+											))}
+										</Pie>
+									</PieChart>
+								</ResponsiveContainer>
+								<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+									<span className="text-lg md:text-xl font-bold">
+										{fmt(RAW_DATA.selfUse, currentLocale)}%
+									</span>
 								</div>
 							</div>
+							<div className="flex items-center gap-1.5 mt-2">
+								<span className="text-xs font-medium text-center leading-tight">
+									{m.dashboard_label_self_consumption()}
+								</span>
+								<ShadTooltip>
+									<TooltipTrigger>
+										<div className="p-1 -m-1 cursor-pointer">
+											<Info className="h-3.5 w-3.5 text-muted-foreground/50 hover:text-primary transition-colors" />
+										</div>
+									</TooltipTrigger>
 
-							{/* Self-Use Chart */}
-							<div className="flex flex-col items-center">
-								<div className="relative w-full aspect-square max-h-[140px] md:max-h-[200px]">
-									<ResponsiveContainer width="100%" height="100%">
-										<PieChart>
-											<Pie
-												data={PIE_DATA_SELF_USE}
-												cx="50%"
-												cy="50%"
-												innerRadius={isMobile ? 45 : 60}
-												outerRadius={isMobile ? 60 : 80}
-												paddingAngle={5}
-												dataKey="value"
-												startAngle={90}
-												endAngle={450}
-											>
-												{PIE_DATA_SELF_USE.map((entry) => (
-													<Cell key={`cell-${entry.name}`} fill={entry.color} />
-												))}
-											</Pie>
-										</PieChart>
-									</ResponsiveContainer>
-									<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-										<span className="text-lg md:text-xl font-bold">
-											{fmt(RAW_DATA.selfUse, currentLocale)}%
-										</span>
-									</div>
-								</div>
-								<div className="flex items-center gap-1.5 mt-2">
-									<span className="text-xs font-medium text-center leading-tight">
-										{m.dashboard_label_self_consumption()}
-									</span>
-									<ShadTooltip>
-										<TooltipTrigger asChild>
-											<div className="p-1 -m-1 cursor-pointer">
-												<Info className="h-3.5 w-3.5 text-muted-foreground/50 hover:text-primary transition-colors" />
-											</div>
-										</TooltipTrigger>
-										<TooltipContent
-											side="bottom"
-											align="start"
-											className="p-0 overflow-hidden shadow-lg border-none z-50"
-										>
+									<TooltipPositioner side="bottom" align="start">
+										<TooltipContent className="p-0 overflow-hidden shadow-lg border-none">
 											<div className="bg-popover border text-popover-foreground p-3 max-w-[250px]">
 												<p className="text-sm leading-relaxed">
 													{m.dashboard_tooltip_self_use_desc()}
 												</p>
 											</div>
 										</TooltipContent>
-									</ShadTooltip>
-								</div>
+									</TooltipPositioner>
+								</ShadTooltip>
 							</div>
 						</div>
-					</TooltipProvider>
+					</div>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mt-2">
 						{/* Autarky Legend */}
