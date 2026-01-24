@@ -256,6 +256,7 @@ function Questionnaire() {
 	);
 
 	const sessionData = Route.useLoaderData();
+	console.debug("sessionData loaded: ", sessionData);
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
