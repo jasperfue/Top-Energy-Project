@@ -187,6 +187,34 @@ const steps = [
 	},
 ];
 
+const trustItems = [
+	{ name: "trust_comp_1", label: m.trust_comp_q1() },
+	{ name: "trust_ben_1", label: m.trust_ben_q1() },
+	{ name: "trust_int_1", label: m.trust_int_q1() },
+
+	{ name: "trust_comp_2", label: m.trust_comp_q2() },
+	{ name: "trust_ben_2", label: m.trust_ben_q2() },
+	{ name: "trust_int_2", label: m.trust_int_q2() },
+
+	{ name: "trust_comp_3", label: m.trust_comp_q3() },
+	{ name: "trust_ben_3", label: m.trust_ben_q3() },
+	{ name: "trust_int_3", label: m.trust_int_q3() },
+
+	{ name: "trust_comp_4", label: m.trust_comp_q4() },
+	{ name: "trust_int_4", label: m.trust_int_q4() },
+] as const;
+
+const ueqItems = [
+	{ name: "ueq_1", min: m.ueq_1_min(), max: m.ueq_1_max() },
+	{ name: "ueq_2_swapped", min: m.ueq_2_max(), max: m.ueq_2_min() },
+	{ name: "ueq_3", min: m.ueq_3_min(), max: m.ueq_3_max() },
+	{ name: "ueq_4_swapped", min: m.ueq_4_max(), max: m.ueq_4_min() },
+	{ name: "ueq_5", min: m.ueq_5_min(), max: m.ueq_5_max() },
+	{ name: "ueq_6_swapped", min: m.ueq_6_max(), max: m.ueq_6_min() },
+	{ name: "ueq_7", min: m.ueq_7_min(), max: m.ueq_7_max() },
+	{ name: "ueq_8_swapped", min: m.ueq_8_max(), max: m.ueq_8_min() },
+] as const;
+
 const getUserSessionData = createServerFn({ method: "GET" }).handler(
 	async () => {
 		const session = await useUserSession();
@@ -328,34 +356,6 @@ function Questionnaire() {
 			alert("Fehler beim Speichern. Bitte versuchen Sie es erneut.");
 		}
 	});
-
-	const trustItems = [
-		{ name: "trust_comp_1", label: m.trust_comp_q1() },
-		{ name: "trust_ben_1", label: m.trust_ben_q1() },
-		{ name: "trust_int_1", label: m.trust_int_q1() },
-
-		{ name: "trust_comp_2", label: m.trust_comp_q2() },
-		{ name: "trust_ben_2", label: m.trust_ben_q2() },
-		{ name: "trust_int_2", label: m.trust_int_q2() },
-
-		{ name: "trust_comp_3", label: m.trust_comp_q3() },
-		{ name: "trust_ben_3", label: m.trust_ben_q3() },
-		{ name: "trust_int_3", label: m.trust_int_q3() },
-
-		{ name: "trust_comp_4", label: m.trust_comp_q4() },
-		{ name: "trust_int_4", label: m.trust_int_q4() },
-	] as const;
-
-	const ueqItems = [
-		{ name: "ueq_1", min: m.ueq_1_min(), max: m.ueq_1_max() },
-		{ name: "ueq_2_swapped", min: m.ueq_2_max(), max: m.ueq_2_min() },
-		{ name: "ueq_3", min: m.ueq_3_min(), max: m.ueq_3_max() },
-		{ name: "ueq_4_swapped", min: m.ueq_4_max(), max: m.ueq_4_min() },
-		{ name: "ueq_5", min: m.ueq_5_min(), max: m.ueq_5_max() },
-		{ name: "ueq_6_swapped", min: m.ueq_6_max(), max: m.ueq_6_min() },
-		{ name: "ueq_7", min: m.ueq_7_min(), max: m.ueq_7_max() },
-		{ name: "ueq_8_swapped", min: m.ueq_8_max(), max: m.ueq_8_min() },
-	] as const;
 
 	return (
 		<main className="mx-auto w-full pt-4 md:p-6 max-w-5xl space-y-6 min-h-[80vh] flex flex-col justify-center">
