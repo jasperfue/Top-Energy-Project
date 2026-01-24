@@ -4,7 +4,7 @@ import {
 	useNavigate,
 	useRouter,
 } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
+import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { ArrowRight, Clock, Mail } from "lucide-react";
 import { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
@@ -46,9 +46,6 @@ export const Route = createFileRoute("/")({
 	component: Consent,
 	beforeLoad: async () => {
 		await clearSession();
-		console.log("Session cleared");
-		await setTeilnehmerId();
-		console.log("assigned Teilnehmer Id");
 	},
 	gcTime: 0,
 });
@@ -63,13 +60,19 @@ function Consent() {
 	);
 	const hydrated = useHydrated();
 	const router = useRouter();
+	const setTeilnehmerIdServerFn = useServerFn(setTeilnehmerId);
+	const [teilnehmerIdIsSet, setTeilnehmerIdIsSet] = useState<boolean>(false);
 
 	useEffect(() => {
-		if (hydrated) {
+		setTeilnehmerIdServerFn().then(() => setTeilnehmerIdIsSet(true));
+	}, [setTeilnehmerIdServerFn]);
+
+	useEffect(() => {
+		if (hydrated && teilnehmerIdIsSet) {
 			router.preloadRoute({ to: "/affinity-for-technology" });
 			console.log("preloaded next route");
 		}
-	}, [hydrated, router]);
+	}, [hydrated, router, teilnehmerIdIsSet]);
 
 	return (
 		<main className="mx-auto max-w-4xl w-full p-4 md:p-6 space-y-6 md:space-y-8 flex-1 flex flex-col justify-center">
@@ -221,7 +224,7 @@ function Consent() {
 				<Button
 					size="lg"
 					onClick={async () => await nav({ to: "/affinity-for-technology" })}
-					disabled={selection !== "yes"}
+					disabled={!teilnehmerIdIsSet || selection !== "yes"}
 					className="w-full sm:w-auto h-12 shadow-md sm:shadow-none"
 				>
 					{m.common_start_study()}
