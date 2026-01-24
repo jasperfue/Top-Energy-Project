@@ -5,7 +5,7 @@ import {
 	type FieldPath,
 	type FieldValues,
 } from "react-hook-form";
-import z from "zod";
+import { z } from "zod";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";

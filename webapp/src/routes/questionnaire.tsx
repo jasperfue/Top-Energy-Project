@@ -10,13 +10,13 @@ import { ArrowRight, Loader2, TriangleAlert } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { LikertScale } from "@/components/LikertScale";
 import {
 	LIKERT_CENTER,
 	LIKERT_LEFT,
 	LIKERT_RIGHT,
 	Likert7,
-} from "@/components/LikertScale.tsx";
+	LikertScale,
+} from "@/components/LikertScale";
 import { MultipleChoiceQuestion } from "@/components/MultipleChoiceQuestion.tsx";
 import { SemanticDifferential } from "@/components/SemanticDifferential.tsx";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { airtable } from "@/lib/airtable.ts";
-import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { cn } from "@/lib/utils.ts";
 import { m } from "@/paraglide/messages.js";
@@ -42,9 +41,8 @@ export const Route = createFileRoute("/questionnaire")({
 			step: safeStep,
 		};
 	},
-	beforeLoad: async ({ search }) => {
-		const step = search.step;
-		if (step === 1) return;
+	loaderDeps: ({ search: { step } }) => ({ step }),
+	loader: async ({ deps: { step } }) => {
 		const data = await getUserSessionData();
 
 		const stepSchemas = [
@@ -68,8 +66,9 @@ export const Route = createFileRoute("/questionnaire")({
 				});
 			}
 		}
+
+		return data;
 	},
-	loader: async () => await getUserSessionData(),
 	component: Questionnaire,
 	gcTime: 0,
 });
@@ -211,10 +210,6 @@ function Questionnaire() {
 	const submitQuestionnaireServerFn = useServerFn(submitQuestionnaire);
 	const updateQuestionnaireSessionServerFn = useServerFn(
 		updateQuestionnaireSession,
-	);
-	usePreloadRoute(
-		step < 6 ? "/questionnaire" : "/thanks",
-		step < 6 ? { step: step + 1 } : undefined,
 	);
 
 	const sessionData = Route.useLoaderData();
@@ -860,7 +855,7 @@ function Questionnaire() {
 						<Button
 							type="button"
 							variant="ghost"
-							className="pl-0 hover:bg-transparent hover:text-primary pl-4 hover:bg-accent"
+							className="hover:bg-transparent hover:text-primary pl-4 hover:bg-accent"
 							asChild
 						>
 							<Link
