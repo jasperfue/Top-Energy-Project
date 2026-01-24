@@ -16,7 +16,7 @@ import {
 	LIKERT_RIGHT,
 	Likert7,
 	LikertScale,
-} from "@/components/LikertScale";
+} from "@/components/LikertScale.tsx";
 import { MultipleChoiceQuestion } from "@/components/MultipleChoiceQuestion.tsx";
 import { SemanticDifferential } from "@/components/SemanticDifferential.tsx";
 import { Button } from "@/components/ui/button";
@@ -41,8 +41,9 @@ export const Route = createFileRoute("/questionnaire")({
 			step: safeStep,
 		};
 	},
-	loaderDeps: ({ search: { step } }) => ({ step }),
-	loader: async ({ deps: { step } }) => {
+	beforeLoad: async ({ search }) => {
+		const step = search.step;
+		if (step === 1) return;
 		const data = await getUserSessionData();
 
 		for (const stepConfig of steps) {
@@ -50,9 +51,6 @@ export const Route = createFileRoute("/questionnaire")({
 
 			const result = stepConfig.schema.safeParse(data);
 			if (!result.success) {
-				console.info(
-					`redirecting because validation failed in step ${stepConfig.id}`,
-				);
 				throw redirect({
 					to: "/questionnaire",
 					search: { step: stepConfig.id },
@@ -60,9 +58,8 @@ export const Route = createFileRoute("/questionnaire")({
 				});
 			}
 		}
-
-		return data;
 	},
+	loader: async () => await getUserSessionData(),
 	component: Questionnaire,
 	gcTime: 0,
 });
