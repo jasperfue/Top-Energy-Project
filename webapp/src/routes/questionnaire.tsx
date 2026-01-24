@@ -62,6 +62,7 @@ export const Route = createFileRoute("/questionnaire")({
 	loader: async () => await getUserSessionData(),
 	component: Questionnaire,
 	gcTime: 0,
+	shouldReload: false,
 });
 
 const trustAnswers = z.object({
