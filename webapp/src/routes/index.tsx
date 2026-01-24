@@ -21,7 +21,6 @@ import {
 	SelectTrigger,
 } from "@/components/ui/select.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { usePreloadRoute } from "@/lib/usePreloadRoute.ts";
 import { useUserSession } from "@/lib/useUserSession.ts";
 import { cn } from "@/lib/utils";
 import { m } from "@/paraglide/messages.js";
@@ -63,7 +62,6 @@ function Consent() {
 		undefined,
 	);
 	const [isLoading, setIsLoading] = useState(false);
-	usePreloadRoute("/affinity-for-technology");
 
 	const handleStart = async () => {
 		if (!selection) return;
