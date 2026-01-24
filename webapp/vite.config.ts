@@ -20,14 +20,7 @@ export default defineConfig({
 	},
 	plugins: [
 		tsConfigPaths(),
-		tanstackStart({
-			prerender: {
-				enabled: true,
-				filter: ({ path }) => {
-					return !path.startsWith("/scenario");
-				},
-			},
-		}),
+		tanstackStart(),
 		viteReact({
 			babel: {
 				plugins: ["babel-plugin-react-compiler"],
