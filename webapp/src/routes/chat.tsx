@@ -114,7 +114,7 @@ function Chat() {
 		// We set h-dvh here to ensure the chat takes the full viewport height
 		<div className="flex flex-col h-dvh w-full overflow-hidden bg-background overscroll-y-none">
 			{/* StudyHeader braucht eventuell auch ein px-4 wrapper, falls er jetzt zu breit wirkt */}
-			<div className="w-full container mx-auto px-4">
+			<div className="w-full container max-w-5xl mx-auto px-4">
 				<StudyHeader onFinish={handleFinish} isLoading={isFinishing} />
 			</div>
 
@@ -125,7 +125,7 @@ function Chat() {
                 */}
 					<Conversation className="overflow-x-hidden pb-2 w-full">
 						{/* Hier fügen wir max-width und margin auto hinzu, damit der Text mittig bleibt */}
-						<ConversationContent className="container mx-auto px-4 w-full">
+						<ConversationContent className="container max-w-5xl mx-auto px-4 w-full">
 							{messages.map((message, index) => (
 								<Message from={message.role} key={message.id}>
 									<MessageContent>
@@ -159,7 +159,7 @@ function Chat() {
 								<div className="absolute bottom-full left-0 right-0 z-10 pointer-events-none bg-gradient-to-t from-background/80 to-transparent">
 									<div className="max-h-[30dvh] overflow-y-auto pointer-events-auto">
 										{/* Suggestions auch zentrieren */}
-										<div className="container mx-auto w-full">
+										<div className="container max-w-5xl mx-auto w-full">
 											<Suggestions className="px-4 py-2">
 												{suggestions.map((suggestion) => (
 													<Suggestion
@@ -175,7 +175,7 @@ function Chat() {
 							)}
 
 							{/* Input Feld zentrieren */}
-							<div className="container mx-auto w-full px-4">
+							<div className="container max-w-5xl mx-auto w-full px-4">
 								<PromptInputComponent
 									stop={stop}
 									// @ts-expect-error

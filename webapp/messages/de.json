@@ -255,10 +255,16 @@
 	"demographics_occupation_entrepreneur": "Unternehmer / Inhaber / Selbstständig",
 
 	"demographics_domain_question": "In welchem fachlichen Schwerpunkt sind Sie überwiegend tätig (oder studieren)?",
-	"demographics_domain_business": "Kaufmännisch / Betriebswirtschaft / Verwaltung",
+	"demographics_domain_business": "Kaufmännisch / Betriebswirtschaft",
 	"demographics_domain_technical": "Technisch / Handwerk / Produktion / Ingenieurwesen",
 	"demographics_domain_it": "IT / Digitalisierung",
 	"demographics_domain_other": "Sonstiges",
+
+	"demographics_energy_knowledge_question": "Wie schätzen Sie Ihr technisches Wissen zu Energiesystemen (PV, Wärmepumpen, Einheiten) ein?",
+	"demographics_energy_knowledge_none": "Laie (Kein technisches Vorwissen)",
+	"demographics_energy_knowledge_basic": "Basiswissen (Begriffe wie kW/kWh sind bekannt)",
+	"demographics_energy_knowledge_advanced": "Fortgeschritten (Verstehe technische Zusammenhänge)",
+	"demographics_energy_knowledge_expert": "Experte (Beruflicher Hintergrund in Energietechnik)",
 
 	"demographics_investexp_question": "Wie viel Erfahrung haben Sie mit unternehmerischen Investitionsentscheidungen?",
 	"demographics_investexp_none": "Keine Erfahrung",

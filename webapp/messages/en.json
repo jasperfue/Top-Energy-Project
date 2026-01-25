@@ -257,10 +257,16 @@
 	"demographics_occupation_entrepreneur": "Entrepreneur / Business Owner",
 
 	"demographics_domain_question": "What is your primary professional specialization (or field of study)?",
-	"demographics_domain_business": "Commercial / Business Admin / Administration",
+	"demographics_domain_business": "Commercial / Business Admin",
 	"demographics_domain_technical": "Technical / Skilled Trades / Manufacturing / Engineering",
 	"demographics_domain_it": "IT / Digitalization",
 	"demographics_domain_other": "Other",
+
+	"demographics_energy_knowledge_question": "How do you rate your technical knowledge of energy systems (PV, Heat Pumps, units)?",
+	"demographics_energy_knowledge_none": "Layperson (No prior knowledge)",
+	"demographics_energy_knowledge_basic": "Basic knowledge (Familiar with terms like kW/kWh)",
+	"demographics_energy_knowledge_advanced": "Advanced (Understand technical relationships)",
+	"demographics_energy_knowledge_expert": "Expert (Professional background in energy tech)",
 
 	"demographics_investexp_question": "How much experience do you have with corporate investment decisions?",
 	"demographics_investexp_none": "No experience",
