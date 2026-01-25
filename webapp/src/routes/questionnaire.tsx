@@ -714,16 +714,16 @@ function Questionnaire() {
 										required
 										options={[
 											{
-												value: "employee_no_lead",
-												label: m.demographics_occupation_employee(),
+												value: "entrepreneur",
+												label: m.demographics_occupation_entrepreneur(),
 											},
 											{
 												value: "employee_lead",
 												label: m.demographics_occupation_manager(),
 											},
 											{
-												value: "entrepreneur",
-												label: m.demographics_occupation_entrepreneur(),
+												value: "employee_no_lead",
+												label: m.demographics_occupation_employee(),
 											},
 											{
 												value: "student",

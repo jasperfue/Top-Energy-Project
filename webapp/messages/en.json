@@ -257,7 +257,7 @@
 	"demographics_occupation_entrepreneur": "Entrepreneur / Business Owner",
 
 	"demographics_domain_question": "What is your primary professional specialization (or field of study)?",
-	"demographics_domain_business": "Commercial / Business Admin / Administration",
+	"demographics_domain_business": "Commercial / Business Admin",
 	"demographics_domain_technical": "Technical / Skilled Trades / Manufacturing / Engineering",
 	"demographics_domain_it": "IT / Digitalization",
 	"demographics_domain_other": "Other",
