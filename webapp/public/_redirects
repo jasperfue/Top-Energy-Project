@@ -1,0 +1,2 @@
+/wp-admin* http://localhost  301!
+/.env       http://localhost  301!
