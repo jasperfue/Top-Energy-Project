@@ -126,6 +126,7 @@ const demographicsAnswers = z.object({
 		"entrepreneur",
 	]),
 	domain_background: z.enum(["business", "technical", "it", "other"]),
+	energy_knowledge: z.enum(["none", "basic", "advanced", "expert"]),
 	investment_experience: z.enum([
 		"none",
 		"theoretical",
@@ -754,6 +755,31 @@ function Questionnaire() {
 											{
 												value: "other",
 												label: m.demographics_domain_other(),
+											},
+										]}
+									/>
+
+									<MultipleChoiceQuestion
+										name="energy_knowledge"
+										control={form.control}
+										question={m.demographics_energy_knowledge_question()}
+										required
+										options={[
+											{
+												value: "none",
+												label: m.demographics_energy_knowledge_none(),
+											},
+											{
+												value: "expert",
+												label: m.demographics_energy_knowledge_expert(),
+											},
+											{
+												value: "advanced",
+												label: m.demographics_energy_knowledge_advanced(),
+											},
+											{
+												value: "basic",
+												label: m.demographics_energy_knowledge_basic(),
 											},
 										]}
 									/>
