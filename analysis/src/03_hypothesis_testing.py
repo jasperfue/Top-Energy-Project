@@ -237,6 +237,7 @@ def plot_bar_ci(
     labels: list[str],
     title: str,
     ylabel: str = "Mean Score (1–7)",
+    ylim: tuple = (1, 7.5),
 ) -> None:
     """
     Plot grouped bar chart (Condition × Variables) with 95% CI error bars.
@@ -264,19 +265,39 @@ def plot_bar_ci(
     ax.set_xticklabels(labels, fontsize=11)
     ax.set_ylabel(ylabel, fontsize=11)
     ax.set_title(title, fontsize=12, fontweight="bold")
-    ax.set_ylim(1, 7.5)
+    ax.set_ylim(ylim)
     ax.legend(title="Condition", frameon=True)
     ax.yaxis.grid(True, linestyle="--", alpha=0.7)
     ax.set_axisbelow(True)
 
 
-# --- Figure A: Understanding ---
-fig, ax = plt.subplots(figsize=(6, 5))
+# --- Figure A: Understanding (Split into two subplots) ---
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
+
+# Left: Subjective Understanding
 plot_bar_ci(
-    ax,
-    variables=["Understanding_Subjective", "Understanding_Objective"],
-    labels=["Subjective\nUnderstanding", "Objective\nUnderstanding"],
-    title="H1: Understanding by Explanation Type\n(Mean ± 95% CI)",
+    ax1,
+    variables=["Understanding_Subjective"],
+    labels=["Subjective"],
+    title="Subjective Understanding",
+    ylabel="Mean Score (1–7)",
+    ylim=(1, 7.5),
+)
+
+# Right: Objective Understanding
+plot_bar_ci(
+    ax2,
+    variables=["Understanding_Objective"],
+    labels=["Objective"],
+    title="Objective Understanding",
+    ylabel="Correct Answers (0–2)",
+    ylim=(0, 2.5),  # Adjusted for the 0-2 scale plus error bars
+)
+
+fig.suptitle(
+    "H1: Understanding by Explanation Type\n(Mean ± 95% CI)",
+    fontsize=14,
+    fontweight="bold",
 )
 fig.tight_layout()
 fig.savefig(PLOTS_PATH / "H1_understanding.png")
@@ -290,6 +311,7 @@ plot_bar_ci(
     variables=["Trust_Competence", "Trust_Benevolence", "Trust_Integrity"],
     labels=["Competence", "Benevolence", "Integrity"],
     title="H2: Trust Dimensions by Explanation Type\n(Mean ± 95% CI)",
+    ylim=(1, 7.5),
 )
 fig.tight_layout()
 fig.savefig(PLOTS_PATH / "H2_trust_dimensions.png")
@@ -303,6 +325,7 @@ plot_bar_ci(
     variables=["Intention"],
     labels=["Implementation\nIntention"],
     title="H3: Intention by Explanation Type\n(Mean ± 95% CI)",
+    ylim=(1, 7.5),
 )
 fig.tight_layout()
 fig.savefig(PLOTS_PATH / "H3_intention.png")

@@ -13,7 +13,7 @@ load_dotenv()
 TOKEN = os.getenv("AIRTABLE_ACCESS_TOKEN")
 BASE_ID = os.getenv("AIRTABLE_BASE_ID")
 TABLE_ID = os.getenv("AIRTABLE_TABLE_ID")
-OUTPUT_PATH = Path("../data/raw/experiment_data.csv")
+OUTPUT_PATH = Path("./data/raw/experiment_data.csv")
 
 # Check if environment variables are set, otherwise raise an error
 if TOKEN is None or BASE_ID is None or TABLE_ID is None:
