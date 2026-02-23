@@ -17,6 +17,8 @@ import scipy.stats as stats
 import seaborn as sns
 from statsmodels.formula.api import ols
 from statsmodels.stats.anova import anova_lm
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 # --- Paths ---
 PROCESSED_DATA_PATH = Path("./data/processed/cleaned_data.csv")
@@ -372,8 +374,6 @@ print("  analysis targeting 1-β = .80 with α = .05).")
 # SECTION 4: Common Method Bias (Harman's Single Factor Test)
 # Goal: Ensure that a single factor does not account for the majority of variance.
 # =============================================================================
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
 
 print("\n" + "=" * 70)
 print("SECTION 4: Common Method Bias (Harman's Single Factor Test)")
@@ -381,11 +381,22 @@ print("=" * 70)
 
 # Select all raw Likert items used for the main constructs
 likert_items = [
-    "trust_comp_1", "trust_comp_2", "trust_comp_3", "trust_comp_4",
-    "trust_ben_1", "trust_ben_2", "trust_ben_3",
-    "trust_int_1", "trust_int_2", "trust_int_3", "trust_int_4",
-    "understanding_q1", "understanding_q2",
-    "intention_q1", "intention_q2", "intention_q3"
+    "trust_comp_1",
+    "trust_comp_2",
+    "trust_comp_3",
+    "trust_comp_4",
+    "trust_ben_1",
+    "trust_ben_2",
+    "trust_ben_3",
+    "trust_int_1",
+    "trust_int_2",
+    "trust_int_3",
+    "trust_int_4",
+    "understanding_q1",
+    "understanding_q2",
+    "intention_q1",
+    "intention_q2",
+    "intention_q3",
 ]
 
 # Drop missing values and standardize the data
