@@ -22,6 +22,7 @@ if TOKEN is None or BASE_ID is None or TABLE_ID is None:
         "AIRTABLE_ACCESS_TOKEN, AIRTABLE_BASE_ID, and AIRTABLE_TABLE_ID."
     )
 
+
 # %%
 def fetch_airtable_data():
     """
@@ -34,27 +35,28 @@ def fetch_airtable_data():
     print("Fetching data from Airtable...")
     api = Api(TOKEN)
     table = api.table(BASE_ID, TABLE_ID)
-    
+
     # Get all records
     records = table.all()
-    
+
     # Extract the 'fields' part of each record into a list of dicts
     data = [record["fields"] for record in records]
-    
+
     # Convert to DataFrame
     df = pd.DataFrame(data)
-    
+
     # Ensure the output directory exists
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Save to CSV
     df.to_csv(OUTPUT_PATH, index=False)
     print(f"Success! Data saved to {OUTPUT_PATH}")
     print(f"Total records fetched: {len(df)}")
-    
+
     # Display the columns to verify the mapping
     print("\nDetected Columns:")
     print(df.columns.tolist())
+
 
 # %%
 if __name__ == "__main__":
