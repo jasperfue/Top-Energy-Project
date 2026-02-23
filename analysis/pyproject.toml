@@ -9,10 +9,13 @@ dependencies = [
     "numpy>=2.4.2",
     "pandas>=3.0.1",
     "pingouin>=0.5.5",
+    "pyairtable>=3.3.0",
+    "python-dotenv>=1.2.1",
     "seaborn>=0.13.2",
 ]
 
 [dependency-groups]
 dev = [
+    "ipykernel>=7.2.0",
     "ruff>=0.15.2",
 ]
