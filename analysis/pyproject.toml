@@ -11,7 +11,9 @@ dependencies = [
     "pingouin>=0.5.5",
     "pyairtable>=3.3.0",
     "python-dotenv>=1.2.1",
+    "scikit-learn>=1.0",
     "seaborn>=0.13.2",
+    "statsmodels>=0.14.0",
 ]
 
 [dependency-groups]
