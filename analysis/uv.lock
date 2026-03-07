@@ -21,7 +21,9 @@ dependencies = [
     { name = "pingouin" },
     { name = "pyairtable" },
     { name = "python-dotenv" },
+    { name = "scikit-learn" },
     { name = "seaborn" },
+    { name = "statsmodels" },
 ]
 
 [package.dev-dependencies]
@@ -38,7 +40,9 @@ requires-dist = [
     { name = "pingouin", specifier = ">=0.5.5" },
     { name = "pyairtable", specifier = ">=3.3.0" },
     { name = "python-dotenv", specifier = ">=1.2.1" },
+    { name = "scikit-learn", specifier = ">=1.0" },
     { name = "seaborn", specifier = ">=0.13.2" },
+    { name = "statsmodels", specifier = ">=0.14.0" },
 ]
 
 [package.metadata.requires-dev]
